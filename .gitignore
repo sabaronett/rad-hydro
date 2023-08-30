@@ -34,6 +34,7 @@
 # Project related
 radmc3d/
 output/
+*.old
 
 # VS Code
 *.code-workspace
