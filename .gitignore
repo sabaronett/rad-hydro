@@ -32,8 +32,8 @@
 *.d
 
 # Project related
-/radmc3d
-/output
+radmc3d/
+output/
 
 # VS Code
 *.code-workspace
