@@ -33,6 +33,7 @@
 
 # Project related
 /radmc3d
+/output
 
 # VS Code
 *.code-workspace
