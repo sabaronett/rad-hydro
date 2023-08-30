@@ -7,8 +7,8 @@ configure = --prob=thermal_relaxation -implicit_radiation --nghost=3 -mpi -hdf5 
 problem_id = thermal     # problem ID: basename of output filenames
 
 <output1>
-file_type  = hst          # History data dump
-dt         = 0.01         # time increment between outputs
+file_type  = hst         # History data dump
+dt         = 1.9         # time increment between outputs
 
 <time>
 cfl_number = 0.4         # The Courant, Friedrichs, & Lewy (CFL) Number
