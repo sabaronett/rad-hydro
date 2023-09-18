@@ -32,7 +32,7 @@ ox1_bc     = periodic    # outer-X1 boundary flag
 nx2        = 256         # Number of zones in X2-direction
 x2min      = -2          # minimum value of X2
 x2max      = 2           # maximum value of X2
-ix2_bc     = outflow    # inner-X2 boundary flag
+ix2_bc     = user        # inner-X2 boundary flag
 ox2_bc     = outflow     # outer-X2 boundary flag
 
 nx3        = 1           # Number of zones in X3-direction
