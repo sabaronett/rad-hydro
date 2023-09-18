@@ -1,0 +1,8 @@
+#!/bin/bash
+# Request three nodes that will not be allocated to others for the duration of the run.
+#SBATCH -N3 --exclusive
+#SBATCH --mail-type=ALL --mail-user=<name@domain.tld>
+#SBATCH -t=HH:MM:SS
+
+# Find out what nodes we were assigned.
+srun hostname
