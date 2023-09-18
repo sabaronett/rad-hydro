@@ -2,8 +2,8 @@
 #SBATCH -p gen -C rome,ib --exclusive
 #SBATCH -N1 --ntasks=16
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
-#SBATCH -t 1:00:00
+#SBATCH -t 0:05:00
 
 date
 hostname
-mpirun $ATHENA -i athinput.beam -d output -t 0:55:00
+mpirun $ATHENA -i athinput.beam -d output -t 0:04:00
