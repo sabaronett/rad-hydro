@@ -5,4 +5,4 @@
 
 date
 hostname
-mpirun -n 16 $ATHENA -i athinput.beam -d output -t 0:55:00
+mpirun $ATHENA -i athinput.beam -d output -t 0:55:00
