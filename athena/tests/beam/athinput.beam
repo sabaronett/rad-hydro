@@ -52,7 +52,7 @@ gamma = 1.6666666666667  # gamma = C_p/C_v = 1 + 2/DoF
 nmu         = 2          # Total rays nmu(nmu + 2) in 3D (/2 in 2D)
 prat        = 0.01       # $a_rT_0^4/P_0$
 crat        = 10.0       # $c/v_0$
-error_limit = 1.e-12     # tolerance level of iteration
+error_limit = 1.e-3      # tolerance level of iteration
 
 # <problem>
 # ang    = 0               # ?
