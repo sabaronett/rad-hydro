@@ -1,0 +1,8 @@
+#!/bin/bash
+#SBATCH -N1 -p genx -C rome,ib
+#SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
+#SBATCH -t=1:00:00
+
+date
+hostname
+mpirun -n 1 $ATHENA -i athinput.beam -t 0:55:00
