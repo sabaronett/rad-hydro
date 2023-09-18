@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -N1 -p genx -C rome,ib --exclusive
+#SBATCH -N1 -p gen -C rome,ib --exclusive
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
 #SBATCH -t 1:00:00
 
