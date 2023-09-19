@@ -7,7 +7,7 @@
 date
 hostname
 module purge
-module load slurm openmpi hdf5/mpi-1.10.9
+module load slurm openmpi hdf5/mpi
 echo
 
 mpirun $ATHENA -i athinput.beam
