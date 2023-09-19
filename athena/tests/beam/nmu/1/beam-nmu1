@@ -6,7 +6,7 @@
 
 date
 hostname
-module --force purge
+module purge
 module load slurm openmpi hdf5/mpi-1.10.9
 echo
 
