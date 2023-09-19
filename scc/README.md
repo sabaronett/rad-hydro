@@ -9,16 +9,6 @@
 - [Planned resource usage](https://wiki.flatironinstitute.org/SCC/AccountManagement/PlannedResourceUsage)
 
 
-## Connecting
-
-### On-site (WSL)
-```bash
-ssh <USER>@rusty.flatironinstitute.org
-```
-
-### [Remote](https://wiki.flatironinstitute.org/SCC/RemoteConnect)
-
-
 ## [Athena++](https://github.com/PrincetonUniversity/athena/wiki)
 
 ### [Configuring](https://github.com/PrincetonUniversity/athena/wiki/Configuring)
@@ -34,9 +24,10 @@ In Athena++'s root,
 
 ##### AMD Optimizing C/C++ and Fortran Compilers ([AOCC](https://www.nas.nasa.gov/hecc/support/kb/preparing-to-run-on-aitken-rome-nodes_657.html))
 
-In Athena++'s root,
+1. `module load aocc`
+2. In Athena++'s root,
 ```bash
-./configure.py --prob=[PROBLEM] -implicit_radiation -mpi -hdf5 -h5double --cxx=aocc --cflag="-march=znver2"
+./configure.py --prob=[PROBLEM] -implicit_radiation -mpi -hdf5 -h5double --cxx=clang++ --cflag="-march=znver2"
 ```
 
 
@@ -45,7 +36,7 @@ In Athena++'s root,
 Parallel compilation (e.g., on a single Rome node):
 1. Request an [interactive node with srun](https://wiki.flatironinstitute.org/SCC/Software/Slurm#srun_Run_a_program_on_allocated_resources):
    ```bash
-   srun -N1 -p genx -C rome --pty bash -i
+   srun -N1 -p genx -C rome -t 0:10:00 --pty bash -i
    ```
 2. In Athena++'s root,
    ```bash
