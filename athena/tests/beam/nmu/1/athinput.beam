@@ -15,6 +15,7 @@ xdmf        = 0                # disable XDMF output (VisIt)
 <time>
 cfl_number  = 0.4              # The Courant, Friedrichs & Lewy No.
 nlim        = 10               # cycle limit
+tlim        = 4.84122918275e-2 # time limit
 ncycle_out  = 1                # interval for stdout summary info
 
 <mesh>
