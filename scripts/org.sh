@@ -2,12 +2,12 @@
 #==============================================================================
 # org.sh
 #
-# Organizes typical Athena++ and post-processing outputs into subdirectories by
-# file format (extension).
+# Organizes Athena++ and post-processing outputs into subdirectories by file
+# format (extension).
 # Reference: https://stackoverflow.com/a/34195247
 #
 # Author: Stanley A. Baronett
-# Updated: 2023-06-07
+# Updated: 2023-09-19
 #==============================================================================
 
 echo "Organizing..."
@@ -65,7 +65,7 @@ if compgen -G "core.*" > /dev/null; then
     mv -v core.* core/ 
 fi
 
-# PBS stdout, Athena++ history files
+# PBS stdout, Athena++ history and radiation transport files
 if compgen -G "*.o*" > /dev/null; then
     if [[ ! -d output ]]; then
         mkdir output
@@ -73,6 +73,9 @@ if compgen -G "*.o*" > /dev/null; then
     mv -v *.o* output/
     if compgen -G "*.hst" > /dev/null; then
         cp -v *.hst output/
+    fi
+    if compgen -G "Rad_angles.txt" > /dev/null; then
+        mv -v Rad_angles.txt output/
     fi
 fi
 
