@@ -7,19 +7,15 @@ configure   = --prob=beam -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --c
 problem_id  = beam             # basename of output filenames
 
 <output1>
-file_type   = hst              # History data dump
-dt          = 0.1              # time increment between outputs
-
-<output2>
 file_type   = hdf5             # HDF5 data dump
 variable    = prim             # output variables
-dt          = 1.0              # time increment between outputs
+dt          = -1               # time increment between outputs
 xdmf        = 0                # disable XDMF output (VisIt)
 
 <time>
 cfl_number  = 0.4              # The Courant, Friedrichs & Lewy No.
-nlim        = -1               # cycle limit
-tlim        = 10.0             # time limit
+nlim        = 10               # cycle limit
+tlim        = -1               # time limit
 ncycle_out  = 1                # interval for stdout summary info
 
 <mesh>
@@ -44,16 +40,17 @@ ox3_bc      = periodic         # outer-X3 boundary flag
 <meshblock>
 nx1         = 32
 nx2         = 32
+nx3         = 1
 
 <hydro>
 gamma       = 1.6666666666667  # gamma = C_p/C_v = 1 + 2/DoF
 
 <radiation>
 nmu         = 1                # Total rays nmu(nmu + 2) in 3D
-prat        = 1                # $a_rT_0^4/P_0$
+prat        = 1.0              # $a_rT_0^4/P_0$
 crat        = 1.0              # $c/v_0$
-error_limit = 1.e-3            # tolerance level of iteration
+error_limit = 1.0e-3           # tolerance level of iteration
 
 <problem>
-ang         = 0                # ?
-octnum      = 0                # ?
+ang         = 0                # beam.cpp (line 72)
+octnum      = 0                # beam.cpp (line 73)
