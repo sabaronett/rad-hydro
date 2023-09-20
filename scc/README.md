@@ -15,6 +15,26 @@ An example of requesting an [interactive node with srun](https://wiki.flatironin
 srun -N1 -p genx -C rome --pty bash -i
 ```
 
+
+## [Data Transfer](https://wiki.flatironinstitute.org/SCC/Hardware/DataTransfer)
+
+### For small amounts of data (< 25GB)
+
+#### [scp](https://wiki.flatironinstitute.org/SCC/Hardware/DataTransfer#scp)
+
+```bash
+# Tranfer from a remote host
+$ scp username@rusty.flatironinstitute.org:~/experiments/mycode.tar.gz .
+```
+
+#### [rsync](https://wiki.flatironinstitute.org/SCC/Hardware/DataTransfer#rsync)
+
+```bash
+# Syncing data from a remote host
+rsync -a username@rusty.flatironinstitute.org:/home/username/code_folder ~/my_local_code
+```
+
+
 ## [Athena++](https://github.com/PrincetonUniversity/athena/wiki)
 
 ### [Configuring](https://github.com/PrincetonUniversity/athena/wiki/Configuring)
@@ -64,23 +84,4 @@ sbatch <script>
 #### [Continuous Restarts](https://slurm.schedmd.com/sbatch.html#OPT_dependency)
 ```bash
 sbatch <script> -d afterok:<job_id>
-```
-
-
-## [Data Transfer](https://wiki.flatironinstitute.org/SCC/Hardware/DataTransfer)
-
-### For small amounts of data (< 25GB)
-
-#### [scp](https://wiki.flatironinstitute.org/SCC/Hardware/DataTransfer#scp)
-
-```bash
-# Tranfer from a remote host
-$ scp username@rusty.flatironinstitute.org:~/experiments/mycode.tar.gz .
-```
-
-#### [rsync](https://wiki.flatironinstitute.org/SCC/Hardware/DataTransfer#rsync)
-
-```bash
-# Syncing data from a remote host
-rsync -a username@rusty.flatironinstitute.org:/home/username/code_folder ~/my_local_code
 ```
