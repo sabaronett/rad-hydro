@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH -p genx -C rome
+#SBATCH -N1 --ntasks=1
+#SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
+#SBATCH -t 1:00:00
+
+date
+hostname
+module purge
+module load slurm python ffmpeg
+echo
+
+python $RHD/athena/tests/beam/scripts/vid.py
