@@ -35,12 +35,14 @@ for output in outputs:
 
 # Initialize first frame
 clip = np.clip(Ers[0], vmin, vmax)
-mesh = ax.pcolormesh(xv, yv, clip, norm=colors.LogNorm(vmin, vmax),
-                     cmap='plasma')
-cb = fig.colorbar(mesh, label='$E_\mathrm{r}/(a_\mathrm{r}T_0^4)$')
-ax.minorticks_on()
 ax.set(aspect='equal', title=f'$t={ts[0]:.2f}t_0$', xlabel='$x/L_0$',
        ylabel='$y/L_0$')
+ax.minorticks_on()
+mesh = ax.pcolormesh(xv, yv, clip, norm=colors.LogNorm(vmin, vmax),
+                     cmap='plasma')
+cb = plt.colorbar(mesh, label='$E_\mathrm{r}/(a_\mathrm{r}T_0^4)$')
+
+
 
 def animate(i):
     """
@@ -64,6 +66,5 @@ anim = animation.FuncAnimation(fig, animate, frames=len(ts), repeat=False)
 metadata = dict(title=(title+' mean radiation energy density'),
                 artist='Stanley A. Baronett')
 writer = animation.FFMpegWriter(fps=60, metadata=metadata, bitrate=-1)
-savefig_kwargs = dict(bbox_inches='tight')
-anim.save(title+'_Er.mp4', writer=writer, savefig_kwargs=savefig_kwargs)
+anim.save(title+'_Er.mp4', writer=writer)
 print('Done.\nVideo saved.', flush=True)
