@@ -35,7 +35,9 @@
 radmc3d/
 output/
 *.athdf
+*.jpg
 *.old
+*.png
 *.txt
 
 # VS Code
