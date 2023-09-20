@@ -64,5 +64,6 @@ anim = animation.FuncAnimation(fig, animate, frames=len(ts), repeat=False)
 metadata = dict(title=(title+' mean radiation energy density'),
                 artist='Stanley A. Baronett')
 writer = animation.FFMpegWriter(fps=60, metadata=metadata, bitrate=-1)
-anim.save(title+'_Er.mp4', writer=writer, bbox_inches='tight')
+anim.save(title+'_Er.mp4', writer=writer,
+          savefig_kwargs={'bbox_inches': 'tight'})
 print('Done.\nVideo saved.', flush=True)
