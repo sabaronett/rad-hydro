@@ -32,11 +32,11 @@
 *.d
 
 # Project related
+*old*
 radmc3d/
 output/
 *.athdf
 *.jpg
-*.old
 *.png
 *.txt
 
