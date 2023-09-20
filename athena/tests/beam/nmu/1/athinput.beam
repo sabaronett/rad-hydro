@@ -8,14 +8,14 @@ problem_id  = beam             # basename of output filenames
 
 <output1>
 file_type   = hdf5             # HDF5 data dump
-variable    = prim             # output variables
-dt          = 1.45236875482777 # time increment between outputs
+variable    = Er               # output variables
+dt          = 0.01666666666667 # time increment between outputs
 xdmf        = 0                # disable XDMF output (VisIt)
 
 <time>
 cfl_number  = 0.4              # The Courant, Friedrichs & Lewy No.
-nlim        = 300              # cycle limit
-tlim        = 1.45236875482777 # time limit
+nlim        = -1               # cycle limit
+tlim        = 10               # time limit
 ncycle_out  = 1                # interval for stdout summary info
 
 <mesh>
