@@ -10,4 +10,4 @@ module purge
 module load slurm openmpi hdf5/mpi
 echo
 
-mpirun $ATHENA -i athinput.beam
+mpirun $ATHENA/bin/athena -i athinput.beam
