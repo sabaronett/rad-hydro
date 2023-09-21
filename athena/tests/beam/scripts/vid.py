@@ -24,7 +24,7 @@ outputs = sorted(list(Path('athdf').glob(problem_id + '.out1.*.athdf')))
 athdf = athena_read.athdf(outputs[0])
 xv, yv = athdf['x1v'], athdf['x2v']
 ts, Ers = [], []
-dpi = 236 # 658 x 1075 resolution
+dpi = 236 # 1510 x 1132 resolution
 fig, ax = plt.subplots(dpi=dpi)
 vmin, vmax = 0.05, 2
 
