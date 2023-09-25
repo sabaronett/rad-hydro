@@ -49,6 +49,6 @@ crat        = 100.0      # $c/v_0$
 error_limit = 1.e-12     # tolerance level of iteration
 
 <problem>
-er    = 1.0              # mean energy density
-tgas  = 100.0            # gas temperature
+er    = 1.0              # initial mean energy density
+tgas  = 100.0            # initial gas temperature
 sigma = 1.0              # constant absorption opacity ρκ_a
