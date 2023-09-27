@@ -47,6 +47,7 @@ gamma       = 1.6666666666667  # gamma = C_p/C_v = 1 + 2/DoF
 
 <radiation>
 angle_flag  = 1                # rotate angular system with local coordinates
+nmu         = 1                # unused but expected to avoid fatal error
 nzeta       = 1                # number of polar angles (0 to π/2)
 npsi        = 1                # number of azimuthal angles (0 to π)
 prat        = 1.0              # $a_rT_0^4/P_0$
