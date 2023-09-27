@@ -26,8 +26,8 @@ ix1_bc      = user             # inner-X1 boundary flag
 ox1_bc      = outflow          # outer-X1 boundary flag
 
 nx2         = 64               # Number of zones in X2-direction
-x2min       = 0.0              # minimum value of X2 (theta = 0)
-x2max       = 3.14159265358979 # maximum value of X2 (theta = pi)
+x2min       = 0.39269908169872 # minimum value of X2 (theta = pi/8)
+x2max       = 2.74889357189106 # maximum value of X2 (theta = 7pi/8)
 ix2_bc      = outflow          # inner-X2 boundary flag
 ox2_bc      = outflow          # outer-X2 boundary flag
 
