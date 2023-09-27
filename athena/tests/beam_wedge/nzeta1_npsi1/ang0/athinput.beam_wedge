@@ -20,12 +20,14 @@ ncycle_out  = 1                # interval for stdout summary info
 
 <mesh>                         # polar wedge boundary
 nx1         = 256              # Number of zones in X1-direction
-x1min       = 0.0              # minimum value of X1
-x1max       = 4.0              # maximum value of X1
+x1min       = 1.0              # minimum value of X1
+x1max       = 5.0              # maximum value of X1
 ix1_bc      = user             # inner-X1 boundary flag
 ox1_bc      = outflow          # outer-X1 boundary flag
 
 nx2         = 64               # Number of zones in X2-direction
+#x2min       = 0.0              # minimum value of X2 (theta = 0)
+#x2max       = 3.14159265358979 # maximum value of X2 (theta = pi)
 x2min       = 0.39269908169872 # minimum value of X2 (theta = pi/8)
 x2max       = 2.74889357189106 # maximum value of X2 (theta = 7pi/8)
 ix2_bc      = outflow          # inner-X2 boundary flag
