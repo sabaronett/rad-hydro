@@ -1,7 +1,7 @@
 <comment>
 problem     = Modified beam test for spherical-polar disk
 reference   = Adapted from Jiang (2021, ApJS, 253, 49), § 4.2
-configure   = --prob=beam_disk -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2"
+configure   = --prob=beam_disk --coord=spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2"
 
 <job>
 problem_id  = beam_disk        # basename of output filenames
@@ -48,7 +48,7 @@ gamma       = 1.6666666666667  # gamma = C_p/C_v = 1 + 2/DoF
 <radiation>
 angle_flag  = 1                # rotate angular system with local coordinates
 nzeta       = 1                # number of polar angles (0 to π/2)
-npsi        = 1                # number of longitudinal angles (0 to π)
+npsi        = 1                # number of azimuthal angles (0 to π)
 prat        = 1.0              # $a_rT_0^4/P_0$
 crat        = 1.0              # $c/v_0$
 error_limit = 1.0e-3           # iteration tolerance level, 1e-6 for production
