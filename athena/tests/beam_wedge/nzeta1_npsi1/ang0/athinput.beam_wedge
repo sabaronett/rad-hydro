@@ -1,10 +1,10 @@
 <comment>
-problem     = Modified beam test for spherical-polar disk
+problem     = Modified beam test in a polar wedge
 reference   = Adapted from Jiang (2021, ApJS, 253, 49), \S 4.2
-configure   = --prob=beam_disk --coord=spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2"
+configure   = --prob=beam_wedge --coord=spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2"
 
 <job>
-problem_id  = beam_disk        # basename of output filenames
+problem_id  = beam_wedge       # basename of output filenames
 
 <output1>
 file_type   = hdf5             # HDF5 data dump
