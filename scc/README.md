@@ -62,14 +62,14 @@ In Athena++'s root,
 Parallel compilation (e.g., on a single Rome node):
 1. Request an [interactive node with srun](https://wiki.flatironinstitute.org/SCC/Software/Slurm#srun_Run_a_program_on_allocated_resources):
    ```bash
-   srun -N1 -p genx -C rome -t 0:10:00 --pty bash -i
+   srun -N1 -p gen -C rome --exclusive -t 0:01:00 --pty bash -i
    ```
 2. In Athena++'s root,
    ```bash
    make clean
    make -j
    ```
-Compilation should take only a few minutes.
+Compilation should take less than a minute.
 
 
 ### [Running the Code](https://github.com/PrincetonUniversity/athena/wiki/Running-the-Code)
