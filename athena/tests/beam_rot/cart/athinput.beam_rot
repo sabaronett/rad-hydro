@@ -1,6 +1,6 @@
 <comment>
-problem     = Radiation crossing beams test rotated (x1<->x2)
-reference   = Jiang (2021, ApJS, 253, 49), \S 4.2
+problem     = Modified radiation crossing beams test
+reference   = Jiang (2021, ApJS, 253, 49), § 4.2
 configure   = --prob=beam_rot -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2"
 
 <job>
@@ -53,3 +53,4 @@ error_limit = 1.0e-3           # tolerance level of iteration
 
 <problem>
 ang         = 0                # beam angle index
+offset      = 0.0              # beam offset along inner boundary
