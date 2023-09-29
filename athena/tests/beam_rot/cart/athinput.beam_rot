@@ -50,6 +50,7 @@ nmu         = 1                # number of polar angles per octant
 prat        = 1.0              # $a_rT_0^4/P_0$
 crat        = 1.0              # $c/v_0$
 error_limit = 1.0e-3           # tolerance level of iteration
+cfl_rad     = 0.1
 
 <problem>
 ang         = 0                # beam angle index
