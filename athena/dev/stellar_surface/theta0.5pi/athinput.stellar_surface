@@ -55,4 +55,4 @@ crat        = 1.0                 # $c/v_0$
 error_limit = 1.0e-3              # tolerance level of iteration
 
 <problem>
-theta       = 3.141592653589793/2
+theta       = 1.57079632679489661 # emission only at specific latitude
