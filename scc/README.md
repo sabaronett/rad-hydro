@@ -67,7 +67,7 @@ Parallel compilation (e.g., on a single Rome node):
 2. In Athena++'s root,
    ```bash
    make clean
-   make -j
+   make -j && cp bin/athena bin/athena.[problem_id]
    ```
 Compilation should take less than a minute.
 
