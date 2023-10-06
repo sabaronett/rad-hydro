@@ -81,6 +81,12 @@ See [`sample`](/scc/sample).
 sbatch <script>
 ```
 
+#### [scancel](https://slurm.schedmd.com/scancel.html)
+
+```bash
+scancel <job_id>
+```
+
 #### [Continuous Restarts](https://slurm.schedmd.com/sbatch.html#OPT_dependency)
 ```bash
 sbatch <script> -d afterok:<job_id>
