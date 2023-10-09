@@ -68,6 +68,7 @@ T_unit       = 6.14e3              # T_0 [K]
 density_unit = 4.28e-14            # \rho_0 [g/cm^3]
 length_unit  = 5.98e14             # L_0 [cm]
 error_limit  = 1.0e-3              # tolerance level of iteration
+source_flag  = 0                   # passive radiation (no gas heating)
 
 <problem>
 GM           = 1.0                 # gravitational potential
@@ -76,4 +77,4 @@ rho0         = 1.0                 # [\rho_0]
 p0_over_r0   = 4.80e-03
 pslope       = -0.5                # pressure power-law index
 dslope       = -2.25               # density power-law index
-sigma_a      = 0 #558.9816959999999  # absorption opacity \kappa_a
+kappa_a      = 558.9816959999999   # absorption opacity \kappa_a
