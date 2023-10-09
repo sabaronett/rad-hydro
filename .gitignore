@@ -37,8 +37,6 @@ radmc3d/
 output/
 *.athdf
 *.hst
-*.jpg
-*.png
 *.txt
 
 # VS Code
