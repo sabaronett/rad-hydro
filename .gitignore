@@ -38,6 +38,7 @@ output/
 *.athdf
 *.hst
 *.txt
+*SZ*
 
 # VS Code
 *.code-workspace
