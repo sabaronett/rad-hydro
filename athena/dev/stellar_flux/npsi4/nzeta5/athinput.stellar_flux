@@ -22,10 +22,14 @@ xdmf         = 0                   # disable XDMF output (VisIt)
 file_type    = hst                 # HDF5 data dump
 dt           = 0.01                # time increment between outputs
 
+<output4>
+file_type    = rst                 # restart file
+dt           = 10                  # time increment between outputs
+
 <time>
 cfl_number   = 0.4                 # The Courant, Friedrichs & Lewy No.
 nlim         = -1                  # cycle limit
-tlim         = 120                 # time limit
+tlim         = 100                 # time limit
 ncycle_out   = 1                   # interval for stdout summary info
 
 <mesh>
@@ -78,3 +82,5 @@ p0_over_r0   = 4.80e-03
 pslope       = -0.5                # pressure power-law index
 dslope       = -2.25               # density power-law index
 kappa_a      = 558.9816959999999   # absorption opacity \kappa_a
+R_star       = 1.16e-4             # [L_0]
+T_star       = 9.42e-1             # [T_0]
