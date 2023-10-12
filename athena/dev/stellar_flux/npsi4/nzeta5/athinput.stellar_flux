@@ -9,27 +9,23 @@ problem_id   = stellar_flux        # basename of output filenames
 <output1>
 file_type    = hdf5                # HDF5 data dump
 variable     = prim                # output variables
-dt           = 1                   # time increment between outputs
+dt           = 10                  # time increment between outputs
 xdmf         = 0                   # disable XDMF output (VisIt)
 
 <output2>
-file_type    = hdf5                # VTK data dump
+file_type    = hdf5                # HDF5 data dump
 variable     = cons                # output variables
-dt           = 1                   # time increment between outputs
+dt           = 10                  # time increment between outputs
 xdmf         = 0                   # disable XDMF output (VisIt)
 
 <output3>
 file_type    = hst                 # HDF5 data dump
-dt           = 0.01                # time increment between outputs
-
-<output4>
-file_type    = rst                 # restart file
-dt           = 10                  # time increment between outputs
+dt           = 0.1                 # time increment between outputs
 
 <time>
 cfl_number   = 0.4                 # The Courant, Friedrichs & Lewy No.
 nlim         = -1                  # cycle limit
-tlim         = 100                 # time limit
+tlim         = 1000                # time limit
 ncycle_out   = 1                   # interval for stdout summary info
 
 <mesh>
