@@ -75,12 +75,11 @@ error_limit  = 1.0e-3              # tolerance level of iteration
 source_flag  = 0                   # passive radiation (no gas heating)
 
 <problem>
-GM           = 1.0                 # gravitational potential
-r0           = 1.0
+r0           = 1.0                 # radial normalization 
 rho0         = 1.0                 # [\rho_0]
 p0_over_r0   = 4.80e-03
 pslope       = -0.5                # pressure power-law index
 dslope       = -2.25               # density power-law index
-kappa_a      = 558.9816959999999   # absorption opacity \kappa_a
-R_star       = 1.16e-4             # [L_0]
-T_star       = 9.42e-1             # [T_0]
+kappa_a      = 558.98169599999994  # absorption opacity
+R            = 1.16e-4             # stellar radius [L_0]
+T            = 9.42e-1             # stellar temperature [T_0]
