@@ -66,11 +66,11 @@ if compgen -G "core.*" > /dev/null; then
 fi
 
 # PBS stdout, Athena++ history and radiation transport files
-if compgen -G "*.o*" > /dev/null; then
+if compgen -G "*.out" > /dev/null; then
     if [[ ! -d output ]]; then
         mkdir output
     fi
-    mv -v *.o* output/
+    mv -v *.out output/
     if compgen -G "*.hst" > /dev/null; then
         cp -v *.hst output/
     fi
