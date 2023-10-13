@@ -55,7 +55,7 @@ times, Fr1s = [], []
 
 for output in outputs:
     athdf = athena_read.athdf(output)
-    times.append(athdf['times'])
+    times.append(athdf['Time'])
     Fr1s.append(athdf['Fr1'][0])
 
 # Initialize first frame
