@@ -65,7 +65,7 @@ cb = plt.colorbar(mesh, label='$F_{\mathrm{r},x}/(ca_\mathrm{r}T_0^4)$')
 
 # Format (sub)plots
 ax.minorticks_on()
-ax.set_title(f'$t={t:.0f}t_0$')#, fontsize='medium')
+ax.set_title(f'$t={times:.0f}t_0$')#, fontsize='medium')
 ax.set(xlabel='$r$/au', ylabel=r'$\theta^\circ$')
 ax.tick_params(axis='both', which='both', top=True, right=True)
 plt.gca().invert_yaxis()
