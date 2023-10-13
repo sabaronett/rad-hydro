@@ -47,7 +47,7 @@ fig, ax = plt.subplots(figsize=(8, 4.5), dpi=150)
 
 # Read and plot
 path = f'{problem_id}/npsi{npsi}/nzeta{nzeta}'
-athinput = athena_read.athinput('athinput.{problem_id}')
+athinput = athena_read.athinput(f'athinput.{problem_id}')
 outputs = sorted(list(Path('athdf').glob(problem_id + '.out1.*.athdf')))
 athdf = athena_read.athdf(outputs[0])
 xv, yv = athdf['x1v'], athdf['x2v']
