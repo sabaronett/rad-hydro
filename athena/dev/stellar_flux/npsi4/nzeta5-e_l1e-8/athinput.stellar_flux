@@ -61,6 +61,7 @@ unit         = 1                   # adopt the units in the input file
 T_unit       = 6.14e3              # T_0 [K]
 density_unit = 4.28e-14            # \rho_0 [g/cm^3]
 length_unit  = 5.98e14             # L_0 [cm]
+nlimit       = 1000                # maximum number of iterations to try
 error_limit  = 1.0e-8              # tolerance level of iteration
 source_flag  = 0                   # passive radiation (no gas heating)
 
