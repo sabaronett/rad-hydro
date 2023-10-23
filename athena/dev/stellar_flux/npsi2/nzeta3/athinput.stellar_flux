@@ -12,13 +12,13 @@ variable     = prim                # output variables
 dt           = 1                   # time increment between outputs
 xdmf         = 0                   # disable XDMF output (VisIt)
 
-<output2>
-file_type    = hdf5                # HDF5 data dump
-variable     = uov                 # output variables
-dt           = 1                   # time increment between outputs
-xdmf         = 0                   # disable XDMF output (VisIt)
+#<output2>
+#file_type    = hdf5                # HDF5 data dump
+#variable     = uov                 # output variables
+#dt           = 1                   # time increment between outputs
+#xdmf         = 0                   # disable XDMF output (VisIt)
 
-<output3>
+<output2>
 file_type    = hst                 # HDF5 data dump
 dt           = 0.001               # time increment between outputs
 
