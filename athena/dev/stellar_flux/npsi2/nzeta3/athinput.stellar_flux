@@ -20,10 +20,10 @@ xdmf         = 0                   # disable XDMF output (VisIt)
 
 <output2>
 file_type    = hst                 # HDF5 data dump
-dt           = 1e-5                # time increment between outputs
+dt           = 1e-6                # time increment between outputs
 
 <time>
-cfl_number   = 4e-3                # The Courant, Friedrichs & Lewy No.
+cfl_number   = 4e-4                # The Courant, Friedrichs & Lewy No.
 nlim         = -1                  # cycle limit
 tlim         = 0.01                # time limit
 ncycle_out   = 1                   # interval for stdout summary info
