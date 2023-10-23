@@ -38,8 +38,8 @@ ox1_bc       = user                # outer-X1 boundary flag
 nx2          = 512                 # Number of zones in X2-direction
 x2min        = 0                   # minimum value of X2
 x2max        = 3.141592653589793   # maximum value of X2
-ix2_bc       = polar_wedge         # inner-X2 boundary flag
-ox2_bc       = polar_wedge         # outer-X2 boundary flag
+ix2_bc       = user                # inner-X2 boundary flag
+ox2_bc       = user                # outer-X2 boundary flag
 
 nx3          = 1                   # Number of zones in X3-direction
 x3min        = 0.0                 # minimum value of X3
@@ -67,6 +67,7 @@ unit         = 1                   # adopt the units in the input file
 T_unit       = 6.14e3              # T_0 [K]
 density_unit = 4.28e-14            # \rho_0 [g/cm^3]
 length_unit  = 5.98e14             # L_0 [cm]
+nlimit       = 1000                # maximum number of iterations to try
 error_limit  = 1.0e-6              # tolerance level of iteration
 source_flag  = 0                   # passive radiation (no gas heating)
 
