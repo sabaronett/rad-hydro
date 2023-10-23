@@ -12,20 +12,20 @@ variable     = prim                # output variables
 dt           = 1                   # time increment between outputs
 xdmf         = 0                   # disable XDMF output (VisIt)
 
-<output2>
-file_type    = hdf5                # HDF5 data dump
-variable     = uov                 # output variables
-dt           = 1                   # time increment between outputs
-xdmf         = 0                   # disable XDMF output (VisIt)
+#<output2>
+#file_type    = hdf5                # HDF5 data dump
+#variable     = uov                 # output variables
+#dt           = 1                   # time increment between outputs
+#xdmf         = 0                   # disable XDMF output (VisIt)
 
 <output2>
 file_type    = hst                 # HDF5 data dump
-dt           = 0.001               # time increment between outputs
+dt           = 1e-5                # time increment between outputs
 
 <time>
-cfl_number   = 0.004               # The Courant, Friedrichs & Lewy No.
+cfl_number   = 4e-5                # The Courant, Friedrichs & Lewy No.
 nlim         = -1                  # cycle limit
-tlim         = 1                   # time limit
+tlim         = 0.01                   # time limit
 ncycle_out   = 1                   # interval for stdout summary info
 
 <mesh>
