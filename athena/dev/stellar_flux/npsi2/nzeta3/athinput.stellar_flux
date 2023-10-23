@@ -9,13 +9,13 @@ problem_id   = stellar_flux        # basename of output filenames
 <output1>
 file_type    = hdf5                # HDF5 data dump
 variable     = prim                # output variables
-dt           = 1e-2                # time increment between outputs
+dt           = 1e-3                # time increment between outputs
 xdmf         = 0                   # disable XDMF output (VisIt)
 
 #<output2>
 #file_type    = hdf5                # HDF5 data dump
 #variable     = uov                 # output variables
-#dt           = 1e-2                # time increment between outputs
+#dt           = 1e-3                # time increment between outputs
 #xdmf         = 0                   # disable XDMF output (VisIt)
 
 <output2>
