@@ -8,32 +8,38 @@ problem_id   = stellar_flux        # basename of output filenames
 
 <output1>
 file_type    = hdf5                # HDF5 data dump
-variable     = Fr1                 # output variables
-dt           = 10                  # time increment between outputs
+variable     = prim                # output variables
+dt           = 1                   # time increment between outputs
 xdmf         = 0                   # disable XDMF output (VisIt)
 
 <output2>
+file_type    = hdf5                # HDF5 data dump
+variable     = uov                 # output variables
+dt           = 1                   # time increment between outputs
+xdmf         = 0                   # disable XDMF output (VisIt)
+
+<output3>
 file_type    = hst                 # HDF5 data dump
-dt           = 0.01                # time increment between outputs
+dt           = 0.001               # time increment between outputs
 
 <time>
-cfl_number   = 0.4                 # The Courant, Friedrichs & Lewy No.
+cfl_number   = 0.004               # The Courant, Friedrichs & Lewy No.
 nlim         = -1                  # cycle limit
-tlim         = 20                  # time limit
+tlim         = 1                   # time limit
 ncycle_out   = 1                   # interval for stdout summary info
 
 <mesh>
-nx1          = 64                  # Number of zones in X1-direction
-x1min        = 0.54                # minimum value of X1
-x1max        = 8.0                 # maximum value of X1
+nx1          = 256                 # Number of zones in X1-direction
+x1min        = 0.250163663377926   # minimum value of X1
+x1max        = 2.501636633779264   # maximum value of X1
 ix1_bc       = user                # inner-X1 boundary flag
 ox1_bc       = user                # outer-X1 boundary flag
 
-nx2          = 96                  # Number of zones in X2-direction
-x2min        = 0.3831043444619522  # minimum value of X2
-x2max        = 2.758488309127841   # maximum value of X2
-ix2_bc       = user                # inner-X2 boundary flag
-ox2_bc       = user                # outer-X2 boundary flag
+nx2          = 512                 # Number of zones in X2-direction
+x2min        = 0                   # minimum value of X2
+x2max        = 3.141592653589793   # maximum value of X2
+ix2_bc       = polar_wedge         # inner-X2 boundary flag
+ox2_bc       = polar_wedge         # outer-X2 boundary flag
 
 nx3          = 1                   # Number of zones in X3-direction
 x3min        = 0.0                 # minimum value of X3
