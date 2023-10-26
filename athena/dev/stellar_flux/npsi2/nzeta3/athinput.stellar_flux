@@ -78,5 +78,5 @@ p0_over_r0   = 4.80e-03
 pslope       = -0.5                # pressure power-law index
 dslope       = -2.25               # density power-law index
 kappa_a      = 558.98169599999994  # absorption opacity
-R            = 1.16e-4             # stellar radius [L_0]
-T            = 9.42e-1             # stellar temperature [T_0]
+R            = 1.16e-4             # solar radius [L_0]
+T            = 9.42e-1             # solar temperature [T_0]
