@@ -8,32 +8,38 @@ problem_id   = stellar_flux        # basename of output filenames
 
 <output1>
 file_type    = hdf5                # HDF5 data dump
-variable     = Fr1                 # output variables
-dt           = 10                  # time increment between outputs
+variable     = prim                # output variables
+dt           = 1e-3                # time increment between outputs
 xdmf         = 0                   # disable XDMF output (VisIt)
 
 <output2>
 file_type    = hst                 # HDF5 data dump
-dt           = 0.01                # time increment between outputs
+dt           = 1e-6                # time increment between outputs
+
+<output3>
+file_type    = hdf5                # HDF5 data dump
+variable     = uov                 # output variables
+dt           = 1e-3                # time increment between outputs
+xdmf         = 0                   # disable XDMF output (VisIt)
 
 <time>
-cfl_number   = 0.4                 # The Courant, Friedrichs & Lewy No.
+cfl_number   = 4e-4                # The Courant, Friedrichs & Lewy No.
 nlim         = -1                  # cycle limit
-tlim         = 20                  # time limit
+tlim         = 1e-3                # time limit
 ncycle_out   = 1                   # interval for stdout summary info
 
 <mesh>
-nx1          = 64                  # Number of zones in X1-direction
-x1min        = 0.54                # minimum value of X1
-x1max        = 8.0                 # maximum value of X1
+nx1          = 256                 # Number of zones in X1-direction
+x1min        = 0.250163663377926   # minimum value of X1
+x1max        = 2.501636633779264   # maximum value of X1
 ix1_bc       = user                # inner-X1 boundary flag
 ox1_bc       = user                # outer-X1 boundary flag
 
-nx2          = 96                  # Number of zones in X2-direction
-x2min        = 0.3831043444619522  # minimum value of X2
-x2max        = 2.758488309127841   # maximum value of X2
-ix2_bc       = user                # inner-X2 boundary flag
-ox2_bc       = user                # outer-X2 boundary flag
+nx2          = 512                 # Number of zones in X2-direction
+x2min        = 0                   # minimum value of X2
+x2max        = 3.141592653589793   # maximum value of X2
+ix2_bc       = polar_wedge         # inner-X2 boundary flag
+ox2_bc       = polar_wedge         # outer-X2 boundary flag
 
 nx3          = 1                   # Number of zones in X3-direction
 x3min        = 0.0                 # minimum value of X3
@@ -61,15 +67,16 @@ unit         = 1                   # adopt the units in the input file
 T_unit       = 6.14e3              # T_0 [K]
 density_unit = 4.28e-14            # \rho_0 [g/cm^3]
 length_unit  = 5.98e14             # L_0 [cm]
+nlimit       = 1000                # maximum number of iterations to try
 error_limit  = 1.0e-6              # tolerance level of iteration
 source_flag  = 0                   # passive radiation (no gas heating)
 
 <problem>
-r0           = 1.0                 # radial normalization 
+r0           = 0.425278227742474   # radial normalization 
 rho0         = 1.0                 # [\rho_0]
 p0_over_r0   = 4.80e-03
 pslope       = -0.5                # pressure power-law index
 dslope       = -2.25               # density power-law index
 kappa_a      = 558.98169599999994  # absorption opacity
-R            = 1.16e-4             # stellar radius [L_0]
-T            = 9.42e-1             # stellar temperature [T_0]
+R            = 1.16e-4             # solar radius [L_0]
+T            = 9.42e-1             # solar temperature [T_0]
