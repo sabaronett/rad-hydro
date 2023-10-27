@@ -1,0 +1,76 @@
+<comment>
+problem      = Stellar flux
+reference    = 
+configure    = --prob stellar_flux --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2"
+
+<job>
+problem_id   = stellar_flux        # basename of output filenames
+
+<output1>
+file_type    = hdf5                # HDF5 data dump
+variable     = prim                # output variables
+dt           = 1e-3                # time increment between outputs
+xdmf         = 0                   # disable XDMF output (VisIt)
+
+<output2>
+file_type    = hst                 # HDF5 data dump
+dt           = 1e-6                # time increment between outputs
+
+<time>
+cfl_number   = 4e-4                # The Courant, Friedrichs & Lewy No.
+nlim         = -1                  # cycle limit
+tlim         = 1e-3                # time limit
+ncycle_out   = 1                   # interval for stdout summary info
+
+<mesh>
+nx1          = 256                 # Number of zones in X1-direction
+x1min        = 0.250163663377926   # minimum value of X1
+x1max        = 2.501636633779264   # maximum value of X1
+ix1_bc       = user                # inner-X1 boundary flag
+ox1_bc       = user                # outer-X1 boundary flag
+
+nx2          = 512                 # Number of zones in X2-direction
+x2min        = 0                   # minimum value of X2
+x2max        = 3.141592653589793   # maximum value of X2
+ix2_bc       = polar_wedge         # inner-X2 boundary flag
+ox2_bc       = polar_wedge         # outer-X2 boundary flag
+
+nx3          = 1                   # Number of zones in X3-direction
+x3min        = 0.0                 # minimum value of X3
+x3max        = 3.141592653589793   # maximum value of X3
+ix3_bc       = periodic            # inner-X3 boundary flag
+ox3_bc       = periodic            # outer-X3 boundary flag
+
+<meshblock>
+nx1          = 32
+nx2          = 32
+nx3          = 1
+
+<hydro>
+gamma        = 1.6666666666667     # gamma = C_p/C_v = 1 + 2/DoF
+dfloor       = 1e-12               # minimum density
+
+<radiation>
+angle_flag   = 1                   # rotate angular system with local coords
+nmu          = 1                   # unused but expected to avoid fatal error
+nzeta        = 320                 # number of polar angles (0 to pi/2)
+npsi         = 2                   # number of azimuthal angles (0 to pi)
+prat         = 1.13e3              # $a_rT_0^4/P_0$
+crat         = 6.36e4              # $c/v_0$
+unit         = 1                   # adopt the units in the input file
+T_unit       = 6.14e3              # T_0 [K]
+density_unit = 4.28e-14            # \rho_0 [g/cm^3]
+length_unit  = 5.98e14             # L_0 [cm]
+nlimit       = 1000                # maximum number of iterations to try
+error_limit  = 1.0e-6              # tolerance level of iteration
+source_flag  = 0                   # passive radiation (no gas heating)
+
+<problem>
+r0           = 0.425278227742474   # radial normalization 
+rho0         = 1.0                 # [\rho_0]
+p0_over_r0   = 4.80e-03
+pslope       = -0.5                # pressure power-law index
+dslope       = -2.25               # density power-law index
+kappa_a      = 558.98169599999994  # absorption opacity
+R            = 1.16e-4             # solar radius [L_0]
+T            = 9.42e-1             # solar temperature [T_0]
