@@ -59,8 +59,8 @@ dfloor       = 1e-12               # minimum density
 <radiation>
 angle_flag   = 1                   # rotate angular system with local coords
 nmu          = 1                   # unused but expected to avoid fatal error
-nzeta        = 20                   # number of polar angles (0 to pi/2)
-npsi         = 2                   # number of azimuthal angles (0 to pi)
+nzeta        = 20                  # number of polar angles (0 to pi/2)
+npsi         = 0                   # number of azimuthal angles (0 to pi)
 prat         = 1.13e3              # $a_rT_0^4/P_0$
 crat         = 6.36e4              # $c/v_0$
 unit         = 1                   # adopt the units in the input file
