@@ -1,10 +1,10 @@
 <comment>
 problem      = Stellar flux
 reference    = 
-configure    = --prob stellar_flux --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2"
+configure    = --prob stellar_flux_sigma_pe --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2"
 
 <job>
-problem_id   = stellar_flux        # basename of output filenames
+problem_id   = stellar_flux_sigma_pe # basename of output filenames
 
 <output1>
 file_type    = hdf5                # HDF5 data dump
@@ -15,12 +15,6 @@ xdmf         = 0                   # disable XDMF output (VisIt)
 <output2>
 file_type    = hst                 # HDF5 data dump
 dt           = 1e-6                # time increment between outputs
-
-<output3>
-file_type    = hdf5                # HDF5 data dump
-variable     = uov                 # output variables
-dt           = 1e-3                # time increment between outputs
-xdmf         = 0                   # disable XDMF output (VisIt)
 
 <time>
 cfl_number   = 4e-4                # The Courant, Friedrichs & Lewy No.
