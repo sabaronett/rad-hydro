@@ -62,7 +62,7 @@ In Athena++'s root,
 Parallel compilation (e.g., on a single Rome node):
 1. Request an [interactive node with srun](https://wiki.flatironinstitute.org/SCC/Software/Slurm#srun_Run_a_program_on_allocated_resources):
    ```bash
-   srun -N1 -p gen -C rome --exclusive -t 0:01:00 --pty bash -i
+   srun -N1 -p cca -C rome --exclusive -t 0:01:00 --pty bash -i
    ```
 2. In Athena++'s root,
    ```bash
