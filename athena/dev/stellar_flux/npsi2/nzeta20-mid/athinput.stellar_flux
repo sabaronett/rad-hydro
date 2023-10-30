@@ -36,8 +36,8 @@ ix1_bc       = user                # inner-X1 boundary flag
 ox1_bc       = user                # outer-X1 boundary flag
 
 nx2          = 1                   # Number of zones in X2-direction
-x2min        = 1.570796326794896   # minimum value of X2
-x2max        = 1.570796326794896   # maximum value of X2
+x2min        = 1.570796326794895   # minimum value of X2
+x2max        = 1.570796326794897   # maximum value of X2
 ix2_bc       = user                # inner-X2 boundary flag
 ox2_bc       = user                # outer-X2 boundary flag
 
