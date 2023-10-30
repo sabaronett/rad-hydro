@@ -29,7 +29,7 @@ tlim         = 1e-3                # time limit
 ncycle_out   = 1                   # interval for stdout summary info
 
 <mesh>
-nx1          = 256                 # Number of zones in X1-direction
+nx1          = 4096                # Number of zones in X1-direction
 x1min        = 0.250163663377926   # minimum value of X1
 x1max        = 2.501636633779264   # maximum value of X1
 ix1_bc       = user                # inner-X1 boundary flag
@@ -49,7 +49,7 @@ ox3_bc       = periodic            # outer-X3 boundary flag
 
 <meshblock>
 nx1          = 32
-nx2          = 32
+nx2          = 1
 nx3          = 1
 
 <hydro>
