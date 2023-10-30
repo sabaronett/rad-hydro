@@ -10,4 +10,4 @@ module purge
 module load slurm openmpi hdf5/mpi
 echo
 
-mpirun $ATHENA/bin/athena.stellar_flux -i athinput.stellar_flux
+mpirun $ATHENA/bin/athena.stellar_flux -i athinput.pseudo_ray_tracing
