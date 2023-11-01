@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -p mem -C coopperlake --exclusive
+#SBATCH -p mem -C cascadelake --exclusive
 #SBATCH -N1 --ntasks=128
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
 #SBATCH -t 6:00:00
