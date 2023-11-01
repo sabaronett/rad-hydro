@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -p cca -C a100,ib --exclusive
-#SBATCH -N2
+#SBATCH -p cca -C skylake,opa --exclusive
+#SBATCH -N4 --ntasks-per-node=32
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
 #SBATCH -t 2:00:00
 
