@@ -10,4 +10,4 @@ module purge
 module load slurm gcc openmpi hdf5/mpi
 echo
 
-mpirun $ATHENA/bin/athena.pseudo_ray_tracing.mem -i athinput.pseudo_ray_tracing
+mpirun $ATHENA/bin/athena.pseudo_ray_tracing.intel -i athinput.pseudo_ray_tracing
