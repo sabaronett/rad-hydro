@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH -p cca -C rome,ib --exclusive
+#SBATCH -N2 --ntasks=256
+#SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
+#SBATCH -t 2:00:00
+
+date
+hostname
+module purge
+module load slurm openmpi hdf5/mpi
+echo
+
+mpirun $ATHENA/bin/athena.pseudo_ray_tracing -i athinput.pseudo_ray_tracing
