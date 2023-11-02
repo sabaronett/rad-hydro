@@ -50,21 +50,38 @@ In Athena++'s root,
 
 ##### AMD Optimizing C/C++ and Fortran Compilers ([AOCC](https://www.nas.nasa.gov/hecc/support/kb/preparing-to-run-on-aitken-rome-nodes_657.html))
 
-1. `module load aocc`
-2. In Athena++'s root,
+In Athena++'s root,
 ```bash
 ./configure.py --prob=[PROBLEM] -implicit_radiation -mpi -hdf5 -h5double --cxx=clang++ --cflag="-march=znver2"
 ```
 
 
+### Intel Nodes ([Intel Compiler](https://www.nas.nasa.gov/hecc/support/kb/recommended-compiler-options_99.html#:~:text=%2DxCORE%2DAVX512%20can%20run%20only%20on%20Skylake%20and%20Cascade%20Lake%20processors))
+1. In Athena++'s root,
+```bash
+./configure.py --prob=[PROBLEM] -implicit_radiation -mpi -hdf5 -h5double --cxx=icpc --mpiccmd="icpc -lmpi" --cflag="-xCORE-AVX512"
+```
+2. Manually remove `-xhost` from `Makefile`, under
+```Makefile
+# General compiler specifications
+...
+CXXFLAGS := ... -xhost ...
+```
+
+
 ### [Compiling](https://github.com/PrincetonUniversity/athena/wiki/Compiling)
 
+#### For AMD Rome Nodes
 Parallel compilation (e.g., on a single Rome node):
 1. Request an [interactive node with srun](https://wiki.flatironinstitute.org/SCC/Software/Slurm#srun_Run_a_program_on_allocated_resources):
    ```bash
    srun -N1 -p cca -C rome --exclusive -t 0:15:00 --pty bash -i
    ```
-2. In Athena++'s root,
+2. Run
+   ```bash
+   module load aocc
+   ```
+3. In Athena++'s root,
    ```bash
    make clean
    ```
@@ -73,6 +90,27 @@ Parallel compilation (e.g., on a single Rome node):
    make -j && cp bin/athena bin/athena.[problem_id]
    ```
 Compilation should take less than a minute.
+
+
+#### For Intel Nodes
+Parallel compilation (e.g., on a single Rome node):
+1. Request an [interactive node with srun](https://wiki.flatironinstitute.org/SCC/Software/Slurm#srun_Run_a_program_on_allocated_resources):
+   ```bash
+   srun -N1 -p cca -C rome --exclusive -t 0:15:00 --pty bash -i
+   ```
+2. Run
+   ```bash
+   module load intel-oneapi-compilers
+   ```
+3. In Athena++'s root,
+   ```bash
+   make clean
+   ```
+   then
+   ```bash
+   make -j && cp bin/athena bin/athena.[problem_id]
+   ```
+Compilation takes more than 5 minutes.
 
 
 ### [Running the Code](https://github.com/PrincetonUniversity/athena/wiki/Running-the-Code)
