@@ -1,10 +1,10 @@
 <comment>
-problem      = Stellar flux
+problem      = Pseudo-Ray Tracing
 reference    = 
-configure    = --prob pseudo_ray_tracing --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2"
+configure    = --prob pseudo_ray_tracing --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=icpc --mpiccmd="icpc -lmpi" --cflag="-axCORE-AVX512"
 
 <job>
-problem_id   = pseudo_ray_tracing # basename of output filenames
+problem_id   = pseudo_ray_tracing  # basename of output filenames
 
 <output1>
 file_type    = hdf5                # HDF5 data dump
@@ -29,11 +29,11 @@ x1max        = 2.501636633779264   # maximum value of X1
 ix1_bc       = user                # inner-X1 boundary flag
 ox1_bc       = user                # outer-X1 boundary flag
 
-nx2          = 512                 # Number of zones in X2-direction
-x2min        = 0                   # minimum value of X2
-x2max        = 3.141592653589793   # maximum value of X2
-ix2_bc       = polar_wedge         # inner-X2 boundary flag
-ox2_bc       = polar_wedge         # outer-X2 boundary flag
+nx2          = 256                 # Number of zones in X2-direction
+x2min        = 1.374446785945535   # minimum value of X2
+x2max        = 1.767145867644259   # maximum value of X2
+ix2_bc       = user                # inner-X2 boundary flag
+ox2_bc       = user                # outer-X2 boundary flag
 
 nx3          = 1                   # Number of zones in X3-direction
 x3min        = 0.0                 # minimum value of X3
