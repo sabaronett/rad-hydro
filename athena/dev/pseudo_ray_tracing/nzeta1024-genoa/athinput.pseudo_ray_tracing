@@ -1,7 +1,7 @@
 <comment>
-problem      = Stellar flux
+problem      = Pseudo-Ray Tracing
 reference    = 
-configure    = --prob pseudo_ray_tracing --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=icpc --mpiccmd="mpicxx -cxx=icpc" --cflag="-axCORE-AVX512"
+configure    = --prob pseudo_ray_tracing --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=icpc --mpiccmd="icpc -lmpi" --cflag="-xCORE-AVX512"
 
 <job>
 problem_id   = pseudo_ray_tracing  # basename of output filenames
