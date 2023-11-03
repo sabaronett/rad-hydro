@@ -2,12 +2,12 @@
 #SBATCH -p mem -C cascadelake --exclusive
 #SBATCH -N1 --ntasks=128
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
-#SBATCH -t 6:00:00
+#SBATCH -t 4:00:00
 
 date
 hostname
 module purge
-module load slurm modules/2.3-alpha0  intel-oneapi-compilers/2023.2.1  intel-oneapi-mpi/intel-2021.10.0 hdf5/intel-mpi-1.14.2
+module load slurm gcc openmpi hdf5/mpi
 echo
 
-mpirun $ATHENA/bin/athena.pseudo_ray_tracing.mem -i athinput.pseudo_ray_tracing
+mpirun $ATHENA/bin/athena.pseudo_ray_tracing.intel -i athinput.pseudo_ray_tracing
