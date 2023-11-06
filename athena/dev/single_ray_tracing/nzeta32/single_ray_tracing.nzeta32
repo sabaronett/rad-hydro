@@ -2,7 +2,7 @@
 #SBATCH -p cca -C skylake,opa --exclusive
 #SBATCH -N4 --ntasks-per-node=32
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
-#SBATCH -t 0:01:00
+#SBATCH -t 0:02:00
 
 date
 hostname
