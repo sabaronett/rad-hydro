@@ -16,6 +16,12 @@ xdmf         = 0                   # disable XDMF output (VisIt)
 file_type    = hst                 # HDF5 data dump
 dt           = 1e-6                # time increment between outputs
 
+<output3>
+file_type    = hdf5                # HDF5 data dump
+variable     = uov                 # output variables
+dt           = 1e-3                # time increment between outputs
+xdmf         = 0                   # disable XDMF output (VisIt)
+
 <time>
 cfl_number   = 4e-4                # The Courant, Friedrichs & Lewy No.
 nlim         = -1                  # cycle limit
