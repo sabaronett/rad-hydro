@@ -18,7 +18,7 @@ srun -N1 -p genx -C rome --pty bash -i
 
 ## [Data Transfer](https://wiki.flatironinstitute.org/SCC/Hardware/DataTransfer)
 
-### For small amounts of data (< 25GB)
+### Under 25GB
 
 #### [scp](https://wiki.flatironinstitute.org/SCC/Hardware/DataTransfer#scp)
 
@@ -131,4 +131,39 @@ scancel <job_id>
 #### [Continuous Restarts](https://slurm.schedmd.com/sbatch.html#OPT_dependency)
 ```bash
 sbatch <script> -d afterok:<job_id>
+```
+
+
+### Debugging
+
+#### Configuring
+
+See GCC's [Options for Debugging Your Program](https://gcc.gnu.org/onlinedocs/gcc/Debugging-Options.html)
+1. In Athena++'s root,
+```bash
+./configure.py --prob=[PROBLEM] -implicit_radiation --cxx=gcc --cflag="-ggdb3"
+```
+2. In `Makefile`, change `-O3` to `-O0`, under
+```Makefile
+# General compiler specifications
+...
+CXXFLAGS := -O3 ...
+```
+
+
+#### [Compiling](#for-amd-rome-nodes)
+
+```bash
+srun -N1 -p cca -C rome --exclusive -t 0:15:00 --pty bash -i
+make clean
+make -j && cp bin/athena bin/athena.[problem_id]
+```
+
+
+#### Running Interactively
+
+```bash
+srun -N1 -p cca -C rome --exclusive -t 2:00:00 --pty bash -i
+module load gdb
+gdb --args $ATHENA/bin/athena.[problem_id]-gdb -i athinput.[problem_id]
 ```
