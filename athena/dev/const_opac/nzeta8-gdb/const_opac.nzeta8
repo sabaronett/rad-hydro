@@ -10,4 +10,4 @@ module purge
 module load slurm gcc
 echo
 
-$ATHENA/bin/athena.const_opac -i athinput.const_opac
+$ATHENA/bin/athena.const_opac-gdb -i athinput.const_opac
