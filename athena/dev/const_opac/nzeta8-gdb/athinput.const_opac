@@ -6,6 +6,12 @@ configure    = --prob const_opac --coord spherical_polar -implicit_radiation --c
 <job>
 problem_id   = const_opac          # basename of output filenames
 
+<output1>
+file_type    = hdf5                # HDF5 data dump
+variable     = prim                # output variables
+dt           = 1e-11               # time increment between outputs
+xdmf         = 0                   # disable XDMF output (VisIt)
+
 <time>
 cfl_number   = 4e-4                # The Courant, Friedrichs & Lewy No.
 nlim         = 2                   # cycle limit
