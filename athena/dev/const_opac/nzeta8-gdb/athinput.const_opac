@@ -1,7 +1,7 @@
 <comment>
 problem      = Constant Opacity
 reference    = 
-configure    = --prob const_opac --coord spherical_polar -implicit_radiation --cxx=gcc --cflag="-g"
+configure    = --prob const_opac --coord spherical_polar -implicit_radiation --cxx=gcc --cflag="-ggdb3"
 
 <job>
 problem_id   = const_opac          # basename of output filenames
@@ -13,13 +13,13 @@ tlim         = 1e-5                # time limit
 ncycle_out   = 1                   # interval for stdout summary info
 
 <mesh>
-nx1          = 256                 # Number of zones in X1-direction
+nx1          = 32                  # Number of zones in X1-direction
 x1min        = 0.250163663377926   # minimum value of X1
 x1max        = 2.501636633779264   # maximum value of X1
 ix1_bc       = user                # inner-X1 boundary flag
 ox1_bc       = user                # outer-X1 boundary flag
 
-nx2          = 512                 # Number of zones in X2-direction
+nx2          = 64                  # Number of zones in X2-direction
 x2min        = 0                   # minimum value of X2
 x2max        = 3.141592653589793   # maximum value of X2
 ix2_bc       = polar_wedge         # inner-X2 boundary flag
