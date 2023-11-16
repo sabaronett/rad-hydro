@@ -7,7 +7,7 @@
 date
 hostname
 module purge
-module load slurm gcc
+module load slurm gcc hdf5
 echo
 
 $ATHENA/bin/athena.const_opac-gdb -i athinput.const_opac
