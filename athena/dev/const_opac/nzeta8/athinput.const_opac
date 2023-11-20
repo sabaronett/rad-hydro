@@ -18,7 +18,7 @@ dt           = 1e-11               # time increment between outputs
 
 <time>
 cfl_number   = 4e-4                # The Courant, Friedrichs & Lewy No.
-nlim         = 4                   # cycle limit
+nlim         = -1                  # cycle limit
 tlim         = 1e-5                # time limit
 ncycle_out   = 1                   # interval for stdout summary info
 
