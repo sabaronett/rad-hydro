@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH -p cca -C skylake,opa --exclusive
+#SBATCH -N4 --ntasks-per-node=32
+#SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
+#SBATCH -t 0:05:00
+
+date
+hostname
+module purge
+module load slurm gcc openmpi hdf5/mpi
+echo
+
+mpirun $ATHENA/bin/athena.const_opac -i athinput.const_opac
