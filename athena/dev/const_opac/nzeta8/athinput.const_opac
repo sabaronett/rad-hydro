@@ -9,7 +9,7 @@ problem_id   = const_opac          # basename of output filenames
 <output1>
 file_type    = hdf5                # HDF5 data dump
 variable     = prim                # output variables
-dt           = 1e-4                # time increment between outputs
+dt           = 1e-3                # time increment between outputs
 xdmf         = 0                   # disable XDMF output (VisIt)
 
 <output2>
@@ -19,7 +19,7 @@ dt           = 1e-6                # time increment between outputs
 <time>
 cfl_number   = 4e-4                # The Courant, Friedrichs & Lewy No.
 nlim         = -1                  # cycle limit
-tlim         = 1e-4                # time limit
+tlim         = 1e-3                # time limit
 ncycle_out   = 1                   # interval for stdout summary info
 
 <mesh>
@@ -74,4 +74,3 @@ dslope       = -2.25               # density power-law index
 kappa_a      = 558.98169599999994  # absorption opacity [\rho_0*L_0]
 R            = 1.16e-4             # solar radius [L_0]
 T            = 9.42e-1             # solar temperature [T_0]
-# sigmoid      = 0.39                # for revised sigmoid at inner BC
