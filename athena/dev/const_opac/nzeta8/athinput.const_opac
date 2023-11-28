@@ -2,6 +2,7 @@
 problem      = Constant Opacity
 reference    = 
 configure    = --prob const_opac --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=icpc --mpiccmd="icpc -lmpi" --cflag="-xCORE-AVX512"
+configure    = --prob const_opac --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=clang++ --cflag="-march=znver2 -mavx2"
 
 <job>
 problem_id   = const_opac          # basename of output filenames
@@ -57,7 +58,7 @@ nzeta        = 8                   # number of polar angles (0 to pi/2)
 npsi         = 2                   # number of azimuthal angles (0 to pi)
 prat         = 1.13e3              # $a_rT_0^4/P_0$
 crat         = 6.36e4              # $c/v_0$
-unit         = 1                   # adopt the units in the input file
+unit         = 1                   # compute prat & crat from user-provided units
 T_unit       = 6.14e3              # T_0 [K]
 density_unit = 4.28e-14            # \rho_0 [g/cm^3]
 length_unit  = 5.98e14             # L_0 [cm]
