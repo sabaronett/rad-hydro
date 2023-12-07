@@ -32,11 +32,12 @@
 *.d
 
 # Project related
-*old*
+figs/
 radmc3d/
 output/
 *.athdf
 *.hst
+*old*
 *temp*
 *.txt
 *SZ*
