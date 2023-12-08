@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -p cca -C skylake,opa --exclusive
-#SBATCH -N4 --ntasks-per-node=32
+#SBATCH -p eval -C genoa -n 192 --exclusive
+#SBATCH -N1 --ntasks=128
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
 #SBATCH -t 2:00:00
 
@@ -10,4 +10,4 @@ module purge
 module load slurm gcc openmpi hdf5/mpi
 echo
 
-mpirun $ATHENA/bin/athena.const_opac -i athinput.const_opac
+mpirun $ATHENA/bin/athena.const_opac-genoa -i athinput.const_opac
