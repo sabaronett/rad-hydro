@@ -56,7 +56,14 @@ In Athena++'s root,
 ```
 
 
-### Intel Nodes ([Intel Compiler](https://www.nas.nasa.gov/hecc/support/kb/recommended-compiler-options_99.html#:~:text=%2DxCORE%2DAVX512%20can%20run%20only%20on%20Skylake%20and%20Cascade%20Lake%20processors))
+#### [AMD Genoa Nodes](https://wiki.flatironinstitute.org/SCC/Hardware/EvaluationHardware#What_are_we_currently_testing_63)
+In Athena++'s root,
+```bash
+./configure.py --prob=[PROBLEM] -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=native -mavx512f"
+```
+
+
+#### Intel Nodes ([Intel Compiler](https://www.nas.nasa.gov/hecc/support/kb/recommended-compiler-options_99.html#:~:text=%2DxCORE%2DAVX512%20can%20run%20only%20on%20Skylake%20and%20Cascade%20Lake%20processors))
 1. In Athena++'s root,
 ```bash
 ./configure.py --prob=[PROBLEM] -implicit_radiation -mpi -hdf5 -h5double --cxx=icpc --mpiccmd="icpc -lmpi" --cflag="-xCORE-AVX512"
@@ -71,7 +78,7 @@ CXXFLAGS := ... -xhost ...
 
 ### [Compiling](https://github.com/PrincetonUniversity/athena/wiki/Compiling)
 
-#### For AMD Rome Nodes
+#### For AMD Rome/Genoa Nodes
 Parallel compilation (e.g., on a single Rome node):
 1. Request an [interactive node with srun](https://wiki.flatironinstitute.org/SCC/Software/Slurm#srun_Run_a_program_on_allocated_resources):
    ```bash
