@@ -1,7 +1,7 @@
 <comment>
 problem          = Constant Opacity Diffusion
 reference        = 
-configure        = --prob const_opac_diffusion --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=icpc --mpiccmd="icpc -lmpi" --cflag="-xCORE-AVX512"
+configure        = --prob const_opac_diffusion --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=native -mavx512f"
 
 <job>
 problem_id       = const_opac_diffusion # basename of output filenames
@@ -9,17 +9,17 @@ problem_id       = const_opac_diffusion # basename of output filenames
 <output1>
 file_type        = hdf5                # HDF5 data dump
 variable         = prim                # output variables
-dt               = 1e-2                # time increment between outputs
+dt               = 3e-2                # time increment between outputs
 xdmf             = 0                   # disable XDMF output (VisIt)
 
 <output2>
 file_type        = hst                 # HDF5 data dump
-dt               = 1e-6                # time increment between outputs
+dt               = 1e-5                # time increment between outputs
 
 <time>
 cfl_number       = 4e-4                # The Courant, Friedrichs & Lewy No.
 nlim             = -1                  # cycle limit
-tlim             = 1e-2                # time limit
+tlim             = 3e-2                # time limit
 ncycle_out       = 1                   # interval for stdout summary info
 
 <mesh>
@@ -62,7 +62,7 @@ length_unit      = 5.98e14             # L_0 [cm]
 molecular_weight = 0.6                 # \mu
 nlimit           = 1000                # maximum number of iterations to try
 error_limit      = 1.0e-6              # tolerance level of iteration
-source_flag      = 1                   # do not heat (0) or heat (1) the gas
+source_flag      = 2                   # do not heat (0) or heat (1) the gas
 
 <problem>
 r0               = 0.425278227742474   # disk radial normalization [L_0]
