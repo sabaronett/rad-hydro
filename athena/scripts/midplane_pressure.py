@@ -15,7 +15,8 @@ import numpy as np
 from pathlib import Path
 
 # Collect Athena++ inputs, outputs, and sim constants
-athinput = athena_read.athinput('athinput.si')
+problem_id = str(sys.argv[1])
+athinput = athena_read.athinput(f'athinput.{problem_id}')
 j_mid = athinput['mesh']['nx2']//2
 outputs = sorted(list(Path('athdf').glob(athinput['job']['problem_id']+
                                          '.out1.*.athdf')))

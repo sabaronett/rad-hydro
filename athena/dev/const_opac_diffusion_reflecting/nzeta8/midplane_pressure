@@ -10,4 +10,4 @@ module purge
 module load slurm python
 echo
 
-python ../../../scripts/midplane_pressure.py
+python ../../../scripts/midplane_pressure.py 'const_opac_diffusion_reflecting'
