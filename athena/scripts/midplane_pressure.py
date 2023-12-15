@@ -9,7 +9,7 @@
 # Updated: 2023-12-15
 #===============================================================================
 import sys
-sys.path.insert(0, '/home/sbaronett/github/sabaronett/athena/vis/python')
+sys.path.insert(0, '/mnt/home/sbaronett/github/sabaronett/athena/vis/python')
 import athena_read
 import numpy as np
 from pathlib import Path
