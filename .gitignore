@@ -37,6 +37,7 @@ radmc3d/
 output/
 *.athdf
 *.hst
+*.npz
 *old*
 *temp*
 *.txt
