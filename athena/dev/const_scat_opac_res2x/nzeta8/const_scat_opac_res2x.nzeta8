@@ -10,4 +10,4 @@ module purge
 module load slurm gcc openmpi hdf5/mpi
 echo
 
-mpirun $ATHENA/bin/athena.const_scat_opac -i athinput.const_scat_opac
+mpirun $ATHENA/bin/athena.const_scat_opac -i athinput.const_scat_opac_res2x
