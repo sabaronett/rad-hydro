@@ -44,7 +44,7 @@ rsync -a username@rusty.flatironinstitute.org:/home/username/code_folder ~/my_lo
 ##### [GNU Compiler](https://www.nas.nasa.gov/hecc/support/kb/preparing-to-run-on-aitken-rome-nodes_657.html#:~:text=on%20Rome%20processors.-,GNU%20Compilers,-%3A)
 In Athena++'s root,
 ```bash
-./configure.py --prob=[PROBLEM] -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2"
+./configure.py --prob=[PROBLEM] -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2  -mtune=znver1 -mfma -mavx2 -m3dnow -fomit-frame-pointer -fopt-info-all-all=all.all"
 ```
 
 
@@ -52,7 +52,7 @@ In Athena++'s root,
 
 In Athena++'s root,
 ```bash
-./configure.py --prob=[PROBLEM] -implicit_radiation -mpi -hdf5 -h5double --cxx=clang++ --cflag="-march=znver2"
+./configure.py --prob=[PROBLEM] -implicit_radiation -mpi -hdf5 -h5double --cxx=clang++ --cflag="-march=znver2  -mtune=znver1 -mfma -mavx2 -m3dnow -fomit-frame-pointer -fopt-info-all-all=all.all"
 ```
 
 
