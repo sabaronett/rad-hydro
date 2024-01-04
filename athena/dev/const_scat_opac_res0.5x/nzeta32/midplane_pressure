@@ -10,4 +10,4 @@ module purge
 module load slurm python
 echo
 
-python ../../../scripts/midplane_pressure.py 'const_scat_opac'
+python ../../../scripts/midplane_pressure.py 'const_scat_opac_res2x'
