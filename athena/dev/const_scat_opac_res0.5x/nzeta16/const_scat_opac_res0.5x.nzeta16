@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH -p eval -C genoa -n 96
+#SBATCH -N1 --ntasks=32
+#SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
+#SBATCH -t 1:00:00
+
+date
+hostname
+module purge
+module load slurm gcc openmpi hdf5/mpi
+echo
+
+mpirun $ATHENA/bin/athena.const_scat_opac -i athinput.const_scat_opac
