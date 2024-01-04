@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH -p eval -C genoa -n 192
+#SBATCH -p cca -C rome,ib --exclusive
 #SBATCH -N4 --ntasks-per-node=128
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
-#SBATCH -t 1:00:00
+#SBATCH -t 4:00:00
 
 date
 hostname
