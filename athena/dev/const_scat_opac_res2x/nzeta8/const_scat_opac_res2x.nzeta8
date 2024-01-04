@@ -1,6 +1,5 @@
 #!/bin/bash
-#SBATCH -p eval -C genoa -n 192
-#SBATCH -C ib
+#SBATCH -p eval -C genoa,ib
 #SBATCH -N3 --ntasks=512
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
 #SBATCH -t 1:00:00
