@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -p eval -C genoa,ib -n 192 --exclusive
-#SBATCH -N3 --ntasks=512
+#SBATCH -p eval -C genoa,ib -n 192
+#SBATCH -N3 --ntasks-per-node=171
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
 #SBATCH -t 1:00:00
 
