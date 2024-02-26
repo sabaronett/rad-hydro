@@ -34,13 +34,11 @@
 # Project related
 figs/
 radmc3d/
-output/
 *.athdf
 *.hst
 *.npz
 *old*
 *temp*
-*.txt
 *SZ*
 
 # VS Code
