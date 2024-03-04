@@ -1,7 +1,7 @@
 <comment>
 problem          = Constant Opacity
 reference        = 
-configure        = --prob const_opac_raytrace --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=clang++ --cflag="-march=znver2"
+configure        = --prob const_opac_raytrace --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=native -mavx512f"
 
 <job>
 problem_id       = const_opac_raytrace # basename of output filenames
@@ -19,7 +19,7 @@ dt               = 1e-6                # time increment between outputs
 <time>
 cfl_number       = 4e-4                # The Courant, Friedrichs & Lewy No.
 nlim             = -1                  # cycle limit
-tlim             = 1e-1                # time limit
+tlim             = 1e-2                # time limit
 ncycle_out       = 1                   # interval for stdout summary info
 
 <mesh>
