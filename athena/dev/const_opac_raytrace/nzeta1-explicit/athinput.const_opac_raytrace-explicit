@@ -1,10 +1,10 @@
 <comment>
 problem          = Constant Opacity
 reference        = 
-configure        = --prob const_opac_raytrace --coord spherical_polar -nr_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=native -mavx512f"
+configure        = --prob const_opac_raytrace-explicit --coord spherical_polar -nr_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=native -mavx512f"
 
 <job>
-problem_id       = const_opac_raytrace # basename of output filenames
+problem_id       = const_opac_raytrace-explicit # basename of output filenames
 
 <output1>
 file_type        = hdf5                # HDF5 data dump
