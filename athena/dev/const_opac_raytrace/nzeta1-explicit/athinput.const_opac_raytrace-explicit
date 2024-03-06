@@ -19,7 +19,7 @@ dt               = 1e-6                # time increment between outputs
 <time>
 cfl_number       = 4e-4                # The Courant, Friedrichs & Lewy No.
 nlim             = -1                  # cycle limit
-tlim             = 1e-1                # time limit
+tlim             = 1e-2                # time limit
 ncycle_out       = 1                   # interval for stdout summary info
 
 <mesh>
@@ -55,8 +55,13 @@ angle_flag       = 1                   # rotate angular system with local coords
 nmu              = 1                   # unused but expected to avoid fatal error
 nzeta            = 1                   # number of polar angles (0 to pi)
 npsi             = 2                   # number of azimuthal angles (0 to pi)
-prat             = 1.0                 # $a_rT_0^4/P_0$
-crat             = 1.0                 # $c/v_0$
+# prat             = 1.0                 # $a_rT_0^4/P_0$
+# crat             = 1.0                 # $c/v_0$
+unit             = 1                   # compute prat & crat from user-provided units
+T_unit           = 6.14e3              # T_0 [K]
+density_unit     = 4.28e-14            # \rho_0 [g/cm^3]
+length_unit      = 5.98e14             # L_0 [cm]
+molecular_weight = 0.6                 # \mu [g/mol]
 source_flag      = 2                   # do not heat (0) or heat (1) the gas
 
 <problem>
