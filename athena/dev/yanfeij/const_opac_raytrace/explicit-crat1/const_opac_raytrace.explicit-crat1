@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -p gen -C rome --exclusive
+#SBATCH -p cca -C rome --exclusive
 #SBATCH -N1 --ntasks=128
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
 #SBATCH -t 168:00:00
