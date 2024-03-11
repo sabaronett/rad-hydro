@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH -p cca -C rome --exclusive
+#SBATCH -N1 --ntasks=10
+#SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
+#SBATCH -t 0:10:00
+
+date
+hostname
+module purge
+module load slurm gcc openmpi hdf5/mpi
+echo
+
+mpirun $ATHENA/bin/athena.homogeneous_sphere-mod -i athinput.homogeneous_sphere
