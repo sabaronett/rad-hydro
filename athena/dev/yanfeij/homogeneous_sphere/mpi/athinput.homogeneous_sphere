@@ -1,7 +1,7 @@
 <comment>
 problem     = Homogeneous sphere test
 reference   = 
-configure   = --prob=homogeneous_sphere --coord=spherical_polar -nr_radiation -hdf5 -h5double --cxx=gcc --cflag="-march=znver2"
+configure   = --prob=homogeneous_sphere --coord=spherical_polar -nr_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2  -mtune=znver1 -mfma -mavx2 -m3dnow -fomit-frame-pointer -fopt-info-all-all=all.all"
 
 <job>
 problem_id  = hsphere  # problem ID: basename of output filenames
