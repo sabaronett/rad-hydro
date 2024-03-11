@@ -10,4 +10,4 @@ module purge
 module load slurm gcc openmpi hdf5/mpi
 echo
 
-mpirun $ATHENA_YFJ/bin/athena.homogeneous_sphere-rome -i athinput.homogeneous_sphere
+mpirun $ATHENA/bin/athena.homogeneous_sphere-rome -i athinput.homogeneous_sphere
