@@ -9,13 +9,17 @@ problem_id  = hsphere  # problem ID: basename of output filenames
 <output1>
 file_type   = hdf5     # Tabular data dump
 variable    = prim     # variables to be output
-dt          = 1e-2     # Optional data format string
+dt          = 1.0      # Optional data format string
 xdmf        = 0        # disable XDMF output (VisIt)
+
+<output2>
+file_type   = hst      # HDF5 data dump
+dt          = 1e-3     # time increment between outputs
 
 <time>
 cfl_number  = 0.3      # The Courant, Friedrichs, & Lewy (CFL) Number
 nlim        = -1       # cycle limit
-tlim        = 0.01     # time limit
+tlim        = 1.0      # time limit
 
 <mesh>
 nx1         = 400      # Number of zones in X1-direction
@@ -23,7 +27,7 @@ x1min       = 0.1      # minimum value of X1
 x1max       = 7.0617   # maximum value of X1
 ix1_bc      = user     # Inner-X1 boundary condition flag
 ox1_bc      = user     # Outer-X1 boundary condition flag
-x1rat       = 1.0107
+x1rat       = 1.0107   # Size ratio between neighboring cells
 
 nx2         = 32       # Number of zones in X2-direction
 x2min       = 0.0      # minimum value of X2
