@@ -1,0 +1,64 @@
+<comment>
+problem     = Homogeneous sphere test
+reference   = 
+configure   = --prob=homogeneous_sphere --coord=spherical_polar -nr_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2  -mtune=znver1 -mfma -mavx2 -m3dnow -fomit-frame-pointer -fopt-info-all-all=all.all"
+
+<job>
+problem_id  = hsphere  # problem ID: basename of output filenames
+
+<output1>
+file_type   = hdf5     # Tabular data dump
+variable    = prim     # variables to be output
+dt          = 10       # Optional data format string
+xdmf        = 0        # disable XDMF output (VisIt)
+
+<output2>
+file_type   = hst      # HDF5 data dump
+dt          = 1e-2     # time increment between outputs
+
+<time>
+cfl_number  = 0.3      # The Courant, Friedrichs, & Lewy (CFL) Number
+nlim        = -1       # cycle limit
+tlim        = 10       # time limit
+
+<mesh>
+nx1         = 400      # Number of zones in X1-direction
+x1min       = 0.1      # minimum value of X1
+x1max       = 7.0617   # maximum value of X1
+ix1_bc      = user     # Inner-X1 boundary condition flag
+ox1_bc      = user     # Outer-X1 boundary condition flag
+x1rat       = 1.0107   # Size ratio between neighboring cells
+
+nx2         = 32       # Number of zones in X2-direction
+x2min       = 0.0      # minimum value of X2
+x2max       = 3.1415926535897931       # maximum value of X2
+ix2_bc      = periodic # Inner-X2 boundary condition flag
+ox2_bc      = periodic # Outer-X2 boundary condition flag
+
+nx3         = 1        # Number of zones in X3-direction
+x3min       = 0.0      # minimum value of X3
+x3max       = 6.2831853071795862       # maximum value of X3
+ix3_bc      = periodic # Inner-X3 boundary condition flag
+ox3_bc      = periodic # Outer-X3 boundary condition flag
+
+<meshblock>
+nx1         = 40
+nx2         = 32
+nx3         = 1
+
+<hydro>
+gamma       = 1.6666666666667       # gamma = C_p/C_v
+
+<radiation>
+nmu         = 3
+prat        = 0.0 # 0.1
+crat        = 1.0 # 10.0
+angle_flag  = 1
+polar_angle = 1
+nzeta       = 2
+npsi        = 2
+error_limit = 1.e-7
+nlimit      = 300
+source_flag = 0
+
+<problem>
