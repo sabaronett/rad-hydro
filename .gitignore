@@ -39,6 +39,7 @@ radmc3d/
 *.npz
 *old*
 *temp*
+*.txt
 *SZ*
 
 # VS Code
