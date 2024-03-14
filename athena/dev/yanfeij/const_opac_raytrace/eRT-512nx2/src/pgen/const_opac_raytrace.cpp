@@ -277,9 +277,9 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
 void MeshBlock::UserWorkBeforeOutput(ParameterInput *pin) {
   for(int k=ks; k<=ke; k++) {
     for(int j=js; j<=je; j++) {
-      for(int i=is; i<=(ie+NGHOST); i++) {
+      for(int i=is; i<=ie; i++) {
         for (int n=0; n<pnrrad->nang; ++n) {
-          user_out_var(n,k,j,i) = pnrrad->ir(k,j,i-NGHOST,n); // store intensities
+          user_out_var(n,k,j,i) = pnrrad->ir(k,j,i,n); // store intensities
         }
       }
     }
