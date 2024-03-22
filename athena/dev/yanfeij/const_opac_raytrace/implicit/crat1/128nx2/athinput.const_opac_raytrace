@@ -67,8 +67,8 @@ T_unit           = 6.4857241173309e12  # T_0 [K]
 density_unit     = 4.28e-14            # \rho_0 [g/cm^3]
 length_unit      = 5.98e14             # L_0 [cm]
 molecular_weight = 0.6                 # \mu [g/mol]
-nlimit           = 1                   # maximum number of iterations to try
-error_limit      = 1.0e-3              # tolerance level of iteration
+nlimit           = 100                 # maximum number of iterations to try
+error_limit      = 1.0e-6              # tolerance level of iteration
 source_flag      = 0                   # do not heat (0) or heat (1) the gas
 
 <problem>
