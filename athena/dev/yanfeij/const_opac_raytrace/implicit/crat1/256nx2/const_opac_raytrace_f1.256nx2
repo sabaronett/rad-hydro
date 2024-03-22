@@ -1,0 +1,14 @@
+#!/bin/bash
+#SBATCH -p eval -C genoa -n 192 --exclusive
+#SBATCH -w workeramd1002
+#SBATCH -N1 --ntasks=64
+#SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
+#SBATCH -t 1:00:00
+
+date
+hostname
+module purge
+module load slurm gcc openmpi hdf5/mpi
+echo
+
+mpirun $ATHENA_YFJ/bin/athena.const_opac_raytrace_f1-genoa -i athinput.const_opac_raytrace
