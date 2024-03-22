@@ -356,7 +356,7 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
         for (int n=0; n<prad->nang-2; ++n) { 
           ir(k,j,is-i,n) = 0.0;
         }
-        ir(k,j,is-i,prad->nang-2) = F/prad->wmu(0); // enable outward radial angle
+        ir(k,j,is-i,prad->nang-2) = F/prad->wmu(nang-2); // enable outward radial angle
         ir(k,j,is-i,prad->nang-1) = 0.0;            // disable antiparallel angle
  //       printf("ir:%e mu: %e\n",ir(k,j,is-i,prad->nang-2),prad->mu(0,k,j,is-i,prad->nang-2));
       }
