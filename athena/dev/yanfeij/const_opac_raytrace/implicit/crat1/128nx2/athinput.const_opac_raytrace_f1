@@ -1,7 +1,7 @@
 <comment>
 problem          = Constant Opacity
 reference        = 
-configure        = --prob const_opac_raytrace_f1 --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2  -mtune=znver1 -mfma -mavx2 -m3dnow -fomit-frame-pointer -fopt-info-all-all=all.all"
+configure        = --prob const_opac_raytrace_f1 --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=native -mavx512f"
 
 <job>
 problem_id       = const_opac_raytrace # basename of output filenames
@@ -61,7 +61,7 @@ T_unit           = 6.4857241173309e12  # T_0 [K]
 density_unit     = 4.28e-14            # \rho_0 [g/cm^3]
 length_unit      = 5.98e14             # L_0 [cm]
 molecular_weight = 0.6                 # \mu [g/mol]
-nlimit           = 100                 # maximum number of iterations to try
+nlimit           = 1                   # maximum number of iterations to try
 error_limit      = 1.0e-3              # tolerance level of iteration
 source_flag      = 0                   # do not heat (0) or heat (1) the gas
 
