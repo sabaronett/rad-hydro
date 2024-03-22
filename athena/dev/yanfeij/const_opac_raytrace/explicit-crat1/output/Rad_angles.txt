@@ -10,7 +10,7 @@ adv_flag:     1
 nzeta:        2  
 npsi:         2  
 taucell:      5.000000e+00  
-source_flag:  2  
+source_flag:  0  
 nfreq      :  1  
 fre_ratio:    1.000000e+00  
 nu_min:       0.000000e+00  
