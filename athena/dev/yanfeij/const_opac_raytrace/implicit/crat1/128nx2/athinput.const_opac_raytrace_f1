@@ -1,7 +1,7 @@
 <comment>
 problem          = Constant Opacity
 reference        = 
-configure        = --prob const_opac_raytrace_F1 --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2  -mtune=znver1 -mfma -mavx2 -m3dnow -fomit-frame-pointer -fopt-info-all-all=all.all"
+configure        = --prob const_opac_raytrace_f1 --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2  -mtune=znver1 -mfma -mavx2 -m3dnow -fomit-frame-pointer -fopt-info-all-all=all.all"
 
 <job>
 problem_id       = const_opac_raytrace # basename of output filenames
@@ -9,7 +9,7 @@ problem_id       = const_opac_raytrace # basename of output filenames
 <output1>
 file_type        = hdf5                # HDF5 data dump
 variable         = prim                # output variables
-dt               = 10                  # time increment between outputs
+dt               = 1                   # time increment between outputs
 xdmf             = 0                   # disable XDMF output (VisIt)
 
 <output2>
@@ -19,8 +19,8 @@ dt               = 1e-3                # time increment between outputs
 <time>
 cfl_number       = 0.2                 # The Courant, Friedrichs & Lewy No.
 nlim             = -1                  # cycle limit
-tlim             = 10                  # time limit
-ncycle_out       = 1000                # interval for stdout summary info
+tlim             = 1                   # time limit
+ncycle_out       = 1                   # interval for stdout summary info
 
 <mesh>
 nx1              = 256                 # Number of zones in X1-direction
@@ -61,8 +61,8 @@ T_unit           = 6.4857241173309e12  # T_0 [K]
 density_unit     = 4.28e-14            # \rho_0 [g/cm^3]
 length_unit      = 5.98e14             # L_0 [cm]
 molecular_weight = 0.6                 # \mu [g/mol]
-nlimit           = 1000                # maximum number of iterations to try
-error_limit      = 1.0e-6              # tolerance level of iteration
+nlimit           = 100                 # maximum number of iterations to try
+error_limit      = 1.0e-3              # tolerance level of iteration
 source_flag      = 0                   # do not heat (0) or heat (1) the gas
 
 <problem>
