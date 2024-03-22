@@ -16,10 +16,16 @@ xdmf             = 0                   # disable XDMF output (VisIt)
 file_type        = hst                 # HDF5 data dump
 dt               = 1e-3                # time increment between outputs
 
+<output3>
+file_type        = hdf5                # HDF5 data dump
+variable         = uov                 # output variables
+dt               = 10                  # time increment between outputs
+xdmf             = 0                   # disable XDMF output (VisIt)
+
 <time>
 cfl_number       = 0.2                 # The Courant, Friedrichs & Lewy No.
 nlim             = -1                  # cycle limit
-tlim             = 1                   # time limit
+tlim             = 10                  # time limit
 ncycle_out       = 1                   # interval for stdout summary info
 
 <mesh>
