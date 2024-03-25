@@ -1,7 +1,7 @@
 <comment>
 problem          = Constant Opacity
 reference        = 
-configure        = --prob const_opac_raytrace --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=native -mavx512f"
+configure        = --prob const_opac_raytrace --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=icpc --mpiccmd="icpc -lmpi" --cflag="-xCORE-AVX512"
 
 <job>
 problem_id       = const_opac_raytrace # basename of output filenames
