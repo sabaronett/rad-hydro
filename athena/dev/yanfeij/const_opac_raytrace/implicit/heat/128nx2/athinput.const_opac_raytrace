@@ -1,7 +1,7 @@
 <comment>
 problem          = Constant Opacity
 reference        = 
-configure        = --prob const_opac_raytrace --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2  -mtune=znver1 -mfma -mavx2 -m3dnow -fomit-frame-pointer -fopt-info-all-all=all.all"
+configure        = --prob const_opac_raytrace_heat --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2  -mtune=znver1 -mfma -mavx2 -m3dnow -fomit-frame-pointer -fopt-info-all-all=all.all"
 
 <job>
 problem_id       = const_opac_raytrace # basename of output filenames
