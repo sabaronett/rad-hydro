@@ -9,18 +9,18 @@ problem_id       = const_opac_raytrace # basename of output filenames
 <output1>
 file_type        = hdf5                # HDF5 data dump
 variable         = prim                # output variables
-dt               = 1e-1                # time increment between outputs
+dt               = 10                  # time increment between outputs
 xdmf             = 0                   # disable XDMF output (VisIt)
 
 <output2>
 file_type        = hst                 # HDF5 data dump
-dt               = 1e-6                # time increment between outputs
+dt               = 1e-3                # time increment between outputs
 
 <time>
 cfl_number       = 0.1                 # The Courant, Friedrichs & Lewy No.
 nlim             = -1                  # cycle limit
-tlim             = 1e-1                # time limit
-ncycle_out       = 1                   # interval for stdout summary info
+tlim             = 10                  # time limit
+ncycle_out       = 10                  # interval for stdout summary info
 
 <mesh>
 nx1              = 256                 # Number of zones in X1-direction
