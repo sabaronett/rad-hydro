@@ -17,7 +17,6 @@
 
 # Executables
 *.exe
-*.out
 *.app
 
 # Fortran module files
@@ -33,10 +32,15 @@
 
 # Project related
 figs/
-radmc3d/
 *.athdf
+*.binp
+*.fits
 *.hst
+*.inp
+!dustkappa_*.inp
+Makefile
 *.npz
+*.out
 *old*
 *temp*
 *.txt
