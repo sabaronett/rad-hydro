@@ -57,7 +57,6 @@ nmu              = 1                   # unused but expected to avoid fatal erro
 nzeta            = 2                   # no. of polar angles (0 to pi)
 npsi             = 2                   # no. of azimuthal angles (0 to pi)
 n_frequency      = 4                   # no. of frequency groups
-NRAD             = 4*4                 # Add history output columns as needed
 frequency_min    = 1e-4                # [0, \nu_l) left group boundary [k_BT_0/h]
 frequency_max    = 1e0                 # [\nu_r, \inf) right group boundary [k_BT_0/h]
 unit             = 1                   # compute prat & crat from user-provided units

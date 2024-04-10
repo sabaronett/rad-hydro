@@ -350,6 +350,8 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
   Real F = std::pow(T, 4)*std::pow(R/x1min, 2)/4; // can get x1min from pmb->pmy_mesh
   int &nang = prad->nang;
   int &nfreq = prad->nfreq;
+  
+  if (nfreq > 3) { NRAD = 4*nfreq; }
 
   for (int k=ks; k<=ke; ++k) {
     for (int j=js; j<=je; ++j) {
