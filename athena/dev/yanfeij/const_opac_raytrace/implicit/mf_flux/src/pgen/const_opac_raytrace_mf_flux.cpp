@@ -45,7 +45,7 @@ Real VelProfileCyl(const Real rad, const Real phi, const Real z);
 Real gm0, r0, rho0, dslope, p0_over_r0, pslope, gamma_gas;
 Real dfloor;
 Real Omega0;
-Real x1min, npsi, crat, prat, T_unit, kappa_a, R, T;
+Real x1min, kappa_a, R, T;
 } // namespace
 
 // User-defined boundary conditions for disk simulations
@@ -129,10 +129,6 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
 
   // Get (stellar) parameters for radiation
   x1min = pin->GetOrAddReal("mesh", "x1min", 1.0);
-  npsi = pin->GetOrAddReal("radiation", "npsi", 2.0);
-  crat = pin->GetOrAddReal("radiation", "crat", 1.0);
-  prat = pin->GetOrAddReal("radiation", "prat", 1.0);
-  T_unit = pin->GetOrAddReal("radiation", "T_unit", 1.0);
   kappa_a = pin->GetOrAddReal("problem", "kappa_a", 0.0);
   R = pin->GetOrAddReal("problem", "R", 0.001);
   T = pin->GetOrAddReal("problem", "T", 1.0);
@@ -247,26 +243,6 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
     }
   }
 
-  // Now initialize opacity and specific intensity
-  if (NR_RADIATION_ENABLED || IM_RADIATION_ENABLED) {
-    int nfreq = pnrrad->nfreq;
-
-    for (int k=ks; k<=ke; ++k) {
-      for (int j=js; j<=je; ++j) {
-        for (int i=is; i<=ie; ++i) {
-          for (int ifr=0; ifr < nfreq; ++ifr) {                         // opacities
-            pnrrad->sigma_s(k,j,i,ifr) = 0.0;                           // scattering
-            pnrrad->sigma_a(k,j,i,ifr) = phydro->u(IDN,k,j,i)*kappa_a;  // absorption
-            pnrrad->sigma_pe(k,j,i,ifr) = phydro->u(IDN,k,j,i)*kappa_a; // Planck (J)
-            pnrrad->sigma_p(k,j,i,ifr) = phydro->u(IDN,k,j,i)*kappa_a;  // Planck (aT^4)
-          }
-          for (int n=0; n<pnrrad->n_fre_ang; ++n) {
-              pnrrad->ir(k,j,i,n) = 0.0;
-          }
-        }
-      }
-    }
-  }
   return;
 }
 
@@ -350,8 +326,6 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
   Real F = std::pow(T, 4)*std::pow(R/x1min, 2)/4; // can get x1min from pmb->pmy_mesh
   int &nang = prad->nang;
   int &nfreq = prad->nfreq;
-  
-  if (nfreq > 3) { NRAD = 4*nfreq; }
 
   for (int k=ks; k<=ke; ++k) {
     for (int j=js; j<=je; ++j) {
