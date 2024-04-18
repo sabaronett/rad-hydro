@@ -46,7 +46,7 @@ Real PoverR(const Real rad, const Real phi, const Real z);
 Real VelProfileCyl(const Real rad, const Real phi, const Real z);
 int BinarySearchIncreasing(AthenaArray<Real> &arr, int low, int high, const Real target);
 Real LinearInterpolation(Real x, Real x0, Real x1, Real y0, Real y1);
-void GetOpacities(const Real temp, const int ifr, Real &kappa_rf, Real &kappa_pf);
+void GetOpacities(const Real temp, const int ifr, Real &kappa_af, Real &kappa_pf);
 // void GetScatteringOpacities(const Real temp, const int ifr, Real &kappa_sf,
 //                             Real &kappa_rf, Real &kappa_pf);
 
@@ -400,9 +400,9 @@ int BinarySearchIncreasing(AthenaArray<Real> &arr, int low, int high, const Real
 
   while (low <= high) {
     mid = low + (high - low)/2;
-    if ((arr[mid-1] < target) && (target < arr[mid])) {
+    if ((arr(mid-1) < target) && (target < arr(mid))) {
       return mid;
-    } else if (arr[mid] < target) {
+    } else if (arr(mid) < target) {
       low = mid;
     } else
       high = mid;
@@ -429,14 +429,14 @@ Real LinearInterpolation(Real x, Real x0, Real x1, Real y0, Real y1) {
 
 void GetOpacities(const Real temp, const int ifr, Real &kappa_af, Real &kappa_pf) {
   if (temp < temp_table(0)) {
-    kappa_rf = kappa_rf_table(0, ifr);
+    kappa_af = kappa_rf_table(0, ifr);
     kappa_pf = kappa_pf_table(0, ifr);
   } else if (temp > temp_table(ntemp-1)) {
-    kappa_rf = kappa_rf_table(ntemp-1, ifr);
+    kappa_af = kappa_rf_table(ntemp-1, ifr);
     kappa_pf = kappa_pf_table(ntemp-1, ifr);
   } else {
     int i = BinarySearchIncreasing(temp_table, 0, ntemp-1, temp);
-    kappa_rf = LinearInterpolation(temp, temp_table(i-1), temp_table(i),
+    kappa_af = LinearInterpolation(temp, temp_table(i-1), temp_table(i),
                                    kappa_rf_table(i-1, ifr), kappa_rf_table(i, ifr));
     kappa_pf = LinearInterpolation(temp, temp_table(i-1), temp_table(i),
                                    kappa_pf_table(i-1, ifr), kappa_pf_table(i, ifr));
@@ -449,8 +449,8 @@ void GetOpacities(const Real temp, const int ifr, Real &kappa_af, Real &kappa_pf
 //! Gets or interpolates the scattering and total Rosseland and Planck-absorption mean
 //! opacities for the given frequency bin and the given temperature.
 
-// void GetOpacities(const Real temp, const int ifr, Real &kappa_sf, Real &kappa_rf,
-//                   Real &kappa_pf) {
+// void GetScatteringOpacities(const Real temp, const int ifr, Real &kappa_sf, Real &kappa_rf,
+//                             Real &kappa_pf) {
 //   if (temp < temp_table(0)) {
 //     kappa_rf = kappa_rf_table(0, ifr);
 //     kappa_pf = kappa_pf_table(0, ifr);
