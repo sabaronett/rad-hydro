@@ -45,6 +45,7 @@ Makefile
 temp/
 *.txt
 !temp_table.txt
+!kappa_rf_table.txt
 !kappa_sf_table.txt
 !kappa_af_table.txt
 !kappa_pf_table.txt
