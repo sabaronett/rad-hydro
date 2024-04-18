@@ -42,7 +42,7 @@ Makefile
 *.npz
 *.out
 *old*
-*temp*
+temp/
 *.txt
 *SZ*
 
