@@ -35,6 +35,7 @@ figs/
 *.athdf
 *.binp
 *.dat
+debug/
 *.fits
 *.hst
 *.inp
