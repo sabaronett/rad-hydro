@@ -193,7 +193,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     // Read file values into array tables
     for (int i=0; i<ntemp; ++i) {
       fscanf(ftemp_table, "%e", &(temp_table(i)));
-      for (int j=0; i<nfreq; ++j) {
+      for (int j=0; j<nfreq; ++j) {
         // if (scattering) { fscanf(fkappa_sf_table, "%e", &(kappa_sf_table(i, j))); }
         fscanf(fkappa_rf_table, "%e", &(kappa_rf_table(i, j)));
         fscanf(fkappa_pf_table, "%e", &(kappa_pf_table(i, j)));
