@@ -103,6 +103,7 @@ def RosselandMeanOpacities(kappa_nu, dBnu_dT, nu):
 def PlanckMeanOpacities(kappa_nu, Bnu, nu, temp_table):
     numer = integrate.simpson(kappa_nu*Bnu, x=nu)
     denom = integrate.simpson(Bnu, x=nu)
+    numer = np.where(numer < 5e-324, 5e-324, numer)
     kappa = numer/denom
     return kappa
 
