@@ -174,6 +174,7 @@ with open('dustopac.inp', 'w+') as f:
 # BEGIN `radmc3d.inp`===========================================================
 # Monte Carlo parameters
 nphot    = int(1e8)
+nphot_mono = int(1e6)
 countwrite = int(1e5)
 
 # Write the radmc3d.inp control file
@@ -182,8 +183,32 @@ with open('radmc3d.inp', 'w+') as f:
     f.write(f'countwrite = {countwrite}\n')   # nr photons between std. outputs
     f.write('iranfreqmode = 1\n')             # differ RNG seeds per OMP process
     f.write('istar_sphere = 0\n')             # point (0)/sphere (1) star source
-    f.write('mc_weighted_photons = 0\n')      # focus photons toward grid
     f.write(f'nphot = {nphot:d}\n')           # number of photons
-    f.write('scattering_mode_max = 2\n')      # anisotropic scattering
+    f.write(f'nphot_mono = {nphot_mono:d}\n') # number of monochromatic photons
+    f.write('scattering_mode_max = 0\n')      # no scattering (zero dust albedo)
     f.write('setthreads = 18\n')              # Intel Core i7-12700H optimized
 # END `radmc3d.inp`=============================================================
+
+
+# BEGIN `mcmono_wavelength_micron.inp`=================================================
+# Wavelength grid
+lam1     = 0.1e0
+lam2     = 7.0e0
+lam3     = 25.e0
+lam4     = 1.0e4
+n12      = 20
+n23      = 100
+n34      = 30
+lam12    = np.logspace(np.log10(lam1), np.log10(lam2), n12, endpoint=False)
+lam23    = np.logspace(np.log10(lam2), np.log10(lam3), n23, endpoint=False)
+lam34    = np.logspace(np.log10(lam3), np.log10(lam4), n34, endpoint=True)
+lam      = np.concatenate([lam12, lam23, lam34])
+nlam     = lam.size
+
+# Write the wavelength file
+# https://www.ita.uni-heidelberg.de/~dullemond/software/radmc-3d/manual_radmc3d/dustradtrans.html#special-purpose-feature-computing-the-local-radiation-field
+with open('mcmono_wavelength_micron.inp', 'w+') as f:
+    f.write(f'{nlam:d}\n')
+    for value in lam:
+        f.write(f'{value:13.6e}\n')
+# END `mcmono_wavelength_micron.inp`===================================================
