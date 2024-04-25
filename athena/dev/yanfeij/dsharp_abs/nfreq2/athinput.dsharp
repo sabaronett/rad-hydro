@@ -20,7 +20,7 @@ dt               = 1e-4                # time increment between outputs
 cfl_number       = 0.1                 # The Courant, Friedrichs & Lewy No.
 nlim             = -1                  # cycle limit
 tlim             = 1                   # time limit
-ncycle_out       = 10                  # interval for stdout summary info
+ncycle_out       = 1                   # interval for stdout summary info
 
 <mesh>
 nx1              = 256                 # Number of zones in X1-direction
@@ -77,6 +77,6 @@ pslope           = -0.5                # pressure power-law index
 dslope           = -2.25               # density power-law index
 r_star           = 1.16e-4             # solar radius [L_0]
 t_star           = 9.42e-1             # solar temperature [T_0]
-n_temperature    = 1000                # no. of temperature groups
-temperature_min  = 1e-3                # min mean opacity temperature [K]
+n_temperature    = 100                 # no. of temperature groups
+temperature_min  = 1                   # min mean opacity temperature [K]
 temperature_max  = 1e3                 # max mean opacity temperature [K]
