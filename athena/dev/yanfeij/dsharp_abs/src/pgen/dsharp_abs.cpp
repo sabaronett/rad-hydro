@@ -194,7 +194,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     for (int i=0; i<ntemp; ++i) {
       fscanf(ftemp_table, "%le", &(temp_table(i)));
       for (int j=0; j<nfreq; ++j) {
-        // if (scattering) { fscanf(fkappa_sf_table, "%e", &(kappa_sf_table(i, j))); }
+        // if (scattering) { fscanf(fkappa_sf_table, "%le", &(kappa_sf_table(i, j))); }
         fscanf(fkappa_rf_table, "%le", &(kappa_rf_table(i, j)));
         fscanf(fkappa_pf_table, "%le", &(kappa_pf_table(i, j)));
       }
