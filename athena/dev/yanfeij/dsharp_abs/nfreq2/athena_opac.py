@@ -11,8 +11,8 @@
 # input file with the following requred parameters:
 #   <radiation>
 #   n_frequency    # no. of frequency groups
-#   frequency_min  # [0, \nu_l) left group boundary [k_BT_0/h]
-#   frequency_max  (if n_frequency > 2) # [\nu_r, \inf) right group boundary
+#   frequency_min  # [0, \nu_min) [k_BT_0/h] < 0 < [Hz]
+#   frequency_max  (if n_frequency > 2) # [\nu_max, \inf)
 #
 #   <problem>
 #   n_temperature    # no. of temperature groups
@@ -21,7 +21,7 @@
 #
 # Author: Stanley A. Baronett
 # Created: 2024-04-19
-# Updated: 2024-04-20
+# Updated: 2024-04-29
 #==============================================================================
 import numpy as np
 from pathlib import Path
@@ -120,19 +120,23 @@ fname = list(Path('./').glob(f'athinput.*'))[0].parts[0]
 athinput = athena_read.athinput(fname)
 n_frequency = athinput['radiation']['n_frequency']
 T_unit = athinput['radiation']['T_unit']                          # [K]
-frequency_min = athinput['radiation']['frequency_min']*k*T_unit/h # [Hz]
+frequency_min = athinput['radiation']['frequency_min']            # [Hz]
 density_unit = athinput['radiation']['density_unit']              # [g/cm^3]
 length_unit = athinput['radiation']['length_unit']                # [cm]
 n_temperature = athinput['problem']['n_temperature']
 temperature_min = athinput['problem']['temperature_min']          # [K]
 temperature_max = athinput['problem']['temperature_max']          # [K]
-ff = np.asarray(frequency_min)       # frequency group f interfaces [Hz]
 temp_table = np.logspace(np.log10(temperature_min), np.log10(temperature_max),
                          n_temperature)
 Bnu_table = GetBnu_table(temp_table, opac_freq)
 dBnu_dT_table = GetdBnu_dT_table(temp_table, opac_freq)
 kappa_af_table = np.zeros((n_temperature, n_frequency))
 kappa_pf_table = np.zeros((n_temperature, n_frequency))
+
+if frequency_min < 0: # unit switch: code (<0) or cgs (>0)
+    frequency_min *= -k*T_unit/h                                  # [k_BT_0/h]
+
+ff = np.asarray(frequency_min)       # frequency group f interfaces [Hz]
 
 if n_frequency > 2:
     frequency_max = athinput['radiation']['frequency_max']*k*T_unit/h # [Hz]
