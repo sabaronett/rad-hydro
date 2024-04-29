@@ -139,9 +139,11 @@ if frequency_min < 0: # unit switch: code (<0) or cgs (>0)
 ff = np.asarray(frequency_min)       # frequency group f interfaces [Hz]
 
 if n_frequency > 2:
-    frequency_max = athinput['radiation']['frequency_max']*k*T_unit/h # [Hz]
+    frequency_max = athinput['radiation']['frequency_max']        # [Hz]
+    if frequency_max < 0: # unit switch: code (<0) or cgs (>0)
+        frequency_max *= -k*T_unit/h                              # [k_BT_0/h]
     ff = np.logspace(np.log10(frequency_min), np.log10(frequency_max),
-                             n_frequency-1)
+                              n_frequency-1)
 
 ff = np.insert(ff, 0, 0)
 ff = np.append(ff, float('inf'))
