@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH -p cca -C ib-rome --exclusive
+#SBATCH -N1 --ntasks=128
+#SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
+#SBATCH -t 36:00:00
+
+date
+hostname
+module purge
+module load slurm gcc openmpi hdf5/mpi
+echo
+
+mpirun $ATHENA_YFJ/bin/athena.dsharp_abs-rome -i athinput.dsharp -r dsharp.final.rst -t 35:55:00
