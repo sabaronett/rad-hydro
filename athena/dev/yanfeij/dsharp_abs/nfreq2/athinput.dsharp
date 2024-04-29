@@ -14,7 +14,7 @@ xdmf             = 0                   # disable XDMF output (VisIt)
 
 <output2>
 file_type        = hst                 # HDF5 data dump
-dt               = 1e-2                # time increment between outputs
+dt               = 1e-5                # time increment between outputs
 
 <output3>
 file_type        = rst                 # restart file
@@ -23,8 +23,8 @@ dt               = 1                   # time increment between outputs
 <time>
 cfl_number       = 0.1                 # The Courant, Friedrichs & Lewy No.
 nlim             = -1                  # cycle limit
-tlim             = 10                  # time limit
-ncycle_out       = 1000                # interval for stdout summary info
+tlim             = 1                   # time limit
+ncycle_out       = 100                 # interval for stdout summary info
 
 <mesh>
 nx1              = 256                 # Number of zones in X1-direction
