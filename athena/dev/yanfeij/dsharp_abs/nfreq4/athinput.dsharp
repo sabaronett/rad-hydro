@@ -1,7 +1,7 @@
 <comment>
 problem          = Constant Opacity
 reference        = 
-configure        = --prob dsharp_abs --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2  -mtune=znver1 -mfma -mavx2 -m3dnow -fomit-frame-pointer -fopt-info-all-all=all.all"
+configure        = --prob dsharp_abs --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2  -mtune=znver1 -mfma -mavx2 -m3dnow -fopt-info-all-all=all.all"
 
 <job>
 problem_id       = dsharp              # basename of output filenames
@@ -61,8 +61,8 @@ nmu              = 1                   # unused but expected to avoid fatal erro
 nzeta            = 2                   # no. of polar angles (0 to pi)
 npsi             = 2                   # no. of azimuthal angles (0 to pi)
 n_frequency      = 4                   # no. of frequency groups
-frequency_min    = 1e-4                # [0, \nu_l) left group boundary [k_BT_0/h]
-frequency_max    = 1e1                 # [\nu_r, \inf) right group boundary [k_BT_0/h]
+frequency_min    = 1e13                # [0, \nu_min) [k_BT_0/h] < 0 < [Hz]
+frequency_max    = 1e14                # [\nu_max, \inf) [k_BT_0/h] < 0 < [Hz]
 unit             = 1                   # compute prat & crat from user-provided units
 T_unit           = 6.14e3              # T_0 [K]
 density_unit     = 4.28e-14            # \rho_0 [g/cm^3]
