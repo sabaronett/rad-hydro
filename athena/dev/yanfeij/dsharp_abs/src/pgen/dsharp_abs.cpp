@@ -14,7 +14,7 @@
 
 // C++ headers
 #include <algorithm>  // min
-#include <cmath>      // exp, pow, sqrt
+#include <cmath>      // exp, log10, pow, sqrt
 #include <cstdlib>    // srand
 #include <cstring>    // strcmp()
 #include <fstream>
@@ -60,6 +60,7 @@ Real r_star, t_star, kappa_a, kappa_s;          // <problem> (radiation)
 // for frequency dependent opacities
 static bool scattering;
 static int nfreq, ntemp;
+static Real dlog10T;
 static AthenaArray<Real> temp_table;
 static AthenaArray<Real> kappa_rf_table;
 static AthenaArray<Real> kappa_pf_table;
@@ -204,6 +205,8 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     // fclose(fkappa_sf_table);
     fclose(fkappa_rf_table);
     fclose(fkappa_pf_table);
+
+    dlog10T = std::log10(temp_table(1)) - std::log10(temp_table(0));
   }
 
   // enroll user-defined boundary condition
@@ -393,6 +396,7 @@ Real VelProfileCyl(const Real rad, const Real phi, const Real z) {
 //----------------------------------------------------------------------------------------
 //! Iteratively use binary search on a strictly increasing array of Reals to find the
 //! index that right-brackets the target, i.e., array[index - 1] < target < array[index]
+//! NOTE: CONSIDER REMOVING THIS CONVENIENCE FUNCTION
 
 int BinarySearchIncreasing(AthenaArray<Real> &arr, int low, int high, const Real target) {
   int mid;
@@ -435,7 +439,8 @@ void GetOpacities(const Real temp, const int ifr, Real &kappa_af, Real &kappa_pf
     kappa_af = kappa_rf_table(ntemp-1, ifr);
     kappa_pf = kappa_pf_table(ntemp-1, ifr);
   } else {
-    int i = BinarySearchIncreasing(temp_table, 0, ntemp-1, temp);
+    // int i = BinarySearchIncreasing(temp_table, 0, ntemp-1, temp); // consider removal
+    int i = int((std::log10(temp) - std::log10(temp_table(0)))/dlog10T) + 1;
     kappa_af = LinearInterpolation(temp, temp_table(i-1), temp_table(i),
                                    kappa_rf_table(i-1, ifr), kappa_rf_table(i, ifr));
     kappa_pf = LinearInterpolation(temp, temp_table(i-1), temp_table(i),
@@ -478,7 +483,6 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                 int is, int ie, int js, int je, int ks, int ke, int ngh) {
   Real F = std::pow(t_star, 4)*std::pow(r_star/x1min, 2)/4; // can get x1min from pmb->pmy_mesh
   int &nang = prad->nang;
-  int &nfreq = prad->nfreq;
 
   for (int k=ks; k<=ke; ++k) {
     for (int j=js; j<=je; ++j) {
