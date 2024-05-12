@@ -55,7 +55,7 @@ gamma            = 1.6666666666667     # gamma = C_p/C_v = 1 + 2/DoF
 dfloor           = 1e-12               # minimum density
 
 <radiation>
-cfl_rad          = 1.0                 # CFL No. for implicit radiation step
+cfl_rad          = 0.5                 # CFL No. for implicit radiation step
 angle_flag       = 1                   # rotate angular system with local coords
 polar_angle      = 1                   # add radial rays
 nmu              = 1                   # unused but expected to avoid fatal error
