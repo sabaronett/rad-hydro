@@ -57,8 +57,8 @@ nmu              = 1                   # unused but expected to avoid fatal erro
 nzeta            = 2                   # no. of polar angles (0 to pi)
 npsi             = 2                   # no. of azimuthal angles (0 to pi)
 n_frequency      = 8                   # no. of frequency groups
-frequency_min    = 1e-4                # [0, \nu_l) left group boundary [k_BT_0/h]
-frequency_max    = 1e1                 # [\nu_r, \inf) right group boundary [k_BT_0/h]
+frequency_min    = 1e10                # [0, \nu_min) [k_BT_0/h] < 0 < [Hz]
+frequency_max    = 1e15                # [\nu_max, \infty) [k_BT_0/h] < 0 < [Hz]
 unit             = 1                   # compute prat & crat from user-provided units
 T_unit           = 6.14e3              # T_0 [K]
 density_unit     = 4.28e-14            # \rho_0 [g/cm^3]
@@ -66,7 +66,7 @@ length_unit      = 5.98e14             # L_0 [cm]
 molecular_weight = 0.6                 # \mu [g/mol]
 nlimit           = 1000                # maximum no. of iterations to try
 error_limit      = 1e-6                # tolerance level of iteration
-source_flag      = 1                   # do not heat (0) or heat (1) the gas
+source_flag      = 2                   # do not heat (0) or heat (1) the gas
 
 <problem>
 r0               = 0.425278227742474   # disk length normalization [L_0]
