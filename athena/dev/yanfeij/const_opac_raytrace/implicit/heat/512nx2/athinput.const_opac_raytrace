@@ -63,7 +63,7 @@ length_unit      = 5.98e14             # L_0 [cm]
 molecular_weight = 0.6                 # \mu [g/mol]
 nlimit           = 1000                # maximum number of iterations to try
 error_limit      = 1.0e-6              # tolerance level of iteration
-source_flag      = 1                   # do not heat (0) or heat (1) the gas
+source_flag      = 2                   # do not heat (0) or heat (1) the gas
 
 <problem>
 r0               = 0.425278227742474   # disk length normalization [L_0]
