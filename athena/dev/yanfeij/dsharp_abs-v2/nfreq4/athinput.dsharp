@@ -14,17 +14,17 @@ xdmf             = 0                   # disable XDMF output (VisIt)
 
 <output2>
 file_type        = hst                 # HDF5 data dump
-dt               = 1e-4                # time increment between outputs
+dt               = 0.1                 # time increment between outputs
 
 <output3>
 file_type        = rst                 # restart file
-dt               = 1                   # time increment between outputs
+dt               = 10                  # time increment between outputs
 
 <time>
 cfl_number       = 0.1                 # The Courant, Friedrichs & Lewy No.
 nlim             = -1                  # cycle limit
-tlim             = 1                   # time limit
-ncycle_out       = 1                   # interval for stdout summary info
+tlim             = 10                  # time limit
+ncycle_out       = 10                  # interval for stdout summary info
 
 <mesh>
 nx1              = 256                 # Number of zones in X1-direction
@@ -56,7 +56,7 @@ dfloor           = 1e-12               # minimum density
 
 <radiation>
 cfl_rad          = 1.0                 # CFL No. for implicit radiation step
-reduced_factor   = 0.01                # Reduced (fraction of) speed of light
+reduced_factor   = 1.0                 # Reduced (fraction of) speed of light
 angle_flag       = 1                   # rotate angular system with local coords
 polar_angle      = 1                   # add radial rays
 nmu              = 1                   # unused but expected to avoid fatal error
