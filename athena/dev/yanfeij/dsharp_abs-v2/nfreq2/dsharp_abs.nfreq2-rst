@@ -2,7 +2,7 @@
 #SBATCH -p cca -C ib-genoa --exclusive
 #SBATCH -N2 --ntasks-per-node=64
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
-#SBATCH -t 0:30:00
+#SBATCH -t 0:05:00
 
 date
 hostname
@@ -10,4 +10,4 @@ module purge
 module load slurm gcc openmpi hdf5/mpi
 echo
 
-mpirun $ATHENA_YFJ/bin/athena.dsharp_abs-genoa -i athinput.dsharp-rst -r dsharp.00001.rst -t 0:25:00
+mpirun $ATHENA_YFJ/bin/athena.dsharp_abs-genoa -i athinput.dsharp-rst -r dsharp.00001.rst -t 0:04:00
