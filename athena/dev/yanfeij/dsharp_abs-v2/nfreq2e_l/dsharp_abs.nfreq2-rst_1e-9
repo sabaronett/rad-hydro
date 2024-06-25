@@ -10,4 +10,4 @@ module purge
 module load slurm gcc openmpi hdf5/mpi
 echo
 
-mpirun $ATHENA_YFJ/bin/athena.dsharp_abs-genoa -i athinput.dsharp-rst -r dsharp.00001.rst -t 0:04:00
+mpirun $ATHENA_YFJ/bin/athena.dsharp_abs-genoa -i athinput.dsharp-rst_1e-9 -r dsharp.00001.rst -t 0:04:00
