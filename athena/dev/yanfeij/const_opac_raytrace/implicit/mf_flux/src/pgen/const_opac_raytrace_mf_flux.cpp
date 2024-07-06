@@ -741,18 +741,18 @@ void DiskOuterX3(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceF
 void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim)
 {
   NRRadiation *prad = pmb->pnrrad;
-  int il = pmb->is; int jl = pmb->js; int kl = pmb->ks;
+  int il = pmb->is+1; int jl = pmb->js; int kl = pmb->ks;
   int iu = pmb->ie; int ju = pmb->je; int ku = pmb->ke;
-  il -= NGHOST;
-  iu += NGHOST;
-  if(ju > jl){
-    jl -= NGHOST;
-    ju += NGHOST;
-  }
-  if(ku > kl){
-    kl -= NGHOST;
-    ku += NGHOST;
-  }
+  // il -= NGHOST;
+  // iu += NGHOST;
+  // if(ju > jl){
+  //   jl -= NGHOST;
+  //   ju += NGHOST;
+  // }
+  // if(ku > kl){
+  //   kl -= NGHOST;
+  //   ku += NGHOST;
+  // }
 
   for (int k=kl; k<=ku; ++k) {
     for (int j=jl; j<=ju; ++j) {
