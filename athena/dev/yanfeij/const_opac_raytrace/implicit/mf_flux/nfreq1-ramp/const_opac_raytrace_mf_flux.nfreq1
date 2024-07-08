@@ -10,4 +10,4 @@ module purge
 module load slurm gcc openmpi hdf5/mpi
 echo
 
-mpirun $ATHENA_YFJ/bin/athena.ramp_opac_raytrace_mf_flux-genoa -i athinput.const_opac_raytrace
+mpirun $ATHENA_YFJ/bin/athena.ramp_opac_raytrace_mf_flux -i athinput.const_opac_raytrace
