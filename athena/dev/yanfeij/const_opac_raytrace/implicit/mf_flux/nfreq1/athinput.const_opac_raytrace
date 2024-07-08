@@ -11,6 +11,7 @@ file_type        = hdf5                # HDF5 data dump
 variable         = prim                # output variables
 dt               = 1                   # time increment between outputs
 xdmf             = 0                   # disable XDMF output (VisIt)
+ghost_zones      = 1
 
 <output2>
 file_type        = hst                 # HDF5 data dump
