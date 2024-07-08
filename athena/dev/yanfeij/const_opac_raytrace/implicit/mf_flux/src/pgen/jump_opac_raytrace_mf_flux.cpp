@@ -741,7 +741,7 @@ void DiskOuterX3(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceF
 void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim)
 {
   NRRadiation *prad = pmb->pnrrad;
-  int il = pmb->is+3; int jl = pmb->js; int kl = pmb->ks;
+  int il = pmb->is; int jl = pmb->js; int kl = pmb->ks;
   int iu = pmb->ie; int ju = pmb->je; int ku = pmb->ke;
   // il -= NGHOST;
   // iu += NGHOST;
@@ -759,9 +759,15 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim)
       for (int i=il; i<=iu; ++i) {
         for (int ifr=0; ifr < prad->nfreq; ++ifr) {            // opacities
           prad->sigma_s(k,j,i,ifr) = 0.0;                      // scattering
-          prad->sigma_a(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_a;  // absorption
-          prad->sigma_pe(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_a; // Planck mean (J)
-          prad->sigma_p(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_a;  // Planck mean (aT^4)
+          if (i < 26) {
+            prad->sigma_a(k,j,i,ifr) = 0.0;
+            prad->sigma_pe(k,j,i,ifr) = 0.0;
+            prad->sigma_p(k,j,i,ifr) = 0.0;
+          } else {
+            prad->sigma_a(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_a;  // absorption
+            prad->sigma_pe(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_a; // Planck mean (J)
+            prad->sigma_p(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_a;  // Planck mean (aT^4)
+          }
         }
 
       }
