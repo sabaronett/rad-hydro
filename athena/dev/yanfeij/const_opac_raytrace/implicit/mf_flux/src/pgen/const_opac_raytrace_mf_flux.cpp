@@ -330,7 +330,7 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
   for (int k=ks; k<=ke; ++k) {
     for (int j=js; j<=je; ++j) {
       for (int i=1; i<=ngh; ++i) {
-        flux = std::pow(T, 4)*std::pow(R/pco->x1v(i), 2)/4;
+        flux = std::pow(T, 4)*std::pow(R/pco->x1v(is-i), 2)/4;
         if (nfreq == 1) {                                               // gray approx
           for (int n=0; n<nang-2; ++n) {                                // non-radial rays
             if (prad->mu(0,k,j,is-i,n) < 0.0)                           // exiting rays
