@@ -6,7 +6,7 @@
 //! \file const_opac_raytrace_mf_flux.cpp
 //! \brief Initializes stratified Keplerian accretion disk in both cylindrical and
 //! spherical polar coordinates.  Initial conditions are in vertical hydrostatic eqm.
-//! The inner radial boundary emits stellar radiation along only the most-radial rays.
+//! The inner radial boundary emits stellar radiation along only the radial rays.
 
 // C headers
 
@@ -323,34 +323,41 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                 const AthenaArray<Real> &w, FaceField &b, AthenaArray<Real> &ir,
                 Real time, Real dt,
                 int is, int ie, int js, int je, int ks, int ke, int ngh) {
-  Real F = std::pow(T, 4)*std::pow(R/x1min, 2)/4; // can get x1min from pmb->pmy_mesh
-  int &nang = prad->nang;
-  int &nfreq = prad->nfreq;
+  Real flux;
+  int &nang = prad->nang;                                               // total angles
+  int &nfreq = prad->nfreq;                                             // total bands
 
   for (int k=ks; k<=ke; ++k) {
     for (int j=js; j<=je; ++j) {
       for (int i=1; i<=ngh; ++i) {
-        if (nfreq == 1) {                       // gray approximation
-          for (int n=0; n<nang-2; ++n) {
-            ir(k,j,is-i,n) = 0.0;               // disable non-radial rays
-          }
-          ir(k,j,is-i,nang-2) = F/prad->wmu(0); // enable outward radial ray
-          ir(k,j,is-i,nang-1) = 0.0;            // disable inward radial ray
-        } else {                                // multifrequency
-          for (int ifr=0; ifr<nfreq; ++ifr) {
-            for (int n=0; n<nang-2; ++n) {
-              ir(k,j,is-i,ifr*nang+n) = 0.0;    // disable non-radial rays
+        flux = std::pow(T, 4)*std::pow(R/pco->x1v(i), 2)/4;
+        if (nfreq == 1) {                                               // gray approx
+          for (int n=0; n<nang-2; ++n) {                                // non-radial rays
+            if (prad->mu(0,k,j,is-i,n) < 0.0)                           // exiting rays
+              ir(k,j,is-i,n) = ir(k,j,is,n);                            // disk emission
+            else                                                        // entering rays
+              ir(k,j,is-i,n) = 0.0;                                     // disable
+          }                                                             // radial rays
+          ir(k,j,is-i,nang-2) = flux/prad->wmu(0);                      // stellar ray
+          ir(k,j,is-i,nang-1) = ir(k,j,is,n);                           // disk emission
+        } else {                                                        // multifrequency
+          for (int ifr=0; ifr<nfreq; ++ifr) {                           // each band
+            for (int n=0; n<nang-2; ++n) {                              // non-radial rays
+              if (prad->mu(0,k,j,is-i,ifr*nang+n) < 0.0)                // exiting rays
+                ir(k,j,is-i,ifr*nang+n) = ir(k,j,is,ifr*nang+n);        // disk emission
+              else                                                      // entering rays
+                ir(k,j,is-i,ifr*nang+n) = 0.0;                          // disable
             }
             if (ifr < nfreq-1) {
               ir(k,j,is-i,ifr*nang+nang-2) =
-                  F*prad->IntPlanckFunc(prad->nu_grid(ifr)/T, prad->nu_grid(ifr+1)/T)\
-                  /prad->wmu(0);                // enable outward radial ray
+                  flux*prad->IntPlanckFunc(prad->nu_grid(ifr)/T, prad->nu_grid(ifr+1)/T)\
+                  /prad->wmu(0);                                        // stellar ray
             } else {
               ir(k,j,is-i,ifr*nang+nang-2) =
-                  F*(1.0 - prad->FitIntPlanckFunc(prad->nu_grid(ifr)/T))\
-                  /prad->wmu(0);                // enable outward radial ray
+                  flux*(1.0 - prad->FitIntPlanckFunc(prad->nu_grid(ifr)/T))\
+                  /prad->wmu(0);                                        // stellar ray
             }
-            ir(k,j,is-i,ifr*nang+nang-1) = 0.0; // disable inward radial ray
+            ir(k,j,is-i,ifr*nang+nang-1) = ir(k,j,is,ifr*nang+nang-1);  // disk emission
           }
         }
       }
@@ -365,16 +372,16 @@ void RadOuterX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                 const AthenaArray<Real> &w, FaceField &b, AthenaArray<Real> &ir,
                 Real time, Real dt,
                 int is, int ie, int js, int je, int ks, int ke, int ngh) {
-  int nang = prad->nang;       // total n-hat angles N
+  int nang = prad->nang;                    // total n-hat angles N
 
   for (int k=ks; k<=ke; ++k) {
     for (int j=js; j<=je; ++j) {
       for (int i=1; i<=ngh; ++i) {
         for (int n=0; n<nang; ++n) {
-          if(prad->mu(0,k,j,ie+i,n) > 0.0)
-            ir(k,j,ie+i,n) = ir(k,j,ie,n);
-          else
-            ir(k,j,ie+i,n) = 0.0;
+          if(prad->mu(0,k,j,ie+i,n) > 0.0)  // exiting rays
+            ir(k,j,ie+i,n) = ir(k,j,ie,n);  // disk emission
+          else                              // entering rays
+            ir(k,j,ie+i,n) = 0.0;           // disable
         }
       }
     }
@@ -388,13 +395,16 @@ void RadInnerX2(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                 const AthenaArray<Real> &w, FaceField &b, AthenaArray<Real> &ir,
                 Real time, Real dt,
                 int is, int ie, int js, int je, int ks, int ke, int ngh) {
-  int nang = prad->nang;       // total n-hat angles N
+  int nang = prad->nang;                    // total n-hat angles N
 
   for (int k=ks; k<=ke; ++k) {
     for (int j=1; j<=ngh; ++j) {
       for (int i=is; i<=ie; ++i) {
         for (int n=0; n<nang; ++n) {
-          ir(k,js-j,i,n) = 0.0;
+          if(prad->mu(1,k,js-j,i,n) < 0.0)  // exiting rays
+            ir(k,js-j,i,n) = ir(k,js,i,n);  // disk emission
+          else                              // entering rays
+            ir(k,js-j,i,n) = 0.0;           // disable
         }
       }
     }
@@ -408,13 +418,16 @@ void RadOuterX2(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                 const AthenaArray<Real> &w, FaceField &b, AthenaArray<Real> &ir,
                 Real time, Real dt,
                 int is, int ie, int js, int je, int ks, int ke, int ngh) {
-  int nang = prad->nang;       // total n-hat angles N
+  int nang = prad->nang;                    // total n-hat angles N
 
   for (int k=ks; k<=ke; ++k) {
     for (int j=1; j<=ngh; ++j) {
       for (int i=is; i<=ie; ++i) {
         for (int n=0; n<nang; ++n) {
-          ir(k,je+j,i,n) = 0.0;
+          if(prad->mu(1,k,je+j,i,n) > 0.0)  // exiting rays
+            ir(k,je+j,i,n) = ir(k,je,i,n);  // disk emission
+          else                              // entering rays
+            ir(k,je+j,i,n) = 0.0;           // disable
         }
       }
     }
@@ -428,13 +441,16 @@ void RadInnerX3(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                 const AthenaArray<Real> &w, FaceField &b, AthenaArray<Real> &ir,
                 Real time, Real dt,
                 int is, int ie, int js, int je, int ks, int ke, int ngh) {
-  int nang = prad->nang;       // total n-hat angles N
+  int nang = prad->nang;                    // total n-hat angles N
 
   for (int k=1; k<=ngh; ++k) {
     for (int j=js; j<=je; ++j) {
       for (int i=is; i<=ie; ++i) {
         for (int n=0; n<nang; ++n) {
-          ir(ks-k,j,i,n) = 0.0;
+          if(prad->mu(2,ks-k,j,i,n) < 0.0)  // exiting rays
+            ir(ks-k,j,i,n) = ir(ks,j,i,n);  // disk emission
+          else                              // entering rays
+            ir(ks-k,j,i,n) = 0.0;           // disable
         }
       }
     }
@@ -448,13 +464,16 @@ void RadOuterX3(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                 const AthenaArray<Real> &w, FaceField &b, AthenaArray<Real> &ir,
                 Real time, Real dt,
                 int is, int ie, int js, int je, int ks, int ke, int ngh) {
-  int nang = prad->nang;       // total n-hat angles N
+  int nang = prad->nang;                    // total n-hat angles N
 
   for (int k=1; k<=ngh; ++k) {
     for (int j=js; j<=je; ++j) {
       for (int i=is; i<=ie; ++i) {
         for (int n=0; n<nang; ++n) {
-          ir(ke+k,j,i,n) = 0.0;
+          if(prad->mu(2,ke+k,j,i,n) > 0.0)  // exiting rays
+            ir(ke+k,j,i,n) = ir(ke,j,i,n);  // disk emission
+          else                              // entering rays
+            ir(ke+k,j,i,n) = 0.0;           // disable
         }
       }
     }
