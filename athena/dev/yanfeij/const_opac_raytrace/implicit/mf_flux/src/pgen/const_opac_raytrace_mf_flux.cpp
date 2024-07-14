@@ -339,7 +339,7 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
               ir(k,j,is-i,n) = 0.0;                                     // disable
           }                                                             // radial rays
           ir(k,j,is-i,nang-2) = flux/prad->wmu(0);                      // stellar ray
-          ir(k,j,is-i,nang-1) = ir(k,j,is,nang-1);                           // disk emission
+          ir(k,j,is-i,nang-1) = ir(k,j,is,nang-1);                      // disk emission
         } else {                                                        // multifrequency
           for (int ifr=0; ifr<nfreq; ++ifr) {                           // each band
             for (int n=0; n<nang-2; ++n) {                              // non-radial rays
