@@ -2,7 +2,7 @@
 #SBATCH -p cca -C ib-genoa --exclusive
 #SBATCH -N2 --ntasks-per-node=64
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
-#SBATCH -t 0:30:00
+#SBATCH -t 0:15:00
 
 date
 hostname
@@ -10,4 +10,4 @@ module purge
 module load slurm gcc openmpi hdf5/mpi
 echo
 
-mpirun $ATHENA_YFJ/bin/athena.const_opac_raytrace_mf_flux-genoa -i athinput.const_opac_raytrace
+mpirun $ATHENA_YFJ/bin/athena.const_opac_raytrace_mf_flux -i athinput.const_opac_raytrace
