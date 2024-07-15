@@ -659,7 +659,7 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim)
           prad->sigma_s(k,j,i,ifr) = 0.0;                        // scattering
           prad->sigma_a(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_a;    // absorption
           prad->sigma_pe(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_a;   // Planck mean (J)
-          if (prad->set_source_flag = 0)
+          if (prad->set_source_flag == 0)
             prad->sigma_p(k,j,i,ifr) = 0;                        // Planck mean (aT^4)
           else
             prad->sigma_p(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_a;
