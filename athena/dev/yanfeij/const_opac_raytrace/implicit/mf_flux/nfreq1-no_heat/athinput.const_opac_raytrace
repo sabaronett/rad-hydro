@@ -53,11 +53,11 @@ dfloor           = 1e-12               # minimum density
 
 <radiation>
 cfl_rad          = 1.0                 # CFL No. for implicit radiation step
-reduced_factor   = 0.01                # Reduced (fraction of) speed of light
+reduced_factor   = 1.0                 # Reduced (fraction of) speed of light
 angle_flag       = 1                   # rotate angular system with local coords
 polar_angle      = 1                   # add radial rays
 nmu              = 1                   # unused but expected to avoid fatal error
-nzeta            = 1                   # no. of polar angles (0 to pi/2)
+nzeta            = 2                   # no. of polar angles (0 to pi/2)
 npsi             = 2                   # no. of azimuthal angles (0 to pi)
 unit             = 1                   # compute prat & crat from user-provided units
 T_unit           = 6.14e3              # T_0 [K]
