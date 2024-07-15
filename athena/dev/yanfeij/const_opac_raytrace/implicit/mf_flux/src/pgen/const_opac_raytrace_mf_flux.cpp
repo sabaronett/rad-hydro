@@ -401,10 +401,7 @@ void RadInnerX2(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
     for (int j=1; j<=ngh; ++j) {
       for (int i=is; i<=ie; ++i) {
         for (int n=0; n<nang; ++n) {
-          if(prad->mu(1,k,js-j,i,n) < 0.0)  // exiting rays
-            ir(k,js-j,i,n) = ir(k,js,i,n);  // disk emission
-          else                              // entering rays
-            ir(k,js-j,i,n) = 0.0;           // disable
+          ir(k,js-j,i,n) = 0.0;             // disable
         }
       }
     }
@@ -424,10 +421,7 @@ void RadOuterX2(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
     for (int j=1; j<=ngh; ++j) {
       for (int i=is; i<=ie; ++i) {
         for (int n=0; n<nang; ++n) {
-          if(prad->mu(1,k,je+j,i,n) > 0.0)  // exiting rays
-            ir(k,je+j,i,n) = ir(k,je,i,n);  // disk emission
-          else                              // entering rays
-            ir(k,je+j,i,n) = 0.0;           // disable
+          ir(k,je+j,i,n) = 0.0;             // disable
         }
       }
     }
@@ -447,10 +441,7 @@ void RadInnerX3(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
     for (int j=js; j<=je; ++j) {
       for (int i=is; i<=ie; ++i) {
         for (int n=0; n<nang; ++n) {
-          if(prad->mu(2,ks-k,j,i,n) < 0.0)  // exiting rays
-            ir(ks-k,j,i,n) = ir(ks,j,i,n);  // disk emission
-          else                              // entering rays
-            ir(ks-k,j,i,n) = 0.0;           // disable
+          ir(ks-k,j,i,n) = 0.0;             // disable
         }
       }
     }
@@ -470,10 +461,7 @@ void RadOuterX3(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
     for (int j=js; j<=je; ++j) {
       for (int i=is; i<=ie; ++i) {
         for (int n=0; n<nang; ++n) {
-          if(prad->mu(2,ke+k,j,i,n) > 0.0)  // exiting rays
-            ir(ke+k,j,i,n) = ir(ke,j,i,n);  // disk emission
-          else                              // entering rays
-            ir(ke+k,j,i,n) = 0.0;           // disable
+          ir(ke+k,j,i,n) = 0.0;             // disable
         }
       }
     }
