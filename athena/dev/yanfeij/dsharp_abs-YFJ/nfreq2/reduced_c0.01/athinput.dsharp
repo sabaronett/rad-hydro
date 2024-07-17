@@ -55,7 +55,7 @@ gamma            = 1.6666666666667     # gamma = C_p/C_v = 1 + 2/DoF
 dfloor           = 1e-12               # minimum density
 
 <radiation>
-reduced_c        = 1e-2                # Reduced speed of light [L_0/T_0]
+reduced_factor   = 0.1                 # Reduced speed of light [L_0/T_0]
 angle_flag       = 1                   # rotate angular system with local coords
 polar_angle      = 1                   # add radial rays
 nmu              = 1                   # unused but expected to avoid fatal error

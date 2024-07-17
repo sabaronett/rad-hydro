@@ -71,7 +71,7 @@ density_unit     = 4.28e-14            # \rho_0 [g/cm^3]
 length_unit      = 5.98e14             # L_0 [cm]
 molecular_weight = 0.6                 # \mu [g/mol]
 nlimit           = 1000                # maximum no. of iterations to try
-error_limit      = 1e-6                # tolerance level of iteration
+error_limit      = 1e-7                # tolerance level of iteration
 source_flag      = 1                   # do not heat (0) or heat (1) the gas
 
 <problem>

@@ -323,13 +323,24 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                 const AthenaArray<Real> &w, FaceField &b, AthenaArray<Real> &ir,
                 Real time, Real dt,
                 int is, int ie, int js, int je, int ks, int ke, int ngh) {
-  Real F = std::pow(T, 4)*std::pow(R/x1min, 2)/4; // can get x1min from pmb->pmy_mesh
+  
   int &nang = prad->nang;
   int &nfreq = prad->nfreq;
+
+  // set constant luminosity in ghostzones
+  // compute 1/r^2 flux as function of x1
+
+  // YFJ: try another model with even less density inner near
+  // inner radial boundary to ensure optically thin for both codes
+
+  // ZZ: if this doesn't help, try reducing overall disk density
+  // and thus disk opacity
+  // SAB: multiply sigma opacities by fractional prefactor
 
   for (int k=ks; k<=ke; ++k) {
     for (int j=js; j<=je; ++j) {
       for (int i=1; i<=ngh; ++i) {
+        Real F = std::pow(T, 4)*std::pow(R/[r@i], 2)/4; // find how to access r@i
         if (nfreq == 1) {                       // gray approximation
           for (int n=0; n<nang-2; ++n) {
             ir(k,j,is-i,n) = 0.0;               // disable non-radial rays
