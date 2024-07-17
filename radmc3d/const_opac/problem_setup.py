@@ -8,7 +8,7 @@
 #
 # Author: Stanley A. Baronett
 # Created: 2023-11-08
-# Updated: 2023-12-12
+# Updated: 2024-07-14
 #===============================================================================
 import numpy as np
 
@@ -198,8 +198,8 @@ with open(f'dustkappa_{name}.inp', 'w+') as f:
 
 # BEGIN `radmc3d.inp`===========================================================
 # Monte Carlo parameters
-nphot    = int(1e8)
-nphot_mono = int(1e6)
+nphot    = int(1e9)
+nphot_mono = int(1e7)
 countwrite = int(1e5)
 
 # Write the radmc3d.inp control file
