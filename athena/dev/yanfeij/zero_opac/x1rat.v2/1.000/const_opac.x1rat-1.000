@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -p gen -C ib-genoa --exclusive
+#SBATCH -p cca -C ib-genoa --exclusive
 #SBATCH -N1 --ntasks-per-node=16
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
 #SBATCH -t 0:05:00
