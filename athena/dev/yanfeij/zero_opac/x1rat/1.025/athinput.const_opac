@@ -1,7 +1,7 @@
 <comment>
 problem          = Constant Opacity
 reference        = 
-configure        = --prob const_opac --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2 -mavx2"
+configure        = --prob const_opac --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double
 
 <job>
 problem_id       = const_opac          # basename of output filenames
@@ -9,24 +9,28 @@ problem_id       = const_opac          # basename of output filenames
 <output1>
 file_type        = hdf5                # HDF5 data dump
 variable         = prim                # output variables
-dt               = 0.01                # time increment between outputs
+dt               = 1e-3                # time increment between outputs
 xdmf             = 0                   # disable XDMF output (VisIt)
 
 <output2>
 file_type        = hst                 # HDF5 data dump
-dt               = 1e-8                # time increment between outputs
+dt               = 1e-13               # time increment between outputs
+
+<output3>
+file_type        = rst                 # restart file
+dt               = 1e-3                # time increment between outputs
 
 <time>
 cfl_number       = 0.1                 # The Courant, Friedrichs & Lewy No.
 nlim             = -1                  # cycle limit
-tlim             = 0.01                # time limit
-ncycle_out       = 10000               # interval for stdout summary info
+tlim             = 1e-3                # time limit
+ncycle_out       = 1000                # interval for stdout summary info
 
 <mesh>
 nx1              = 1024                # Number of zones in X1-direction
 x1min            = 0.250163663377926   # minimum value of X1
 x1max            = 2.501636633779264   # maximum value of X1
-x1rat            = 1.080               # geometric spacing factor
+x1rat            = 1.025               # geometric spacing factor
 ix1_bc           = user                # inner-X1 boundary flag
 ox1_bc           = user                # outer-X1 boundary flag
 
