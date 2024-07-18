@@ -26,7 +26,7 @@ ncycle_out       = 10000               # interval for stdout summary info
 nx1              = 1024                # Number of zones in X1-direction
 x1min            = 0.250163663377926   # minimum value of X1
 x1max            = 2.501636633779264   # maximum value of X1
-x1rat            = 1.095               # geometric spacing factor
+x1rat            = 1.090               # geometric spacing factor
 ix1_bc           = user                # inner-X1 boundary flag
 ox1_bc           = user                # outer-X1 boundary flag
 
