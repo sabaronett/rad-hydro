@@ -14,7 +14,7 @@ xdmf             = 0                   # disable XDMF output (VisIt)
 
 <output2>
 file_type        = hst                 # HDF5 data dump
-dt               = 1e-3                # time increment between outputs
+dt               = 1e-9                # time increment between outputs
 
 <time>
 cfl_number       = 0.1                 # The Courant, Friedrichs & Lewy No.
