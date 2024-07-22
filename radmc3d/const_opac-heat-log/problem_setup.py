@@ -211,7 +211,7 @@ with open('radmc3d.inp', 'w+') as f:
     f.write(f'nphot = {nphot:d}\n')           # number of photons
     f.write(f'nphot_mono = {nphot_mono:d}\n') # number of monochromatic photons
     f.write('scattering_mode_max = 0\n')      # no scattering (zero dust albedo)
-    f.write('setthreads = 18\n')             # AMD Rome optimized
+    f.write('setthreads = 122\n')             # AMD Rome optimized
 # END `radmc3d.inp`=============================================================
 
 

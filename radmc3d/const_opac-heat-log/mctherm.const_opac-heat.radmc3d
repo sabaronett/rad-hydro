@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -p cca -C ib-rome --exclusive
+#SBATCH -p gen -C ib-rome --exclusive
 #SBATCH -N1 --ntasks-per-node=128
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
 #SBATCH -t 2:00:00
