@@ -42,11 +42,11 @@ with open('amr_grid.inp', 'w+') as f:
     f.write('1 1 0\n')                        # Include r,theta coordinates
     f.write(f'{nr:d} {ntheta:d} {nphi:d}\n')  # Size of grid
     for value in ri:
-        f.write(f'{value:13.6e}\n')           # X coordinates (cell walls)
+        f.write(f'{value:.16e}\n')           # X coordinates (cell walls)
     for value in thetai:
-        f.write(f'{value:13.6e}\n')           # Y coordinates (cell walls)
+        f.write(f'{value:.16e}\n')           # Y coordinates (cell walls)
     for value in phii:
-        f.write(f'{value:13.6e}\n')           # Z coordinates (cell walls)
+        f.write(f'{value:.16e}\n')           # Z coordinates (cell walls)
 # END `amr_grid.inp`============================================================
 
 
@@ -70,7 +70,7 @@ nlam     = lam.size
 with open('wavelength_micron.inp', 'w+') as f:
     f.write(f'{nlam:d}\n')
     for value in lam:
-        f.write(f'{value:13.6e}\n')
+        f.write(f'{value:.16e}\n')
 # END `wavelength_micron.inp`===================================================
 
 
@@ -91,11 +91,11 @@ pstar    = np.array([0.,0.,0.])               # position
 with open('stars.inp', 'w+') as f:
     f.write('2\n')
     f.write(f'1 {nlam:d}\n\n')
-    f.write(f'{rstar:13.6e} {mstar:13.6e} {pstar[0]:13.6e} {pstar[1]:13.6e} '\
-            + f'{pstar[2]:13.6e}\n\n')
+    f.write(f'{rstar:.16e} {mstar:.16e} {pstar[0]:.16e} {pstar[1]:.16e} '\
+            + f'{pstar[2]:.16e}\n\n')
     for value in lam:
-        f.write(f'{value:13.6e}\n')
-    f.write(f'\n{-tstar:13.6e}\n')
+        f.write(f'{value:.16e}\n')
+    f.write(f'\n{-tstar:.16e}\n')
 # END `stars.inp`===============================================================
 
 
@@ -152,7 +152,7 @@ with open('dust_density.inp', 'w+') as f:
     f.write(f'{nr*ntheta*nphi:d}\n')          # Nr of cells
     f.write('1\n')                            # Nr of dust species
     data = rhod.ravel(order='F')              # Fortran-style indexing
-    data.tofile(f, sep='\n', format='%13.6e')
+    data.tofile(f, sep='\n', format='%.16e')
     f.write('\n')
 # END `dust_density.inp`========================================================
 
@@ -192,7 +192,7 @@ with open(f'dustkappa_{name}.inp', 'w+') as f:
     f.write(f'{iformat:d}\n')
     f.write(f'{nlam:d}\n\n')
     for value in lam:
-        f.write(f'{value:13.6e} {kappa_a:13.6e}\n')
+        f.write(f'{value:.16e} {kappa_a:.16e}\n')
 # END `dustkappa_[name].inp`===================================================
 
 
@@ -211,7 +211,7 @@ with open('radmc3d.inp', 'w+') as f:
     f.write(f'nphot = {nphot:d}\n')           # number of photons
     f.write(f'nphot_mono = {nphot_mono:d}\n') # number of monochromatic photons
     f.write('scattering_mode_max = 0\n')      # no scattering (zero dust albedo)
-    f.write('setthreads = 122\n')             # AMD Rome optimized
+    f.write('setthreads = 18\n')             # AMD Rome optimized
 # END `radmc3d.inp`=============================================================
 
 
@@ -235,5 +235,5 @@ nlam     = lam.size
 with open('mcmono_wavelength_micron.inp', 'w+') as f:
     f.write(f'{nlam:d}\n')
     for value in lam:
-        f.write(f'{value:13.6e}\n')
+        f.write(f'{value:.16e}\n')
 # END `mcmono_wavelength_micron.inp`===================================================
