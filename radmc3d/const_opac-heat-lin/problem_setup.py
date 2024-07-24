@@ -200,7 +200,7 @@ with open(f'dustkappa_{name}.inp', 'w+') as f:
 # Monte Carlo parameters
 nphot      = int(1e10)
 nphot_mono = int(1e8)
-countwrite = int(1e8)
+countwrite = int(1e7)
 
 # Write the radmc3d.inp control file
 # https://www.ita.uni-heidelberg.de/~dullemond/software/radmc-3d/manual_radmc3d/clioptions.html#additional-arguments-general
