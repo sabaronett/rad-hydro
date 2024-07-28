@@ -7,18 +7,18 @@
 # `radmc3d-2.0/examples/run_ppdisk_simple_1/problem_setup.py`.
 #
 # Author: Stanley A. Baronett
-# Created: 2023-12-11
-# Updated: 2024-04-04
+# Created: 2024-07-27
+# Updated: 2024-07-27
 #===============================================================================
 import numpy as np
 
 # BEGIN `amr_grid.inp`==========================================================
 # Constants
-au       = 1.495978707e13                     # Astronomical Unit       [cm]
+au       = 1.495978707e13                     # Astronomical Unit [cm]
 
 # Grid parameters
-nr       = 256
-ntheta   = 512
+nr       = 1024
+ntheta   = 1024
 nphi     = 1
 rin      = 10*au                              # [cm]
 rout     = 100*au                             # [cm]
@@ -28,7 +28,7 @@ phimin   = 0
 phimax   = 2*np.pi
 
 # Make the coordinates
-ri       = np.linspace(rin, rout, nr+1)
+ri       = np.logspace(np.log10(rin), np.log10(rout), nr+1)
 thetai   = np.linspace(thetamin, thetamax, ntheta+1)
 phii     = np.linspace(phimin, phimax, nphi+1)
 
@@ -42,11 +42,11 @@ with open('amr_grid.inp', 'w+') as f:
     f.write('1 1 0\n')                        # Include r,theta coordinates
     f.write(f'{nr:d} {ntheta:d} {nphi:d}\n')  # Size of grid
     for value in ri:
-        f.write(f'{value:13.6e}\n')           # X coordinates (cell walls)
+        f.write(f'{value:.16e}\n')           # X coordinates (cell walls)
     for value in thetai:
-        f.write(f'{value:13.6e}\n')           # Y coordinates (cell walls)
+        f.write(f'{value:.16e}\n')           # Y coordinates (cell walls)
     for value in phii:
-        f.write(f'{value:13.6e}\n')           # Z coordinates (cell walls)
+        f.write(f'{value:.16e}\n')           # Z coordinates (cell walls)
 # END `amr_grid.inp`============================================================
 
 
@@ -70,15 +70,15 @@ nlam     = lam.size
 with open('wavelength_micron.inp', 'w+') as f:
     f.write(f'{nlam:d}\n')
     for value in lam:
-        f.write(f'{value:13.6e}\n')
+        f.write(f'{value:.16e}\n')
 # END `wavelength_micron.inp`===================================================
 
 
 # BEGIN `stars.inp`=============================================================
 # Constants
-ms       = 1.98892e33                         # Solar mass              [g]
-ts       = 5.78388e3                          # Solar temperature       [K]
-rs       = 6.9368e10                          # Solar radius            [cm]
+ms       = 1.98892e33                         # Solar mass [g]
+ts       = 5.78388e3                          # Solar temperature [K]
+rs       = 6.9368e10                          # Solar radius [cm]
 
 # Star parameters
 mstar    = ms                                 # unimportant as of verion 2.0
@@ -91,11 +91,11 @@ pstar    = np.array([0.,0.,0.])               # position
 with open('stars.inp', 'w+') as f:
     f.write('2\n')
     f.write(f'1 {nlam:d}\n\n')
-    f.write(f'{rstar:13.6e} {mstar:13.6e} {pstar[0]:13.6e} {pstar[1]:13.6e} '\
-            + f'{pstar[2]:13.6e}\n\n')
+    f.write(f'{rstar:.16e} {mstar:.16e} {pstar[0]:.16e} {pstar[1]:.16e} '\
+            + f'{pstar[2]:.16e}\n\n')
     for value in lam:
-        f.write(f'{value:13.6e}\n')
-    f.write(f'\n{-tstar:13.6e}\n')
+        f.write(f'{value:.16e}\n')
+    f.write(f'\n{-tstar:.16e}\n')
 # END `stars.inp`===============================================================
 
 
@@ -114,7 +114,7 @@ gm0      = 1.0                                # GM
 T_unit   = 6.14e3                             # T_0 [K]
 density_unit = 4.28e-14                       # \rho_0 [g/cm^3]
 length_unit = 5.98e14                         # L_0 [cm]
-dfloor   = 1e-12                              # minimum density [g/cm^3]
+dfloor   = 1e-12                              # minimum density [\rho_0]
 r0       = 0.425278227742474                  # disk radial normalization [L_0]
 rho0     = 0.2                                # disk density normalization [\rho_0]
 p0_over_r0 = 4.80e-03                         # (H/r0)^2
@@ -152,7 +152,7 @@ with open('dust_density.inp', 'w+') as f:
     f.write(f'{nr*ntheta*nphi:d}\n')          # Nr of cells
     f.write('1\n')                            # Nr of dust species
     data = rhod.ravel(order='F')              # Fortran-style indexing
-    data.tofile(f, sep='\n', format='%13.6e')
+    data.tofile(f, sep='\n', format='%.16e')
     f.write('\n')
 # END `dust_density.inp`========================================================
 
@@ -174,8 +174,9 @@ with open('dustopac.inp', 'w+') as f:
 
 # BEGIN `radmc3d.inp`===========================================================
 # Monte Carlo parameters
-nphot    = int(1e8)
-countwrite = int(1e5)
+nphot    = int(1e10)
+nphot_mono = int(1e8)
+countwrite = int(1e7)
 
 # Write the radmc3d.inp control file
 # https://www.ita.uni-heidelberg.de/~dullemond/software/radmc-3d/manual_radmc3d/clioptions.html#additional-arguments-general
@@ -183,10 +184,10 @@ with open('radmc3d.inp', 'w+') as f:
     f.write(f'countwrite = {countwrite}\n')   # nr photons between std. outputs
     f.write('iranfreqmode = 1\n')             # differ RNG seeds per OMP process
     f.write('istar_sphere = 0\n')             # point (0)/sphere (1) star source
-    f.write('mc_weighted_photons = 0\n')      # focus photons toward grid
     f.write(f'nphot = {nphot:d}\n')           # number of photons
+    f.write(f'nphot_mono = {nphot_mono:d}\n') # number of monochromatic photons
     f.write('scattering_mode_max = 0\n')      # no scattering (zero dust albedo)
-    f.write('setthreads = 18\n')              # Intel Core i7-12700H optimized
+    f.write('setthreads = 122\n')             # AMD Rome optimized
 # END `radmc3d.inp`=============================================================
 
 
@@ -210,5 +211,5 @@ nlam     = lam.size
 with open('mcmono_wavelength_micron.inp', 'w+') as f:
     f.write(f'{nlam:d}\n')
     for value in lam:
-        f.write(f'{value:13.6e}\n')
+        f.write(f'{value:.16e}\n')
 # END `mcmono_wavelength_micron.inp`===================================================
