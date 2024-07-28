@@ -8,7 +8,7 @@
 #
 # Author: Stanley A. Baronett
 # Created: 2024-07-27
-# Updated: 2024-07-27
+# Updated: 2024-07-28
 #===============================================================================
 import numpy as np
 
@@ -174,7 +174,7 @@ with open('dustopac.inp', 'w+') as f:
 
 # BEGIN `radmc3d.inp`===========================================================
 # Monte Carlo parameters
-nphot    = int(1e9)
+nphot    = int(8e8)
 nphot_mono = int(1e7)
 countwrite = int(1e7)
 
