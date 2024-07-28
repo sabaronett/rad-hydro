@@ -174,8 +174,8 @@ with open('dustopac.inp', 'w+') as f:
 
 # BEGIN `radmc3d.inp`===========================================================
 # Monte Carlo parameters
-nphot    = int(1e10)
-nphot_mono = int(1e8)
+nphot    = int(1e9)
+nphot_mono = int(1e7)
 countwrite = int(1e7)
 
 # Write the radmc3d.inp control file
