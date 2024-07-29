@@ -3,7 +3,7 @@
 # mint2npz.py
 #
 # Uses the radmc3dPy module to read `./mean_intensity.out`, integrate it over
-# all frequencies (in decreasing order), and save it to tot_mint.npz.
+# all (decreasing) frequencies, and save it to `./total_mean_intensity.npz`.
 #
 # Author: Stanley A. Baronett
 # Created: 2024-07-25
@@ -15,6 +15,6 @@ from scipy import integrate
 
 data = analyze.readData(mint=True)
 print('Integrating over all frequencies', flush=True)
-tot_mint = np.abs(integrate.trapezoid(data.meanint, x=data.freq, axis=-1))
-print('Saving to tot_mint.npz', flush=True)
-np.savez_compressed('tot_mint', tot_mint=tot_mint)
+totmeanint = np.abs(integrate.trapezoid(data.meanint, x=data.freq, axis=-1))
+print('Saving to total_mean_intensity.npz', flush=True)
+np.savez_compressed('total_mean_intensity', totmeanint=totmeanint)
