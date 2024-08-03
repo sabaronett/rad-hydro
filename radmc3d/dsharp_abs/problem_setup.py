@@ -12,7 +12,7 @@
 #===============================================================================
 import numpy as np
 import sys
-sys.path.insert(0, '/home/stanley/github/PrincetonUniversity/athena/vis/python')
+sys.path.insert(0, '/mnt/home/sbaronett/github/PrincetonUniversity/athena/vis/python')
 import athena_read
 
 # BEGIN `amr_grid.inp`==========================================================
