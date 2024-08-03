@@ -19,7 +19,7 @@ import athena_read
 # Read the Athena++ grid
 run = 'log'
 problem_id = 'const_opac'
-path = '/home/stanley/github/sabaronett/rad-hydro/athena/dev/yanfeij/'\
+path = '/mnt/home/sbaronett/ceph/github/sabaronett/rad-hydro/athena/dev/yanfeij/'\
        +f'{problem_id}-heat/1024x1024/{run}'
 athinput = athena_read.athinput(f'{path}/athinput.{problem_id}')
 length_unit = athinput['radiation']['length_unit']
