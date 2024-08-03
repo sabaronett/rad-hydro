@@ -7,7 +7,7 @@
 # `radmc3d-2.0/examples/run_ppdisk_simple_1/problem_setup.py`.
 #
 # Author: Stanley A. Baronett
-# Created: 2023-12-11
+# Created: 2024-08-03
 # Updated: 2024-08-03
 #===============================================================================
 import numpy as np
@@ -119,21 +119,46 @@ with open('dust_density.inp', 'w+') as f:
 # Dust opacity control file
 # https://www.ita.uni-heidelberg.de/~dullemond/software/radmc-3d/manual_radmc3d/inputoutputfiles.html#the-dustopac-inp-file
 with open('dustopac.inp', 'w+') as f:
-    f.write('2               iformat (Format number of this file)\n')
-    f.write('1               nspec (Nr of dust species)\n')
+    f.write('2               Format number of this file\n')
+    f.write('1               Nr of dust species\n')
     f.write('============================================================================\n')
-    f.write('1               inputstyle (Way in which this dust species is read)\n')
-    f.write('0               iquantum (0=Thermal grain)\n')
-    f.write('dsharp_abs      Extension of name of dustkappa_***.inp file\n')
+    f.write('1               Way in which this dust species is read\n')
+    f.write('0               0=Thermal grain\n')
+    f.write('constant        Extension of name of dustkappa_***.inp file\n')
     f.write('----------------------------------------------------------------------------\n')
 # END `dustopac.inp`============================================================
 
 
+# BEGIN `dustkappa_[name].inp`=================================================
+name = 'constant'                             # dust species name (no spaces)
+iformat = 1                                   # pure absorption (1)
+
+kappa_star_cgs = 10                           # absorption opacity [cm^2/g]
+dgratio = 100                                 # dust-to-gas ratio
+small_grain_ratio = 0.02184
+kappa_a = kappa_star_cgs*dgratio*small_grain_ratio # [cm^2/g]
+
+# Write the dust opacities file
+# https://www.ita.uni-heidelberg.de/~dullemond/software/radmc-3d/manual_radmc3d/inputoutputfiles.html#the-dustkappa-inp-files
+with open(f'dustkappa_{name}.inp', 'w+') as f:
+    f.write('# Opacity file for a constant dust opacity test\n')
+    f.write('# Optical constants from...\n')
+    f.write('# Please do not forget to cite in your publications the original paper of these optical constant measurements\n')
+    f.write('# Made with the ... code by ...\n')
+    f.write('# Grain size =  ? cm\n')
+    f.write('# Material density =  ? g/cm^3\n')
+    f.write(f'{iformat:d}\n')
+    f.write(f'{nlam:d}\n\n')
+    for value in lam:
+        f.write(f'{value:.16e} {kappa_a:.16e}\n')
+# END `dustkappa_[name].inp`===================================================
+
+
 # BEGIN `radmc3d.inp`===========================================================
 # Monte Carlo parameters
-nphot    = int(8e8)
-nphot_mono = int(1e7)
-countwrite = int(1e8)
+nphot = int(1e10)
+nphot_mono = int(1e8)
+countwrite = int(1e7)
 
 # Write the radmc3d.inp control file
 # https://www.ita.uni-heidelberg.de/~dullemond/software/radmc-3d/manual_radmc3d/clioptions.html#additional-arguments-general
