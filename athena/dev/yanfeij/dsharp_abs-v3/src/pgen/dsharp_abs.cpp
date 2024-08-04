@@ -526,7 +526,7 @@ void RadOuterX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
           for (int ifr=0; ifr<nfreq; ++ifr) {                     // each band
             for (int n=0; n<nang; ++n) {                          // non-radial rays
               if (prad->mu(0,k,j,ie+i,ifr*nang+n) > 0.0)          // exiting rays
-                ir(k,j,ie+i,ifr*nang+n) = ir(k,j,ie,ifr*nang+n)\  // disk emission
+                ir(k,j,ie+i,ifr*nang+n) = ir(k,j,ie,ifr*nang+n)\
                                           *std::pow(pco->x1v(ie)/pco->x1v(ie+i), 2);
               else                                                // entering rays
                 ir(k,j,ie+i,ifr*nang+n) = 0.0;                    // disable
