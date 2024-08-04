@@ -469,7 +469,7 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
         if (nfreq <= 1) {                                               // gray approx
           for (int n=0; n<nang-2; ++n) {                                // non-radial rays
             if (prad->mu(0,k,j,is-i,n) < 0.0)                           // exiting rays
-              ir(k,j,is-i,n) = ir(k,j,is,n)\                            // disk emission
+              ir(k,j,is-i,n) = ir(k,j,is,n)\
                                *std::pow(pco->x1v(is)/pco->x1v(is-i), 2);
             else                                                        // entering rays
               ir(k,j,is-i,n) = 0.0;                                     // disable
@@ -480,7 +480,7 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
           for (int ifr=0; ifr<nfreq; ++ifr) {                           // each band
             for (int n=0; n<nang-2; ++n) {                              // non-radial rays
               if (prad->mu(0,k,j,is-i,ifr*nang+n) < 0.0)                // exiting rays
-                ir(k,j,is-i,ifr*nang+n) = ir(k,j,is,ifr*nang+n)\        // disk emission
+                ir(k,j,is-i,ifr*nang+n) = ir(k,j,is,ifr*nang+n)\
                                           *std::pow(pco->x1v(is)/pco->x1v(is-i), 2);
               else                                                      // entering rays
                 ir(k,j,is-i,ifr*nang+n) = 0.0;                          // disable
@@ -493,7 +493,7 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                                              - prad->FitIntPlanckFunc(prad->nu_grid(ifr)\
                                              /t_star))/prad->wmu(0);
             }
-            ir(k,j,is-i,ifr*nang+nang-1) = ir(k,j,is,ifr*nang+nang-1)\  // disk emission
+            ir(k,j,is-i,ifr*nang+nang-1) = ir(k,j,is,ifr*nang+nang-1)\
                                            *std::pow(pco->x1v(is)/pco->x1v(is-i), 2);
           }
         }
