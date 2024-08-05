@@ -12,16 +12,16 @@
 #===============================================================================
 import numpy as np
 import sys
-# sys.path.insert(0, '/mnt/home/sbaronett/github/PrincetonUniversity/athena/vis/python')
-sys.path.insert(0, '/home/stanley/github/PrincetonUniversity/athena/vis/python')
+sys.path.insert(0, '/mnt/home/sbaronett/github/PrincetonUniversity/athena/vis/python')
+# sys.path.insert(0, '/home/stanley/github/PrincetonUniversity/athena/vis/python')
 import athena_read
 
 # BEGIN `amr_grid.inp`==========================================================
 # Read the Athena++ grid
 run = 'nfreq/4'
 problem_id = 'dsharp'
-# path = '/mnt/home/sbaronett/ceph/github/sabaronett/rad-hydro/athena/dev/yanfeij/'\
-path = '/home/stanley/github/sabaronett/rad-hydro/athena/dev/yanfeij/'\
+# path = '/home/stanley/github/sabaronett/rad-hydro/athena/dev/yanfeij/'\
+path = '/mnt/home/sbaronett/ceph/github/sabaronett/rad-hydro/athena/dev/yanfeij/'\
        +f'{problem_id}_abs-v3/{run}'
 athinput = athena_read.athinput(f'{path}/athinput.{problem_id}')
 length_unit = athinput['radiation']['length_unit']
