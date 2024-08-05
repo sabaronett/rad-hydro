@@ -8,7 +8,7 @@
 #
 # Author: Stanley A. Baronett
 # Created: 2023-12-11
-# Updated: 2024-08-03
+# Updated: 2024-08-04
 #===============================================================================
 import numpy as np
 import sys
@@ -18,11 +18,11 @@ import athena_read
 
 # BEGIN `amr_grid.inp`==========================================================
 # Read the Athena++ grid
-run = 'log'
-problem_id = 'const_opac'
+run = 'nfreq/4'
+problem_id = 'dsharp'
 # path = '/mnt/home/sbaronett/ceph/github/sabaronett/rad-hydro/athena/dev/yanfeij/'\
 path = '/home/stanley/github/sabaronett/rad-hydro/athena/dev/yanfeij/'\
-       +f'{problem_id}-heat/1024x1024/{run}'
+       +f'{problem_id}_abs-v3/{run}'
 athinput = athena_read.athinput(f'{path}/athinput.{problem_id}')
 length_unit = athinput['radiation']['length_unit']
 athdf = athena_read.athdf(f'{path}/athdf/{problem_id}.out1.00000.athdf')
