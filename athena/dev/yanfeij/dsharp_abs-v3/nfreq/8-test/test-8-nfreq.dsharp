@@ -10,4 +10,4 @@ module purge
 module load slurm gcc openmpi hdf5/mpi
 echo
 
-mpirun $ATHENA_YFJ/bin/athena.dsharp-rome -i athinput.dsharp
+mpirun $ATHENA_YFJ/bin/athena.dsharp-unopt -i athinput.dsharp
