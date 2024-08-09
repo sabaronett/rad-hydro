@@ -10,4 +10,4 @@ module purge
 module load slurm gcc openmpi hdf5/mpi
 echo
 
-mpirun $ATHENA_YFJ/bin/athena.const_opac -i athinput.const_opac
+mpirun $ATHENA_YFJ/bin/athena.const_opac-rome -i athinput.const_opac
