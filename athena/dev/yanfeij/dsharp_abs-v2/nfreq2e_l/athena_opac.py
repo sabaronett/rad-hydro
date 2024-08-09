@@ -21,7 +21,7 @@
 #
 # Author: Stanley A. Baronett
 # Created: 2024-04-19
-# Updated: 2024-05-27
+# Updated: 2024-06-22
 #==============================================================================
 import numpy as np
 from pathlib import Path
@@ -96,12 +96,14 @@ def RosselandMeanOpacities(kappa_nu, dBnu_dT, nu):
     numer = integrate.simpson(dBnu_dT/kappa_nu, x=nu)
     denom = integrate.simpson(dBnu_dT, x=nu)
     kappa = denom/numer
+    np.nan_to_num(kappa, copy=False, nan=kappa_nu[0])
     return kappa
 
 def PlanckMeanOpacities(kappa_nu, Bnu, nu, temp_table):
     numer = integrate.simpson(kappa_nu*Bnu, x=nu)
     denom = integrate.simpson(Bnu, x=nu)
     kappa = numer/denom
+    np.nan_to_num(kappa, copy=False, nan=kappa_nu[0])
     return kappa
 
 # Read absorption coefficient as a function of frequency
