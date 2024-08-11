@@ -485,7 +485,7 @@ else:
 
 if args['implicit_radiation']:
     definitions['IM_RADIATION_ENABLED'] = '1'
-    definitions['NRAD_VARIABLES'] = '192'
+    definitions['NRAD_VARIABLES'] = '256'
 else:
     definitions['IM_RADIATION_ENABLED'] = '0'
 
