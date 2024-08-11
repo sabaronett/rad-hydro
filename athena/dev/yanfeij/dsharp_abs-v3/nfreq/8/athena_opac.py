@@ -21,7 +21,7 @@
 #
 # Author: Stanley A. Baronett
 # Created: 2024-04-19
-# Updated: 2024-06-22
+# Updated: 2024-08-11
 #==============================================================================
 import numpy as np
 from pathlib import Path
@@ -96,7 +96,7 @@ def RosselandMeanOpacities(kappa_nu, dBnu_dT, nu):
     numer = integrate.simpson(dBnu_dT/kappa_nu, x=nu)
     denom = integrate.simpson(dBnu_dT, x=nu)
     kappa = denom/numer
-    np.nan_to_num(kappa, copy=False, nan=kappa_nu[0])
+    np.nan_to_num(kappa, copy=False, nan=kappa_nu[0], posinf=kappa_nu[0])
     return kappa
 
 def PlanckMeanOpacities(kappa_nu, Bnu, nu, temp_table):
