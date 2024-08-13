@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -p cca -C ib-genoa --exclusive
+#SBATCH -p cca -C ib-rome --exclusive
 #SBATCH -N2 --ntasks-per-node=82
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
 #SBATCH -t 0:10:00
@@ -10,4 +10,4 @@ module purge
 module load slurm gcc openmpi hdf5/mpi
 echo
 
-mpirun $ATHENA_YFJ/bin/athena.const_opac-genoa -i athinput.const_opac
+mpirun $ATHENA_YFJ/bin/athena.const_opac-rome -i athinput.const_opac
