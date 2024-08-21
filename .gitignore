@@ -46,6 +46,7 @@ Makefile
 *old*
 temp/
 *.txt
+!freq_table.txt
 !temp_table.txt
 !kappa_rf_table.txt
 !kappa_sf_table.txt
