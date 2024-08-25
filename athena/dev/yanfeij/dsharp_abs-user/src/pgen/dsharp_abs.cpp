@@ -261,7 +261,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     fclose(fkappa_pf_table);
     dlog10T = std::log10(temp_table(1)) - std::log10(temp_table(0));
     if (!fname.empty()) {
-      FILE *ffreq_table = fopen("./"+fname, "r");
+      FILE *ffreq_table = fopen(fname, "r");
       freq_table.NewAthenaArray(nfreq-1);
 
       for (int i=0; i<nfreq-1; ++i) {
