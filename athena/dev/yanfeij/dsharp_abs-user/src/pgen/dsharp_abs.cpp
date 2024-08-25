@@ -178,13 +178,13 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     // kappa_sf_table.NewAthenaArray(ntemp, nfreq);
     kappa_rf_table.NewAthenaArray(ntemp, nfreq);
     kappa_pf_table.NewAthenaArray(ntemp, nfreq);
-    
+
     // Open input table files
     if (ftemp_table == nullptr) {
       msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
           << "./temp_table.txt for frequency-dependent opacities not found";
       ATHENA_ERROR(msg);
-      
+
       return;
     }
     // if (fkappa_sf_table == nullptr) {
@@ -196,14 +196,14 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
       msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
           << "./kappa_rf_table.txt for frequency-dependent opacities not found";
       ATHENA_ERROR(msg);
-      
+
       return;
     }
     if (fkappa_pf_table == nullptr) {
       msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
           << "./kappa_pf_table.txt for frequency-dependent opacities not found";
       ATHENA_ERROR(msg);
-      
+
       return;
     }
 
@@ -215,19 +215,19 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
       msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
           << "temp_table.txt size does not match `n_temperature` input parameter";
       ATHENA_ERROR(msg);
-      
+
       return;
     } else {
       temp_ifstream.close();
     }
     if (!fname.empty()) {
       std::ifstream freq_ifstream(fname);
-      
+
       if (!freq_ifstream.is_open()) {
       msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
           << "Could not open `frequency_table` file for user-defined frequency groups";
       ATHENA_ERROR(msg);
-      
+
       return;
       } else {
         int ffreq_lines = 0;
@@ -238,7 +238,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
           msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
               << fname << " size inconsistent with `n_frequency` input parameter";
           ATHENA_ERROR(msg);
-          
+
           return;
         } else {
           freq_ifstream.close();
