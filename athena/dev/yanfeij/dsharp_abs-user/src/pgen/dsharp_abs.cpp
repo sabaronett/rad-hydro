@@ -163,7 +163,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
   r_star = pin->GetOrAddReal("problem", "r_star", 0.001);
   t_star = pin->GetOrAddReal("problem", "t_star", 1.0);
   ntemp = pin->GetOrAddInteger("problem", "n_temperature", 0);
-  fname = pin->GetOrAddString("problem", "frequency_table", NULL);
+  fname = pin->GetOrAddString("problem", "frequency_table", nullptr);
 
   // Prepare frequency- and temperature-dependent opacity tables
   if (nfreq > 0) {
@@ -220,7 +220,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     } else {
       temp_ifstream.close();
     }
-    if (fname != NULL) {
+    if (!fname.empty()) {
       std::ifstream freq_ifstream(fname);
       
       if (!freq_ifstream.is_open()) {
@@ -260,7 +260,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     fclose(fkappa_rf_table);
     fclose(fkappa_pf_table);
     dlog10T = std::log10(temp_table(1)) - std::log10(temp_table(0));
-    if (fname != NULL) {
+    if (!fname.empty()) {
       FILE *ffreq_table = fopen("./"+fname, "r");
       freq_table.NewAthenaArray(nfreq-1);
 
@@ -280,7 +280,6 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
         }
       }
       fclose(ffreq_table);
-      EnrollFrequencyFunction(GetFrequencies);
     }
   }
 
@@ -321,6 +320,9 @@ void MeshBlock::InitUserMeshBlockData(ParameterInput *pin) {
   // enroll user-defined opacity function
   if (NR_RADIATION_ENABLED || IM_RADIATION_ENABLED) {
     pnrrad->EnrollOpacityFunction(DiskOpacity);
+    if (!fname.empty()) {
+      pnrrad->EnrollFrequencyFunction(GetFrequencies);
+    }
   }
 
   return;
