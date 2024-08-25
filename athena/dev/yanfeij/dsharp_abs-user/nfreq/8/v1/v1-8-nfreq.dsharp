@@ -2,7 +2,7 @@
 #SBATCH -p cca -C ib-rome --exclusive
 #SBATCH -N1 --ntasks-per-node=128
 #SBATCH --mail-type=ALL --mail-user=barons2@unlv.nevada.edu
-#SBATCH -t 0:15:00
+#SBATCH -t 1:00:00
 
 date
 hostname
