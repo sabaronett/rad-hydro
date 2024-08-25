@@ -71,7 +71,6 @@ static AthenaArray<Real> temp_table;
 static AthenaArray<Real> kappa_rf_table;
 static AthenaArray<Real> kappa_pf_table;
 // static AthenaArray<Real> kappa_sf_table;
-static std::string fname;
 } // namespace
 
 // User-defined boundary conditions and radiation-related functions for disk simulations
@@ -128,11 +127,7 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim);
 //========================================================================================
 
 void Mesh::InitUserMeshData(ParameterInput *pin) {
-  // Physical constants
-  Real k_b = 1.3807e-16;  // Boltzmann constant [erg/K]
-  Real h = 6.626196e-27;  // Planck constant [erg s]
-
-  // Get parameters for gravitatonal potential of central point mass
+    // Get parameters for gravitatonal potential of central point mass
   gm0 = pin->GetOrAddReal("problem", "gm0", 1.0);
   r0 = pin->GetOrAddReal("problem", "r0", 1.0);
 
@@ -163,7 +158,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
   r_star = pin->GetOrAddReal("problem", "r_star", 0.001);
   t_star = pin->GetOrAddReal("problem", "t_star", 1.0);
   ntemp = pin->GetOrAddInteger("problem", "n_temperature", 0);
-  fname = pin->GetOrAddString("problem", "frequency_table", nullptr);
+  user_freq = pin->GetOrAddInteger("problem", "frequency_table", 0);
 
   // Prepare frequency- and temperature-dependent opacity tables
   if (nfreq > 0) {
@@ -182,7 +177,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     // Open input table files
     if (ftemp_table == nullptr) {
       msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
-          << "./temp_table.txt for frequency-dependent opacities not found";
+          << "Unable to open temp_table.txt for frequency-dependent opacities";
       ATHENA_ERROR(msg);
 
       return;
@@ -194,14 +189,14 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     // }
     if (fkappa_rf_table == nullptr) {
       msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
-          << "./kappa_rf_table.txt for frequency-dependent opacities not found";
+          << "Unable to open kappa_rf_table.txt for frequency-dependent opacities";
       ATHENA_ERROR(msg);
 
       return;
     }
     if (fkappa_pf_table == nullptr) {
       msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
-          << "./kappa_pf_table.txt for frequency-dependent opacities not found";
+          << "Unable to open kappa_pf_table.txt for frequency-dependent opacities";
       ATHENA_ERROR(msg);
 
       return;
@@ -220,12 +215,12 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     } else {
       temp_ifstream.close();
     }
-    if (!fname.empty()) {
-      std::ifstream freq_ifstream(fname);
+    if (user_freq == 1) {
+      std::ifstream freq_ifstream("freq_table.txt");
 
       if (!freq_ifstream.is_open()) {
       msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
-          << "Could not open `frequency_table` file for user-defined frequency groups";
+          << "Unable to open freq_table.txt for user-defined frequency groups";
       ATHENA_ERROR(msg);
 
       return;
@@ -260,8 +255,10 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     fclose(fkappa_rf_table);
     fclose(fkappa_pf_table);
     dlog10T = std::log10(temp_table(1)) - std::log10(temp_table(0));
-    if (!fname.empty()) {
-      FILE *ffreq_table = fopen(fname, "r");
+    if (user_freq == 1) {
+      Real k_b = 1.3807e-16;  // Boltzmann constant [erg/K]
+      Real h = 6.626196e-27;  // Planck constant [erg s]
+      FILE *ffreq_table = fopen("./freq_table.txt", "r");
       freq_table.NewAthenaArray(nfreq-1);
 
       for (int i=0; i<nfreq-1; ++i) {
