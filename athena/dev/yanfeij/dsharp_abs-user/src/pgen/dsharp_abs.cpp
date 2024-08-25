@@ -64,7 +64,7 @@ Real r_star, t_star, kappa_a, kappa_s;          // <problem> (radiation)
 
 // for frequency dependent opacities
 static bool scattering;
-static int nfreq, ntemp;
+static int nfreq, ntemp, user_freq;
 static Real dlog10T, t_unit;
 static AthenaArray<Real> freq_table;
 static AthenaArray<Real> temp_table;
@@ -231,7 +231,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
           ++ffreq_lines;
         if (ffreq_lines != nfreq-1) {
           msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
-              << fname << " size inconsistent with `n_frequency` input parameter";
+              << "freq_table.txt size inconsistent with `n_frequency` input parameter";
           ATHENA_ERROR(msg);
 
           return;
@@ -317,9 +317,8 @@ void MeshBlock::InitUserMeshBlockData(ParameterInput *pin) {
   // enroll user-defined opacity function
   if (NR_RADIATION_ENABLED || IM_RADIATION_ENABLED) {
     pnrrad->EnrollOpacityFunction(DiskOpacity);
-    if (!fname.empty()) {
+    if (user_freq == 1)
       pnrrad->EnrollFrequencyFunction(GetFrequencies);
-    }
   }
 
   return;
