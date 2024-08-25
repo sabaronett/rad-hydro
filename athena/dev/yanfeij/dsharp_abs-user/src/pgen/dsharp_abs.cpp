@@ -65,7 +65,7 @@ Real r_star, t_star, kappa_a, kappa_s;          // <problem> (radiation)
 // for frequency dependent opacities
 static bool scattering;
 static int nfreq, ntemp;
-static Real dlog10T;
+static Real dlog10T, t_unit;
 static AthenaArray<Real> freq_table;
 static AthenaArray<Real> temp_table;
 static AthenaArray<Real> kappa_rf_table;
@@ -163,21 +163,18 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
   r_star = pin->GetOrAddReal("problem", "r_star", 0.001);
   t_star = pin->GetOrAddReal("problem", "t_star", 1.0);
   ntemp = pin->GetOrAddInteger("problem", "n_temperature", 0);
-  fname = pin->GetOrAddString("problem", "frequency_table", nullptr);
+  fname = pin->GetOrAddString("problem", "frequency_table", NULL);
 
   // Prepare frequency- and temperature-dependent opacity tables
   if (nfreq > 0) {
     int ftemp_lines = 0;
-    int ffreq_lines = 0;
     std::string line;
     std::stringstream msg;
     FILE *ftemp_table = fopen("./temp_table.txt", "r");
-    FILE *ffreq_table = fopen("./"+fname, "r");
     // FILE *fkappa_sf_table = fopen("./kappa_sf_table.txt", "r");
     FILE *fkappa_rf_table = fopen("./kappa_rf_table.txt", "r");
     FILE *fkappa_pf_table = fopen("./kappa_pf_table.txt", "r");
     temp_table.NewAthenaArray(ntemp);
-    freq_table.NewAthenaArray(nfreq);
     // kappa_sf_table.NewAthenaArray(ntemp, nfreq);
     kappa_rf_table.NewAthenaArray(ntemp, nfreq);
     kappa_pf_table.NewAthenaArray(ntemp, nfreq);
@@ -211,7 +208,8 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     }
 
     // Check table sizes against input parameters
-    while (std::getline(ftemp_table, line))
+    std::ifstream temp_ifstream("temp_table.txt");
+    while (std::getline(temp_ifstream, line))
       ++ftemp_lines;
     if (ftemp_lines != ntemp) {
       msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
@@ -219,16 +217,32 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
       ATHENA_ERROR(msg);
       
       return;
+    } else {
+      temp_ifstream.close();
     }
-    if (fname != nullptr) {
-      while (std::getline(ffreq_table, line))
-        ++ffreq_lines;
-      if (ffreq_lines+1 != nfreq) {
-        msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
-            << fname << " size inconsistent with `n_frequency` input parameter";
-        ATHENA_ERROR(msg);
-        
-        return;
+    if (fname != NULL) {
+      std::ifstream freq_ifstream(fname);
+      
+      if (!freq_ifstream.is_open()) {
+      msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
+          << "Could not open `frequency_table` file for user-defined frequency groups";
+      ATHENA_ERROR(msg);
+      
+      return;
+      } else {
+        int ffreq_lines = 0;
+
+        while (std::getline(freq_ifstream, line))
+          ++ffreq_lines;
+        if (ffreq_lines != nfreq-1) {
+          msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
+              << fname << " size inconsistent with `n_frequency` input parameter";
+          ATHENA_ERROR(msg);
+          
+          return;
+        } else {
+          freq_ifstream.close();
+        }
       }
     }
 
@@ -236,37 +250,38 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     for (int i=0; i<ntemp; ++i) {
       fscanf(ftemp_table, "%le", &(temp_table(i)));
       for (int j=0; j<nfreq; ++j) {
-        if (fname != nullptr)
-          fscanf(ffreq_table, "%le", &(freq_table(i)));
-          // ADD SWITCH TO CONVERT TO CODE UNITS AS NEEDED
-          if (freq_table(i) < 0) {
-            freq_table(i) *= -1;
-          } else if (t_unit == 0.0) {
-            msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
-                << "`T_unit` input parameter needed to convert `frequency_table` to code "
-                << "units";
-            ATHENA_ERROR(msg);
-
-            return;
-          } else {
-            freq_table(i) /= k_b*t_unit/h;
-          }
         // if (scattering) { fscanf(fkappa_sf_table, "%le", &(kappa_sf_table(i, j))); }
         fscanf(fkappa_rf_table, "%le", &(kappa_rf_table(i, j)));
         fscanf(fkappa_pf_table, "%le", &(kappa_pf_table(i, j)));
       }
     }
-
     fclose(ftemp_table);
-    fclose(ffreq_table);
     // fclose(fkappa_sf_table);
     fclose(fkappa_rf_table);
     fclose(fkappa_pf_table);
-
     dlog10T = std::log10(temp_table(1)) - std::log10(temp_table(0));
+    if (fname != NULL) {
+      FILE *ffreq_table = fopen("./"+fname, "r");
+      freq_table.NewAthenaArray(nfreq-1);
 
-    if (fname != nullptr)
-      pnrrad->EnrollFrequencyFunction(GetFrequencies);
+      for (int i=0; i<nfreq-1; ++i) {
+        fscanf(ffreq_table, "%le", &(freq_table(i)));
+        if (freq_table(i) < 0) {
+          freq_table(i) *= -1;
+        } else if (t_unit == 0.0) {
+          msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
+              << "`T_unit` input parameter needed to convert `frequency_table` to code "
+              << "units";
+          ATHENA_ERROR(msg);
+
+          return;
+        } else {
+          freq_table(i) /= k_b*t_unit/h;
+        }
+      }
+      fclose(ffreq_table);
+      EnrollFrequencyFunction(GetFrequencies);
+    }
   }
 
   // enroll user-defined boundary condition
