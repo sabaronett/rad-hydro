@@ -66,8 +66,8 @@ void IMRadiation::Iteration(
 
       std::cout << "meshblock = " << nb << std::endl;
       for (int i=0; i<prad->nfreq; ++i)
-        std::cout << "\tnu_" << i << " = " << std::scientific << std::setprecision(2)
-                  << prad->nu_grid(i) << " hnu/k_BT_0" << std::endl;
+        std::cout << "\tnu_" << i << " = " << std::scientific << prad->nu_grid(i)
+                  << " hnu/k_BT_0" << std::endl;
 
       // prepare t_gas and vel
       if (stage == 1) {
