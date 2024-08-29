@@ -261,8 +261,12 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
       FILE *ffreq_table = fopen("./freq_table.txt", "r");
       freq_table.NewAthenaArray(nfreq-1);
 
-      for (int i=0; i<nfreq-1; ++i) {
+      std::cout << "### User-defined frequency groups in [Mesh::InitUserMeshData]"
+                << std::endl;
+      for (int i=0; i<nfreq; ++i) {
         fscanf(ffreq_table, "%le", &(freq_table(i)));
+        std::cout << "\tfreq_table(" << i << ") = " << std::scientific
+                  << std::setprecision(2) << freq_table(i) << " (raw input)" << std::endl;
         if (freq_table(i) < 0) {
           freq_table(i) *= -1;
         } else if (t_unit == 0.0) {
@@ -275,6 +279,9 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
         } else {
           freq_table(i) /= k_b*t_unit/h;
         }
+        std::cout << "\tfreq_table(" << i << ") = " << std::scientific
+                  << std::setprecision(2) << freq_table(i)  << " hnu/k_BT_0"
+                  << std::endl;
       }
       fclose(ffreq_table);
     }

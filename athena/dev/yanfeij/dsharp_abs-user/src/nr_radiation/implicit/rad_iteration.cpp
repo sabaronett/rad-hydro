@@ -22,6 +22,7 @@
 // C++ headers
 #include <sstream>    // stringstream
 #include <iostream>   // endl
+#include <iomanip>    // for std::scientific
 
 // Athena++ headers
 #include "../../defs.hpp"
@@ -63,8 +64,10 @@ void IMRadiation::Iteration(
       Field *pf = pmb->pfield;
       AthenaArray<Real> &ir_ini = prad->ir1;
 
-      for(int i=1; i<prad->nfreq; ++i)
-        std::cout << "f = " << i << ": " << prad->nu_grid(i) << std::endl;
+      std::cout << "meshblock = " << nb << std::endl;
+      for (int i=0; i<prad->nfreq; ++i)
+        std::cout << "\tnu_" << i << " = " << std::scientific << std::setprecision(2)
+                  << prad->nu_grid(i) << " hnu/k_BT_0" << std::endl;
 
       // prepare t_gas and vel
       if (stage == 1) {
