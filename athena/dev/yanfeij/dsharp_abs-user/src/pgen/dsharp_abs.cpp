@@ -263,7 +263,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
 
       std::cout << "### User-defined frequency groups in [Mesh::InitUserMeshData]"
                 << std::endl;
-      for (int i=0; i<nfreq; ++i) {
+      for (int i=0; i<nfreq-1; ++i) {
         fscanf(ffreq_table, "%le", &(freq_table(i)));
         std::cout << "\tfreq_table(" << i << ") = " << std::scientific << freq_table(i)
                   << " (raw input)" << std::endl;
@@ -536,10 +536,10 @@ void GetOpacities(const Real temp, const int ifr, Real &kappa_af, Real &kappa_pf
 void GetFrequencies(NRRadiation *prad) {
   prad->nu_grid(0) = 0.0;
 
-  for(int i=1; i<prad->nfreq; ++i) {
-    prad->nu_grid(i) = freq_table(i);
-    prad->nu_cen(i-1) = (prad->nu_grid(i-1) + prad->nu_grid(i))/2;
-    prad->delta_nu(i-1) = prad->nu_grid(i) - prad->nu_grid(i-1);
+  for(int i=0; i<prad->nfreq-1; ++i) {
+    prad->nu_grid(i+1) = freq_table(i);
+    prad->nu_cen(i) = (prad->nu_grid(i) + prad->nu_grid(i+1))/2;
+    prad->delta_nu(i) = prad->nu_grid(i+1) - prad->nu_grid(i);
   }
 }
 

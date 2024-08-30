@@ -65,7 +65,7 @@ void IMRadiation::Iteration(
       AthenaArray<Real> &ir_ini = prad->ir1;
 
       std::cout << "meshblock = " << nb << std::endl;
-      for (int i=0; i<prad->nfreq; ++i)
+      for (int i=0; i<prad->nfreq+1; ++i)
         std::cout << "\tnu_" << i << " = " << std::scientific << prad->nu_grid(i)
                   << " hnu/k_BT_0" << std::endl;
 
