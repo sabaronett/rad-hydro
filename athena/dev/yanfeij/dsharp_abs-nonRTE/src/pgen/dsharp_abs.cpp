@@ -5,13 +5,13 @@
 //========================================================================================
 //! \file dsharp_abs.cpp
 //! \brief Initializes stratified Keplerian accretion disk in both cylindrical and
-//! spherical polar coordinates.  Initial conditions are in vertical hydrostatic eqm.
+//! spherical polar coordinates. Initial conditions are in vertical hydrostatic eqm.
 //! The inner radial boundary emits stellar radiation along only the radial direction.
 //! (Adapted from disk.cpp.)
 //! 
 //! Author: Stanley A. Baronett
 //! Created: 2024-09-03
-//! Updated: 2024-09-23
+//! Updated: 2024-10-07
 //========================================================================================
 
 // C headers
@@ -53,7 +53,7 @@ Real LinearInterpolation(Real x, Real x0, Real x1, Real y0, Real y1);
 void GetOpacities(const Real temp, const int ifr, Real &kappa_af, Real &kappa_pf);
 // void GetScatteringOpacities(const Real temp, const int ifr, Real &kappa_sf,
 //                             Real &kappa_rf, Real &kappa_pf);
-void GetFrequencies(NRRadiation *prad);
+void SetFrequencies(NRRadiation *prad);
 
 // input file parameters which are useful to make global to this file
 Real x1min;                                     // <mesh>
@@ -65,7 +65,7 @@ Real r_star, t_star, kappa_a, kappa_s;          // <problem> (radiation)
 // for frequency dependent opacities
 static bool scattering;
 static int nfreq, ntemp, user_freq;
-static Real dlog10T, t_unit, delta_rte;
+static Real dlog10T, t_unit;
 static AthenaArray<Real> freq_table;
 static AthenaArray<Real> temp_table;
 static AthenaArray<Real> kappa_rf_table;
@@ -125,7 +125,6 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim);
 //! to initialize variables which are global to (and therefore can be passed to) other
 //! functions in this file.  Called in Mesh constructor.
 //========================================================================================
-
 void Mesh::InitUserMeshData(ParameterInput *pin) {
     // Get parameters for gravitatonal potential of central point mass
   gm0 = pin->GetOrAddReal("problem", "gm0", 1.0);
@@ -158,7 +157,6 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
   r_star = pin->GetOrAddReal("problem", "r_star", 0.001);
   t_star = pin->GetOrAddReal("problem", "t_star", 1.0);
   ntemp = pin->GetOrAddInteger("problem", "n_temperature", 0);
-  delta_rte = pin->GetOrAddReal("problem", "delta_rte", 0.0)/t_unit;
   user_freq = pin->GetOrAddInteger("problem", "frequency_table", 0);
 
   // Prepare frequency- and temperature-dependent opacity tables
@@ -319,13 +317,13 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
 //! Called in MeshBlock constructor before ProblemGenerator.
 //========================================================================================
 void MeshBlock::InitUserMeshBlockData(ParameterInput *pin) {
-  AllocateUserOutputVariables(pnrrad->nang);
+  AllocateUserOutputVariables(1);
 
   // enroll user-defined opacity function
   if (NR_RADIATION_ENABLED || IM_RADIATION_ENABLED) {
     pnrrad->EnrollOpacityFunction(DiskOpacity);
     if (user_freq == 1)
-      pnrrad->EnrollFrequencyFunction(GetFrequencies);
+      pnrrad->EnrollFrequencyFunction(SetFrequencies);
   }
 
   return;
@@ -335,7 +333,6 @@ void MeshBlock::InitUserMeshBlockData(ParameterInput *pin) {
 //! \fn void MeshBlock::ProblemGenerator(ParameterInput *pin)
 //! \brief Initializes Keplerian accretion disk.
 //========================================================================================
-
 void MeshBlock::ProblemGenerator(ParameterInput *pin) {
   Real rad(0.0), phi(0.0), z(0.0);
   Real den, vel;
@@ -382,22 +379,21 @@ void MeshBlock::ProblemGenerator(ParameterInput *pin) {
 //! \fn void MeshBlock::UserWorkBeforeOutput(ParameterInput *pin)
 //! \brief Function called before generating output files
 //========================================================================================
-void MeshBlock::UserWorkBeforeOutput(ParameterInput *pin) {
-  for(int k=ks; k<=ke; k++) {
-    for(int j=js; j<=je; j++) {
-      for(int i=is; i<=(ie+NGHOST); i++) {
-        for (int n=0; n<pnrrad->nang; ++n) {
-          user_out_var(n,k,j,i) = pnrrad->ir(k,j,i-NGHOST,n); // store intensities
-        }
-      }
-    }
-  }
-}
+// void MeshBlock::UserWorkBeforeOutput(ParameterInput *pin) {
+//   for(int k=ks; k<=ke; k++) {
+//     for(int j=js; j<=je; j++) {
+//       for(int i=is; i<=(ie+NGHOST); i++) {
+//         for (int n=0; n<pnrrad->nang; ++n) {
+//           user_out_var(n,k,j,i) = pnrrad->ir(k,j,i-NGHOST,n); // store intensities
+//         }
+//       }
+//     }
+//   }
+// }
 
 namespace {
 //----------------------------------------------------------------------------------------
 //! transform to cylindrical coordinate
-
 void GetCylCoord(Coordinates *pco,Real &rad,Real &phi,Real &z,int i,int j,int k) {
   if (std::strcmp(COORDINATE_SYSTEM, "cylindrical") == 0) {
     rad=pco->x1v(i);
@@ -414,7 +410,6 @@ void GetCylCoord(Coordinates *pco,Real &rad,Real &phi,Real &z,int i,int j,int k)
 
 //----------------------------------------------------------------------------------------
 //! computes density in cylindrical coordinates
-
 Real DenProfileCyl(const Real rad, const Real phi, const Real z) {
   Real den;
   Real p_over_r = p0_over_r0;
@@ -431,7 +426,6 @@ Real DenProfileCyl(const Real rad, const Real phi, const Real z) {
 
 //----------------------------------------------------------------------------------------
 //! computes pressure/density in cylindrical coordinates
-
 Real PoverR(const Real rad, const Real phi, const Real z) {
   Real poverr;
   poverr = p0_over_r0*std::pow(rad/r0, pslope);
@@ -441,7 +435,6 @@ Real PoverR(const Real rad, const Real phi, const Real z) {
 
 //----------------------------------------------------------------------------------------
 //! computes rotational velocity in cylindrical coordinates
-
 Real VelProfileCyl(const Real rad, const Real phi, const Real z) {
   Real p_over_r = PoverR(rad, phi, z);
   Real vel = (dslope+pslope)*p_over_r/(gm0/rad) + (1.0+pslope)
@@ -455,7 +448,6 @@ Real VelProfileCyl(const Real rad, const Real phi, const Real z) {
 //! Iteratively use binary search on a strictly increasing array of Reals to find the
 //! index that right-brackets the target, i.e., array[index - 1] < target < array[index]
 //! NOTE: CONSIDER REMOVING THIS CONVENIENCE FUNCTION
-
 int BinarySearchIncreasing(AthenaArray<Real> &arr, int low, int high, const Real target) {
   int mid;
   std::stringstream msg;
@@ -480,7 +472,6 @@ int BinarySearchIncreasing(AthenaArray<Real> &arr, int low, int high, const Real
 //! Linear interpolation between two given points
 //! TODO: Check if src/utils/interp_table.cpp can be used instead of this
 //!       (will need to #include "../utils/interp_table.hpp")
-
 Real LinearInterpolation(Real x, Real x0, Real x1, Real y0, Real y1) {
   return y0 + (x - x0)*(y1 - y0)/(x1 - x0);
 }
@@ -488,7 +479,6 @@ Real LinearInterpolation(Real x, Real x0, Real x1, Real y0, Real y1) {
 //----------------------------------------------------------------------------------------
 //! Gets or interpolates the Rosseland and Planck mean absorption opacities for the given
 //! frequency bin and the given temperature.
-
 void GetOpacities(const Real temp, const int ifr, Real &kappa_af, Real &kappa_pf) {
   if (temp < temp_table(0)) {
     kappa_af = kappa_rf_table(0, ifr);
@@ -511,7 +501,6 @@ void GetOpacities(const Real temp, const int ifr, Real &kappa_af, Real &kappa_pf
 //----------------------------------------------------------------------------------------
 //! Gets or interpolates the scattering and total Rosseland and Planck-absorption mean
 //! opacities for the given frequency bin and the given temperature.
-
 // void GetScatteringOpacities(const Real temp, const int ifr, Real &kappa_sf, Real &kappa_rf,
 //                             Real &kappa_pf) {
 //   if (temp < temp_table(0)) {
@@ -532,23 +521,78 @@ void GetOpacities(const Real temp, const int ifr, Real &kappa_af, Real &kappa_pf
 // }
 
 //----------------------------------------------------------------------------------------
-//! Sets the frequency grid to that provided in the frequency table
-
-void GetFrequencies(NRRadiation *prad) {
+//! Sets the frequency grid to the provided frequency table
+void SetFrequencies(NRRadiation *prad) {
   prad->nu_grid(0) = 0.0;
 
-  for(int i=0; i<prad->nfreq-1; ++i) {
+  for(int i=0; i<nfreq-1; ++i) {
     prad->nu_grid(i+1) = freq_table(i);
     prad->nu_cen(i) = (prad->nu_grid(i) + prad->nu_grid(i+1))/2;
     prad->delta_nu(i) = prad->nu_grid(i+1) - prad->nu_grid(i);
   }
 }
 
+//========================================================================================
+//! \fn int GetMaxErf(const AthenaArray<Real> Erf_Dnu)
+//! \brief Returns the index of the finite frequency band with the maximum specific
+//! radiation energy density.
+//========================================================================================
+int GetMaxErf(const AthenaArray<Real> Erf_Dnu) {
+  int f_peak = 0;
+
+  for(int ifr=1; ifr<nfreq-1; ++ifr) {
+    if (Erf_Dnu(ifr) > Erf_Dnu(f_peak))
+      f_peak = ifr;
+  }
+
+  return f_peak;
+}
+
+//========================================================================================
+//! \fn Real GetColorTemp(const Real nu_peak)
+//! \brief Returns the color temperature for the peak of the spectrum, using the Wien
+//! displacement law.
+//========================================================================================
+Real GetColorTemp(const Real nu_peak) {
+  return nu_peak/2.82;
+}
+
+//========================================================================================
+//! \fn Real GetNuPeak(const Real temp)
+//! \brief Returns the frequency of the peak of the Planck law B_nu(temp), using the Wien
+//! displacement law.
+//========================================================================================
+Real GetNuPeak(const Real temp) {
+  return 2.82*temp;
+}
+
+//========================================================================================
+//! \fn int GetFreqGroup(const NRRadiation *prad, const Real nu)
+//! \brief Returns the frequency band that contains the given frequency `nu`.
+//========================================================================================
+int GetFreqGroup(const NRRadiation *prad, const Real nu) {
+  int f;
+  
+  if (nu < prad->nu_grid(1)) {
+    f = 0;
+  } else if (nu > prad->nu_grid(nfreq-1)) {
+    f = nfreq-1;
+  } else {
+    for (int i=1; i<nfreq-1; ++i) {
+      if (nu > prad->nu_grid(i) && nu < prad->nu_grid(i+1)) {
+        f = i;
+        break;
+      }
+    }
+  }
+
+  return f;
+}
+
 } // namespace
 
 //----------------------------------------------------------------------------------------
 //! User-defined boundary Conditions: sets solution in ghost zones to initial values
-
 void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                 const AthenaArray<Real> &w, FaceField &b, AthenaArray<Real> &ir,
                 Real time, Real dt,
@@ -568,7 +612,7 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
             else                                                        // entering rays
               ir(k,j,is-i,n) = 0.0;                                     // disable
           }                                                             // radial rays
-          ir(k,j,is-i,nang-2) = flux/prad->wmu(0);                      // stellar ray
+          ir(k,j,is-i,nang-2) = flux/prad->wmu(nang-2);                      // stellar ray
           ir(k,j,is-i,nang-1) = ir(k,j,is,nang-1);                      // disk emission
         } else {                                                        // multifrequency
           for (int ifr=0; ifr<nfreq; ++ifr) {                           // each band
@@ -585,7 +629,7 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
             } else {
               ir(k,j,is-i,ifr*nang+nang-2) = flux*(1.0\
                                              - prad->FitIntPlanckFunc(prad->nu_grid(ifr)\
-                                             /t_star))/prad->wmu(0);
+                                             /t_star))/prad->wmu(nang-2);
             }
             ir(k,j,is-i,ifr*nang+nang-1) = ir(k,j,is,ifr*nang+nang-1)\
                                            *std::pow(pco->x1v(is)/pco->x1v(is-i), 2);
@@ -598,7 +642,6 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
 
 //----------------------------------------------------------------------------------------
 //! User-defined boundary Conditions: sets solution in ghost zones to initial values
-
 void RadOuterX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                 const AthenaArray<Real> &w, FaceField &b, AthenaArray<Real> &ir,
                 Real time, Real dt,
@@ -634,7 +677,6 @@ void RadOuterX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
 
 //----------------------------------------------------------------------------------------
 //! User-defined boundary Conditions: sets solution in ghost zones to initial values
-
 void RadInnerX2(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                 const AthenaArray<Real> &w, FaceField &b, AthenaArray<Real> &ir,
                 Real time, Real dt,
@@ -654,7 +696,6 @@ void RadInnerX2(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
 
 //----------------------------------------------------------------------------------------
 //! User-defined boundary Conditions: sets solution in ghost zones to initial values
-
 void RadOuterX2(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                 const AthenaArray<Real> &w, FaceField &b, AthenaArray<Real> &ir,
                 Real time, Real dt,
@@ -674,7 +715,6 @@ void RadOuterX2(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
 
 //----------------------------------------------------------------------------------------
 //! User-defined boundary Conditions: sets solution in ghost zones to initial values
-
 void RadInnerX3(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                 const AthenaArray<Real> &w, FaceField &b, AthenaArray<Real> &ir,
                 Real time, Real dt,
@@ -694,7 +734,6 @@ void RadInnerX3(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
 
 //----------------------------------------------------------------------------------------
 //! User-defined boundary Conditions: sets solution in ghost zones to initial values
-
 void RadOuterX3(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
                 const AthenaArray<Real> &w, FaceField &b, AthenaArray<Real> &ir,
                 Real time, Real dt,
@@ -714,7 +753,6 @@ void RadOuterX3(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
 
 //----------------------------------------------------------------------------------------
 //! User-defined boundary Conditions: sets solution in ghost zones to initial values
-
 void DiskInnerX1(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceField &b,
                  Real time, Real dt,
                  int il, int iu, int jl, int ju, int kl, int ku, int ngh) {
@@ -760,7 +798,6 @@ void DiskInnerX1(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceF
 
 //----------------------------------------------------------------------------------------
 //! User-defined boundary Conditions: sets solution in ghost zones to initial values
-
 void DiskOuterX1(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceField &b,
                  Real time, Real dt,
                  int il, int iu, int jl, int ju, int kl, int ku, int ngh) {
@@ -806,7 +843,6 @@ void DiskOuterX1(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceF
 
 //----------------------------------------------------------------------------------------
 //! User-defined boundary Conditions: sets solution in ghost zones to initial values
-
 void DiskInnerX2(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceField &b,
                  Real time, Real dt,
                  int il, int iu, int jl, int ju, int kl, int ku, int ngh) {
@@ -852,7 +888,6 @@ void DiskInnerX2(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceF
 
 //----------------------------------------------------------------------------------------
 //! User-defined boundary Conditions: sets solution in ghost zones to initial values
-
 void DiskOuterX2(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceField &b,
                  Real time, Real dt,
                  int il, int iu, int jl, int ju, int kl, int ku, int ngh) {
@@ -898,7 +933,6 @@ void DiskOuterX2(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceF
 
 //----------------------------------------------------------------------------------------
 //! User-defined boundary Conditions: sets solution in ghost zones to initial values
-
 void DiskInnerX3(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceField &b,
                  Real time, Real dt,
                  int il, int iu, int jl, int ju, int kl, int ku, int ngh) {
@@ -944,7 +978,6 @@ void DiskInnerX3(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceF
 
 //----------------------------------------------------------------------------------------
 //! User-defined boundary Conditions: sets solution in ghost zones to initial values
-
 void DiskOuterX3(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceField &b,
                  Real time, Real dt,
                  int il, int iu, int jl, int ju, int kl, int ku, int ngh) {
@@ -989,18 +1022,22 @@ void DiskOuterX3(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceF
 }
 
 //----------------------------------------------------------------------------------------
-//! Sets opacities throughout the disk domain and in ghost zones
-
+//! Sets opacities throughout the domain
 void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
   NRRadiation *prad = pmb->pnrrad;
+  AthenaArray<Real> Erf_Dnu;  // specific radiation energy density per finite freq. band
   int il = pmb->is; int jl = pmb->js; int kl = pmb->ks;
   int iu = pmb->ie; int ju = pmb->je; int ku = pmb->ke;
-  int &nang = prad->nang;  // total angles
-  Real temp, t_rad;        // cell and radiation temperatures
-  Real u = 0.0;            // radiation energy density
-  Real kappa_sf = kappa_s; // Rosseland mean scattering opacity (defaults to gray value)
-  Real kappa_af = kappa_a; // Rosseland mean absorption opacity (defaults to gray value)
-  Real kappa_pf = kappa_a; // Planck mean absorption opacity    (defaults to gray value)
+  int &nang = prad->nang;     // total angles
+  int f_peak;                 // frequency band with peak Er/\Delta\nu
+  int f_gas;                  // frequency band with peak gas emission
+  Real t_gas;                 // gas temperature
+  Real t_c;                   // color temperature
+  Real kappa_sf = kappa_s;    // Rosseland mean scattering opacity (defaults to gray value)
+  Real kappa_af = kappa_a;    // Rosseland mean absorption opacity (defaults to gray value)
+  Real kappa_pef = kappa_a;   // Planck mean absorption opacity    (defaults to gray value)
+  Real kappa_pf = kappa_a;    // Planck mean absorption opacity    (defaults to gray value)
+  Real dummy;                 // dummy variable for GetOpacities
 
   // Include ghost zones in upper/lower directional limits
   // il -= NGHOST;
@@ -1014,23 +1051,35 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
   //   ku += NGHOST;
   // }
 
+  if (nfreq > 1)
+    Erf_Dnu.NewAthenaArray(nfreq-1);
+
   for (int k=kl; k<=ku; ++k) {
     for (int j=jl; j<=ju; ++j) {
       for (int i=il; i<=iu; ++i) {
-        temp = prim(IEN,k,j,i)/prim(IDN,k,j,i); // default to local gas temperature
-        for (int ifr=0; ifr<nfreq; ++ifr) {
-          for (int n=0; n<nang; ++n) {
-            u += prad->ir(k,j,i,ifr*nang+n);
+        if (nfreq > 1) {
+          t_gas = prim(IEN,k,j,i)/prim(IDN,k,j,i);
+          f_gas = GetFreqGroup(prad, GetNuPeak(t_gas));
+          for (int ifr=0; ifr<nfreq-1; ++ifr) {
+            Erf_Dnu(ifr) = 0.0;
+            for (int n=0; n<nang; ++n) {
+              Erf_Dnu(ifr) += prad->wmu(n)*prad->ir(k,j,i,ifr*nang+n);
+            }
+            Erf_Dnu(ifr) /= prad->delta_nu(ifr);
           }
-        }
-        t_rad = std::pow(u, 0.25);
-        if (t_rad-temp > delta_rte) {           // if significantly higher
-          temp = t_rad;                         // use local radiation temperature instead
-          std::cout << "Non-RTE condition met\n\tT_r = " << std::scientific << t_rad
-                    << " K" << std::endl;
+          f_peak = GetMaxErf(Erf_Dnu);
+          t_c = GetColorTemp(prad->nu_cen(f_peak));
+          pmb->user_out_var(0,k,j,i) = t_c;
         }
         for (int ifr=0; ifr<nfreq; ++ifr) {
-          if (nfreq > 0) { GetOpacities(temp, ifr, kappa_af, kappa_pf); }
+          if (nfreq > 1) { 
+            GetOpacities(t_gas, ifr, kappa_af, kappa_pf);
+            if (f_peak != f_gas) {  // optically thin region
+              GetOpacities(t_c, ifr, dummy, kappa_pef);
+            } else {                // optically thick region
+              GetOpacities(t_gas, ifr, dummy, kappa_pef);
+            }
+          }
           //   if (scattering) {
           //     Real kappa_rf; // Rosseland mean total (abs+sca) opacity
           //     GetScatteringOpacities(temp, ifr, kappa_sf, kappa_rf, kappa_pf);
@@ -1041,8 +1090,8 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
           // }
           prad->sigma_s(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_sf;
           prad->sigma_a(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_af;
-          prad->sigma_pe(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_pf; // J_0 coefficient
-          prad->sigma_p(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_pf;  // \epsilon_0 coefficient
+          prad->sigma_pe(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_pef; // J_0 coefficient
+          prad->sigma_p(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_pf;   // \epsilon_0 coefficient
         }
       }
     }
