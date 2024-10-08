@@ -10,18 +10,18 @@
 # inputoutputfiles.html#the-dustkappa-inp-files); (2) an Athena++-formatted
 # input file with the following requred parameters:
 #   <radiation>
-#   n_frequency      # no. of frequency groups
+#   nfreq      # no. of frequency groups
 #   frequency_min    # [0, \nu_min) [k_BT_0/h] < 0 < [Hz]
-#   frequency_max    (if n_frequency > 2) # [\nu_max, \inf)
+#   frequency_max    (if nfreq > 2) # [\nu_max, \inf)
 #
 #   <problem>
-#   n_temperature    # no. of temperature groups
+#   ntemp    # no. of temperature groups
 #   temperature_min  # min mean opacity temperature [K]
 #   temperature_max  # max mean opacity temperature [K]
 #
 # Author: Stanley A. Baronett
 # Created: 2024-04-19
-# Updated: 2024-08-20
+# Updated: 2024-10-01
 #==============================================================================
 import numpy as np
 from pathlib import Path
@@ -46,7 +46,7 @@ def GetBnu_table(Ts, nus):
 
     for i, T in enumerate(Ts):
         for j, nu in enumerate(nus):
-            prefactor = 2*h/c**2*(k*T/h)**4
+            prefactor = 2*(k*T)**3/(h*c)**2
             u = h*nu/k/T
             if u < 0.001:  # Rayleigh--Jeans Law
                 table[i][j] = prefactor*u**2
@@ -65,7 +65,7 @@ def GetdBnu_dT_table(Ts, nus, diag=False):
 
     for i, T in enumerate(Ts):
         for j, nu in enumerate(nus):
-            prefactor = 2*k**3*T**2/c**2/h**2
+            prefactor = 2*k**3*(T/h/c)**2
             u = h*nu/k/T
             if u < 0.001:
                 table[i][j] = prefactor*(u**2 - u**4)
@@ -121,55 +121,55 @@ athinput = athena_read.athinput(fname)
 T_unit = athinput['radiation']['T_unit']                          # [K]
 density_unit = athinput['radiation']['density_unit']              # [g/cm^3]
 length_unit = athinput['radiation']['length_unit']                # [cm]
-n_temperature = athinput['problem']['n_temperature']
+ntemp = athinput['problem']['n_temperature']
 temperature_min = athinput['problem']['temperature_min']          # [K]
 temperature_max = athinput['problem']['temperature_max']          # [K]
 temp_table = np.logspace(np.log10(temperature_min), np.log10(temperature_max),
-                         n_temperature)
+                         ntemp)
 Bnu_table = GetBnu_table(temp_table, opac_freq)
 dBnu_dT_table = GetdBnu_dT_table(temp_table, opac_freq)
 
 # For a single or multiple frequency bands
 nu_min, nu_max = opac_freq[0], opac_freq[-1]
-n_frequency = athinput['radiation']['n_frequency']
-kappa_af_table = np.zeros((n_temperature, n_frequency))
-kappa_pf_table = np.zeros((n_temperature, n_frequency))
+nfreq = athinput['radiation']['n_frequency']
+kappa_af_table = np.zeros((ntemp, nfreq))
+kappa_pf_table = np.zeros((ntemp, nfreq))
 i_nu0 = 0                   # left frequency table index
 i_nu1 = len(opac_freq) - 1  # right index
-ff = np.asarray([nu_min, nu_max])
-if n_frequency > 1:
+nu_grid = np.asarray([nu_min, nu_max])
+if nfreq > 1:
     frequency_min = athinput['radiation']['frequency_min']        # [Hz]
     if frequency_min < 0:  # unit switch: code (<0) or cgs (>0)
         frequency_min *= -k*T_unit/h                              # [k_BT_0/h]
-    ff = np.asarray(frequency_min)   # frequency group f interfaces [Hz]
+    nu_grid = np.asarray(frequency_min)   # frequency group f interfaces [Hz]
     
-    if n_frequency > 2:
+    if nfreq > 2:
         try:
             if (athinput['problem']['frequency_table'] == 1):
                 fname = "freq_table.txt"
-            ff = np.loadtxt(fname)
-            if len(ff)+1 != n_frequency:
-                raise ValueError(f'{fname} inconsistent with `n_frequency` '\
+            nu_grid = np.loadtxt(fname)
+            if len(nu_grid)+1 != nfreq:
+                raise ValueError(f'{fname} inconsistent with `nfreq` '\
                                  +'input parameter')
-            if np.all(ff < 0):  # unit switch: code (<0) or cgs (>0)
-                ff *= -k*T_unit/h                                  # [k_BT_0/h]
+            if np.all(nu_grid < 0):  # unit switch: code (<0) or cgs (>0)
+                nu_grid *= -k*T_unit/h                                  # [k_BT_0/h]
         except KeyError:
             frequency_max = athinput['radiation']['frequency_max'] # [Hz]
             if frequency_max < 0:  # unit switch: code (<0) or cgs (>0)
                 frequency_max *= -k*T_unit/h                       # [k_BT_0/h]
-            ff = np.logspace(np.log10(frequency_min), np.log10(frequency_max),
-                                    n_frequency-1)
-    ff = np.insert(ff, 0, nu_min)
-    ff = np.append(ff, nu_max)
-    if ff[0] < nu_min:
+            nu_grid = np.logspace(np.log10(frequency_min), np.log10(frequency_max),
+                                    nfreq-1)
+    nu_grid = np.insert(nu_grid, 0, nu_min)
+    nu_grid = np.append(nu_grid, nu_max)
+    if nu_grid[0] < nu_min:
         warnings.warn('Lowest frequency group is below the lowest frequency '\
                       +'given by the opacity table')
-    if ff[-1] > nu_max:
+    if nu_grid[-1] > nu_max:
         warnings.warn('Highest frequency group is above the highest frequency '\
                       +'given by the opacity table')
-    i_nu1 = BinarySearchIncreasing(opac_freq, 0, len(opac_freq)-1, ff[1])
+    i_nu1 = BinarySearchIncreasing(opac_freq, 0, len(opac_freq)-1, nu_grid[1])
 
-for i in range(n_frequency):
+for i in range(nfreq):
     kappa_af_table[:, i] = RosselandMeanOpacities(opac_kabs[i_nu0:i_nu1],
                                                   dBnu_dT_table[:, i_nu0:i_nu1],
                                                   opac_freq[i_nu0:i_nu1])
@@ -178,8 +178,8 @@ for i in range(n_frequency):
                                                opac_freq[i_nu0:i_nu1],
                                                temp_table)
     i_nu0 = i_nu1
-    if i < (n_frequency - 2):  # intermediate frequency group
-        i_nu1 = BinarySearchIncreasing(opac_freq, 0, len(opac_freq)-1, ff[i+2])
+    if i < (nfreq - 2):  # intermediate frequency group
+        i_nu1 = BinarySearchIncreasing(opac_freq, 0, len(opac_freq)-1, nu_grid[i+2])
     else:                      # (next-to-) last frequency group
         i_nu1 = len(opac_freq)-1
 

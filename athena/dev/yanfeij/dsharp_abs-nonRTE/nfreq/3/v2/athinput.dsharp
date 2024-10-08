@@ -86,5 +86,4 @@ t_star           = 9.42e-1             # solar temperature [T_0]
 n_temperature    = 1000                # no. of temperature groups
 temperature_min  = 10                  # min mean opacity temperature [K]
 temperature_max  = 1e4                 # max mean opacity temperature [K]
-delta_rte        = 10                  # threshold for non-RTE condition [K]
 frequency_table  = 1                   # custom frequencies [k_BT_0/h] < 0 < [Hz]
