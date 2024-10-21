@@ -317,7 +317,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
 //! Called in MeshBlock constructor before ProblemGenerator.
 //========================================================================================
 void MeshBlock::InitUserMeshBlockData(ParameterInput *pin) {
-  AllocateUserOutputVariables(1);
+  AllocateUserOutputVariables(1+nfreq);
 
   // enroll user-defined opacity function
   if (NR_RADIATION_ENABLED || IM_RADIATION_ENABLED) {
@@ -1079,6 +1079,7 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
             } else {                // optically thick region
               GetOpacities(t_gas, ifr, dummy, kappa_pfe);
             }
+              pmb->user_out_var(1+ifr,k,j,i) = kappa_pfe;
           }
           //   if (scattering) {
           //     Real kappa_rf; // Rosseland mean total (abs+sca) opacity
