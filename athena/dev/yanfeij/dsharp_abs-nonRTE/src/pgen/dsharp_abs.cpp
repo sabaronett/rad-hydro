@@ -11,7 +11,7 @@
 //! 
 //! Author: Stanley A. Baronett
 //! Created: 2024-09-03
-//! Updated: 2024-10-07
+//! Updated: 2024-10-21
 //========================================================================================
 
 // C headers
@@ -1035,7 +1035,7 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
   Real t_c;                   // color temperature
   Real kappa_sf = kappa_s;    // Rosseland mean scattering opacity (defaults to gray value)
   Real kappa_af = kappa_a;    // Rosseland mean absorption opacity (defaults to gray value)
-  Real kappa_pef = kappa_a;   // Planck mean absorption opacity    (defaults to gray value)
+  Real kappa_pfe = kappa_a;   // Planck mean absorption opacity    (defaults to gray value)
   Real kappa_pf = kappa_a;    // Planck mean absorption opacity    (defaults to gray value)
   Real dummy;                 // dummy variable for GetOpacities
 
@@ -1069,15 +1069,15 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
           }
           f_peak = GetMaxErf(Erf_Dnu);
           t_c = GetColorTemp(prad->nu_cen(f_peak));
-          pmb->user_out_var(0,k,j,i) = t_c;
         }
         for (int ifr=0; ifr<nfreq; ++ifr) {
           if (nfreq > 1) { 
             GetOpacities(t_gas, ifr, kappa_af, kappa_pf);
             if (f_peak != f_gas) {  // optically thin region
-              GetOpacities(t_c, ifr, dummy, kappa_pef);
+              GetOpacities(t_c, ifr, dummy, kappa_pfe);
+              pmb->user_out_var(0,k,j,i) = t_c;
             } else {                // optically thick region
-              GetOpacities(t_gas, ifr, dummy, kappa_pef);
+              GetOpacities(t_gas, ifr, dummy, kappa_pfe);
             }
           }
           //   if (scattering) {
@@ -1090,7 +1090,7 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
           // }
           prad->sigma_s(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_sf;
           prad->sigma_a(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_af;
-          prad->sigma_pe(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_pef; // J_0 coefficient
+          prad->sigma_pe(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_pfe; // J_0 coefficient
           prad->sigma_p(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_pf;   // \epsilon_0 coefficient
         }
       }
