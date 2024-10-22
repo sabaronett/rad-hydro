@@ -137,7 +137,7 @@ scancel <job_id>
 
 #### [Continuous Restarts](https://slurm.schedmd.com/sbatch.html#OPT_dependency)
 ```bash
-sbatch <script> -d afterok:<job_id>
+sbatch -d afterok:<job_id> <script>
 ```
 
 
