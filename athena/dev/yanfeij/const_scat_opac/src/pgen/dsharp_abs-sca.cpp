@@ -1087,7 +1087,7 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
             pmb->user_out_var(1+ifr,k,j,i) = kappa_pfe;
             if (scattering) {
               GetScatteringOpacities(t_gas, ifr, kappa_sf, kappa_rf, kappa_pf);
-              kappa_af = kappa_rf - kappa_sf
+              kappa_af = kappa_rf - kappa_sf;
             }
           }
           prad->sigma_s(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_sf;
