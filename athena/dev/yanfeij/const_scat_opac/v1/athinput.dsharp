@@ -63,6 +63,7 @@ polar_angle      = 1                   # add radial rays
 nmu              = 1                   # unused but expected to avoid fatal error
 nzeta            = 4                   # no. of polar angles (0 to pi/2)
 npsi             = 2                   # no. of azimuthal angles (0 to pi)
+n_frequency      = 1                   # no. of frequency groups
 unit             = 1                   # compute prat & crat from user-provided units
 T_unit           = 6.14e3              # T_0 [K]
 density_unit     = 4.28e-14            # \rho_0 [g/cm^3]
