@@ -133,9 +133,9 @@ with open('dustopac.inp', 'w+') as f:
 
 # BEGIN `radmc3d.inp`===========================================================
 # Monte Carlo parameters
-nphot    = int(8e7)
-nphot_mono = int(1e6)
-countwrite = int(1e6)
+nphot    = int(8e8)
+nphot_mono = int(1e7)
+countwrite = int(1e7)
 
 # Write the radmc3d.inp control file
 # https://www.ita.uni-heidelberg.de/~dullemond/software/radmc-3d/manual_radmc3d/clioptions.html#additional-arguments-general
@@ -145,7 +145,7 @@ with open('radmc3d.inp', 'w+') as f:
     f.write('istar_sphere = 0\n')             # point (0)/sphere (1) star source
     f.write(f'nphot = {nphot:d}\n')           # number of photons
     f.write(f'nphot_mono = {nphot_mono:d}\n') # number of monochromatic photons
-    f.write('scattering_mode_max = 1\n')      # no scattering (zero dust albedo)
+    f.write('scattering_mode_max = 1\n')      # isotropic scattering https://www.ita.uni-heidelberg.de/~dullemond/software/radmc-3d/manual_radmc3d/dustradtrans.html?highlight=scattering_mode_max#five-modes-of-treating-scattering
     f.write('setthreads = 122\n')             # AMD Rome optimized
 # END `radmc3d.inp`=============================================================
 
