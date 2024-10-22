@@ -655,7 +655,7 @@ void RadOuterX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
   for (int k=ks; k<=ke; ++k) {
     for (int j=js; j<=je; ++j) {
       for (int i=1; i<=ngh; ++i) {
-        if (nfreq == 1) {                                         // gray approx
+        if (nfreq <= 1) {                                         // gray approx
           for (int n=0; n<nang; ++n) {                            // non-radial rays
             if (prad->mu(0,k,j,ie+i,n) > 0.0)                     // exiting rays
               ir(k,j,ie+i,n) = ir(k,j,ie,n)\
