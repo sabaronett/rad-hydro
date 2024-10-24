@@ -1070,14 +1070,15 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
           f_peak = GetMaxErfDnu(erf_dnu);
           t_c = GetColorTemp(prad->nu_cen(f_peak));
           pmb->user_out_var(0,k,j,i) = t_c;
+          pmb->user_out_var(1,k,j,i) = 0.0;
+          if (f_peak != f_gas) { pmb->user_out_var(1,k,j,i) = 1.0; }
         }
         for (int ifr=0; ifr<nfreq; ++ifr) {
           if (nfreq > 1) { 
             GetOpacities(t_gas, ifr, kappa_af, kappa_pf);
-            if (f_peak != f_gas) {                               // optically thin region
+            if (f_peak != f_gas) {                               // non-rad.-therm. eq.
               GetOpacities(t_c, ifr, dummy, kappa_pfe);
-              pmb->user_out_var(1,k,j,i) = 1;
-            } else {                                             // optically thick region
+            } else {                                             // radiation-thermal eq.
               GetOpacities(t_gas, ifr, dummy, kappa_pfe);
             }
             pmb->user_out_var(2+ifr,k,j,i) = kappa_pfe;
