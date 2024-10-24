@@ -11,7 +11,7 @@
 //! 
 //! Author: Stanley A. Baronett
 //! Created: 2024-09-03
-//! Updated: 2024-10-21
+//! Updated: 2024-10-23
 //========================================================================================
 
 // C headers
@@ -150,7 +150,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
 
   // Get stellar radiation parameters
   x1min = pin->GetOrAddReal("mesh", "x1min", 1.0);
-  nfreq = pin->GetOrAddInteger("radiation", "n_frequency", 0);
+  nfreq = pin->GetOrAddInteger("radiation", "n_frequency", 1);
   t_unit = pin->GetOrAddReal("radiation", "T_unit", 0.0);
   kappa_a = pin->GetOrAddReal("problem", "kappa_a", 0.0);
   kappa_s = pin->GetOrAddReal("problem", "kappa_s", 0.0);
@@ -160,7 +160,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
   user_freq = pin->GetOrAddInteger("problem", "frequency_table", 0);
 
   // Prepare frequency- and temperature-dependent opacity tables
-  if (nfreq > 0) {
+  if (nfreq > 1) {
     int ftemp_lines = 0;
     std::string line;
     std::stringstream msg;
@@ -317,7 +317,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
 //! Called in MeshBlock constructor before ProblemGenerator.
 //========================================================================================
 void MeshBlock::InitUserMeshBlockData(ParameterInput *pin) {
-  AllocateUserOutputVariables(1+nfreq);
+  AllocateUserOutputVariables(2+nfreq);
 
   // enroll user-defined opacity function
   if (NR_RADIATION_ENABLED || IM_RADIATION_ENABLED) {
@@ -533,15 +533,15 @@ void SetFrequencies(NRRadiation *prad) {
 }
 
 //========================================================================================
-//! \fn int GetMaxErf(const AthenaArray<Real> Erf_Dnu)
+//! \fn int GetMaxErfDnu(const AthenaArray<Real> erf_dnu)
 //! \brief Returns the index of the finite frequency band with the maximum specific
 //! radiation energy density.
 //========================================================================================
-int GetMaxErf(const AthenaArray<Real> Erf_Dnu) {
+int GetMaxErfDnu(const AthenaArray<Real> erf_dnu) {
   int f_peak = 0;
 
   for(int ifr=1; ifr<nfreq-1; ++ifr) {
-    if (Erf_Dnu(ifr) > Erf_Dnu(f_peak))
+    if (erf_dnu(ifr) > erf_dnu(f_peak))
       f_peak = ifr;
   }
 
@@ -604,7 +604,7 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
     for (int j=js; j<=je; ++j) {
       for (int i=1; i<=ngh; ++i) {
         flux = std::pow(t_star, 4)*std::pow(r_star/pco->x1v(is-i), 2)/4;
-        if (nfreq <= 1) {                                               // gray approx
+        if (nfreq == 1) {                                               // gray approx
           for (int n=0; n<nang-2; ++n) {                                // non-radial rays
             if (prad->mu(0,k,j,is-i,n) < 0.0)                           // exiting rays
               ir(k,j,is-i,n) = ir(k,j,is,n)\
@@ -1025,7 +1025,7 @@ void DiskOuterX3(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceF
 //! Sets opacities throughout the domain
 void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
   NRRadiation *prad = pmb->pnrrad;
-  AthenaArray<Real> Erf_Dnu;  // specific radiation energy density per finite freq. band
+  AthenaArray<Real> erf_dnu;  // specific radiation energy density per finite freq. band
   int il = pmb->is; int jl = pmb->js; int kl = pmb->ks;
   int iu = pmb->ie; int ju = pmb->je; int ku = pmb->ke;
   int &nang = prad->nang;     // total angles
@@ -1052,7 +1052,7 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
   // }
 
   if (nfreq > 1)
-    Erf_Dnu.NewAthenaArray(nfreq-1);
+    erf_dnu.NewAthenaArray(nfreq-1);
 
   for (int k=kl; k<=ku; ++k) {
     for (int j=jl; j<=ju; ++j) {
@@ -1061,25 +1061,26 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
           t_gas = prim(IEN,k,j,i)/prim(IDN,k,j,i);
           f_gas = GetFreqGroup(prad, GetNuPeak(t_gas));
           for (int ifr=0; ifr<nfreq-1; ++ifr) {
-            Erf_Dnu(ifr) = 0.0;
+            erf_dnu(ifr) = 0.0;                                  // reset from last cell
             for (int n=0; n<nang; ++n) {
-              Erf_Dnu(ifr) += prad->wmu(n)*prad->ir(k,j,i,ifr*nang+n);
+              erf_dnu(ifr) += prad->wmu(n)*prad->ir(k,j,i,ifr*nang+n);
             }
-            Erf_Dnu(ifr) /= prad->delta_nu(ifr);
+            erf_dnu(ifr) /= prad->delta_nu(ifr);
           }
-          f_peak = GetMaxErf(Erf_Dnu);
+          f_peak = GetMaxErf(erf_dnu);
           t_c = GetColorTemp(prad->nu_cen(f_peak));
+          pmb->user_out_var(0,k,j,i) = t_c;
         }
         for (int ifr=0; ifr<nfreq; ++ifr) {
           if (nfreq > 1) { 
             GetOpacities(t_gas, ifr, kappa_af, kappa_pf);
-            if (f_peak != f_gas) {  // optically thin region
+            if (f_peak != f_gas) {                               // optically thin region
               GetOpacities(t_c, ifr, dummy, kappa_pfe);
-              pmb->user_out_var(0,k,j,i) = t_c;
-            } else {                // optically thick region
+              pmb->user_out_var(1,k,j,i) = 1;
+            } else {                                             // optically thick region
               GetOpacities(t_gas, ifr, dummy, kappa_pfe);
             }
-              pmb->user_out_var(1+ifr,k,j,i) = kappa_pfe;
+            pmb->user_out_var(2+ifr,k,j,i) = kappa_pfe;
           }
           //   if (scattering) {
           //     Real kappa_rf; // Rosseland mean total (abs+sca) opacity
