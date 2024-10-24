@@ -1067,7 +1067,7 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
             }
             erf_dnu(ifr) /= prad->delta_nu(ifr);
           }
-          f_peak = GetMaxErf(erf_dnu);
+          f_peak = GetMaxErfDnu(erf_dnu);
           t_c = GetColorTemp(prad->nu_cen(f_peak));
           pmb->user_out_var(0,k,j,i) = t_c;
         }
