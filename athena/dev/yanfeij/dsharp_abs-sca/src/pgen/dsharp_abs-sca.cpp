@@ -3,15 +3,15 @@
 // Copyright(C) 2014 James M. Stone <jmstone@princeton.edu> and other code contributors
 // Licensed under the 3-clause BSD License, see LICENSE file for details
 //========================================================================================
-//! \file dsharp_abs.cpp
+//! \file dsharp_abs-sca.cpp
 //! \brief Initializes stratified Keplerian accretion disk in both cylindrical and
 //! spherical polar coordinates. Initial conditions are in vertical hydrostatic eqm.
-//! The inner radial boundary emits stellar radiation along only the radial direction.
+//! The inner radial boundary emits purely radial stellar radiation.
 //! (Adapted from disk.cpp.)
 //! 
 //! Author: Stanley A. Baronett
 //! Created: 2024-10-21
-//! Updated: 2024-10-21
+//! Updated: 2024-10-28
 //========================================================================================
 
 // C headers
@@ -150,7 +150,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
 
   // Get stellar radiation parameters
   x1min = pin->GetOrAddReal("mesh", "x1min", 1.0);
-  nfreq = pin->GetOrAddInteger("radiation", "n_frequency", 0);
+  nfreq = pin->GetOrAddInteger("radiation", "n_frequency", 1);
   t_unit = pin->GetOrAddReal("radiation", "T_unit", 0.0);
   kappa_a = pin->GetOrAddReal("problem", "kappa_a", 0.0);
   kappa_s = pin->GetOrAddReal("problem", "kappa_s", 0.0);
@@ -160,7 +160,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
   user_freq = pin->GetOrAddInteger("problem", "frequency_table", 0);
 
   // Prepare frequency- and temperature-dependent opacity tables
-  if (nfreq > 0) {
+  if (nfreq > 1) {
     int ftemp_lines = 0;
     std::string line;
     std::stringstream msg;
@@ -317,7 +317,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
 //! Called in MeshBlock constructor before ProblemGenerator.
 //========================================================================================
 void MeshBlock::InitUserMeshBlockData(ParameterInput *pin) {
-  AllocateUserOutputVariables(1+nfreq);
+  AllocateUserOutputVariables(2+nfreq);
 
   // enroll user-defined opacity function
   if (NR_RADIATION_ENABLED || IM_RADIATION_ENABLED) {
@@ -537,15 +537,15 @@ void SetFrequencies(NRRadiation *prad) {
 }
 
 //========================================================================================
-//! \fn int GetMaxErf(const AthenaArray<Real> Erf_Dnu)
+//! \fn int GetMaxErfDnu(const AthenaArray<Real> erf_dnu)
 //! \brief Returns the index of the finite frequency band with the maximum specific
 //! radiation energy density.
 //========================================================================================
-int GetMaxErf(const AthenaArray<Real> Erf_Dnu) {
+int GetMaxErfDnu(const AthenaArray<Real> erf_dnu) {
   int f_peak = 0;
 
   for(int ifr=1; ifr<nfreq-1; ++ifr) {
-    if (Erf_Dnu(ifr) > Erf_Dnu(f_peak))
+    if (erf_dnu(ifr) > erf_dnu(f_peak))
       f_peak = ifr;
   }
 
@@ -608,7 +608,7 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
     for (int j=js; j<=je; ++j) {
       for (int i=1; i<=ngh; ++i) {
         flux = std::pow(t_star, 4)*std::pow(r_star/pco->x1v(is-i), 2)/4;
-        if (nfreq <= 1) {                                               // gray approx
+        if (nfreq == 1) {                                               // gray approx
           for (int n=0; n<nang-2; ++n) {                                // non-radial rays
             if (prad->mu(0,k,j,is-i,n) < 0.0)                           // exiting rays
               ir(k,j,is-i,n) = ir(k,j,is,n)\
@@ -655,7 +655,7 @@ void RadOuterX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
   for (int k=ks; k<=ke; ++k) {
     for (int j=js; j<=je; ++j) {
       for (int i=1; i<=ngh; ++i) {
-        if (nfreq <= 1) {                                         // gray approx
+        if (nfreq == 1) {                                         // gray approx
           for (int n=0; n<nang; ++n) {                            // non-radial rays
             if (prad->mu(0,k,j,ie+i,n) > 0.0)                     // exiting rays
               ir(k,j,ie+i,n) = ir(k,j,ie,n)\
@@ -1029,20 +1029,20 @@ void DiskOuterX3(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceF
 //! Sets opacities throughout the domain
 void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
   NRRadiation *prad = pmb->pnrrad;
-  AthenaArray<Real> Erf_Dnu;  // specific radiation energy density per finite freq. band
+  AthenaArray<Real> erf_dnu;  // specific radiation energy density per finite freq. band
   int il = pmb->is; int jl = pmb->js; int kl = pmb->ks;
   int iu = pmb->ie; int ju = pmb->je; int ku = pmb->ke;
   int &nang = prad->nang;     // total angles
   int f_peak;                 // frequency band with peak Er/\Delta\nu
   int f_gas;                  // frequency band with peak gas emission
   Real t_gas;                 // gas temperature
-  Real t_c;                   // color temperature+
-  Real dummy;                 // dummy variable for GetOpacities
-  Real kappa_af = kappa_a;    // Rosseland mean absorption opacity (defaults to gray value)
-  Real kappa_pfe = kappa_a;   // Planck mean absorption opacity    (defaults to gray value)
-  Real kappa_pf = kappa_a;    // Planck mean absorption opacity    (defaults to gray value)
+  Real t_c;                   // color temperature
+  Real kappa_sf = kappa_s;    // Rosseland mean scattering opacity (gray by default)
+  Real kappa_af = kappa_a;    // Rosseland mean absorption opacity (gray by default)
+  Real kappa_pfe = kappa_a;   // J_0 (Plank mean) absorp. coef.    (gray by default)
+  Real kappa_pf = kappa_a;    // epsilon_0 (Plank mean) abs. coef. (gray by default)
   Real kappa_rf;              // Rosseland mean total (abs+sca) opacity
-  Real kappa_sf = kappa_s;    // Rosseland mean scattering opacity (defaults to gray value)
+  Real dummy;                 // dummy variable for GetOpacities
 
   // Include ghost zones in upper/lower directional limits
   // il -= NGHOST;
@@ -1057,7 +1057,7 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
   // }
 
   if (nfreq > 1)
-    Erf_Dnu.NewAthenaArray(nfreq-1);
+    erf_dnu.NewAthenaArray(nfreq-1);
 
   for (int k=kl; k<=ku; ++k) {
     for (int j=jl; j<=ju; ++j) {
@@ -1066,14 +1066,17 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
           t_gas = prim(IEN,k,j,i)/prim(IDN,k,j,i);
           f_gas = GetFreqGroup(prad, GetNuPeak(t_gas));
           for (int ifr=0; ifr<nfreq-1; ++ifr) {
-            Erf_Dnu(ifr) = 0.0;
+            erf_dnu(ifr) = 0.0;                                  // reset from last cell
             for (int n=0; n<nang; ++n) {
-              Erf_Dnu(ifr) += prad->wmu(n)*prad->ir(k,j,i,ifr*nang+n);
+              erf_dnu(ifr) += prad->wmu(n)*prad->ir(k,j,i,ifr*nang+n);
             }
-            Erf_Dnu(ifr) /= prad->delta_nu(ifr);
+            erf_dnu(ifr) /= prad->delta_nu(ifr);
           }
-          f_peak = GetMaxErf(Erf_Dnu);
+          f_peak = GetMaxErfDnu(erf_dnu);
           t_c = GetColorTemp(prad->nu_cen(f_peak));
+          pmb->user_out_var(0,k,j,i) = t_c;
+          pmb->user_out_var(1,k,j,i) = 0.0;
+          if (f_peak != f_gas) { pmb->user_out_var(1,k,j,i) = 1.0; }
         }
         for (int ifr=0; ifr<nfreq; ++ifr) {
           if (nfreq > 1) {
@@ -1083,13 +1086,12 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
             } else {
               GetOpacities(t_gas, ifr, kappa_af, kappa_pf);
             }
-            if (f_peak != f_gas) {  // optically thin region
+            if (f_peak != f_gas) {                               // non-rad.-therm. eq.
               GetOpacities(t_c, ifr, dummy, kappa_pfe);
-              pmb->user_out_var(0,k,j,i) = t_c;
-            } else {                // optically thick region
+            } else {                                             // radiation-thermal eq.
               GetOpacities(t_gas, ifr, dummy, kappa_pfe);
             }
-            pmb->user_out_var(1+ifr,k,j,i) = kappa_pfe;
+            pmb->user_out_var(2+ifr,k,j,i) = kappa_pfe;
           }
           prad->sigma_s(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_sf;
           prad->sigma_a(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_af;
