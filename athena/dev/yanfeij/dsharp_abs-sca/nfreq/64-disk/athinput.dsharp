@@ -1,7 +1,7 @@
 <comment>
 problem          = DSHARP opacities
 reference        = 
-configure        = --prob dsharp_abs-sca --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2 -mavx2"
+configure        = --prob dsharp_disk --coord spherical_polar -implicit_radiation -mpi -hdf5 -h5double --cxx=gcc --cflag="-march=znver2 -mavx2"
 
 <job>
 problem_id       = dsharp              # basename of output filenames
