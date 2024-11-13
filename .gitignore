@@ -44,6 +44,7 @@ Makefile
 *.npz
 *.out
 *old*
+*.pdf
 temp/
 *.txt
 !freq_table.txt
