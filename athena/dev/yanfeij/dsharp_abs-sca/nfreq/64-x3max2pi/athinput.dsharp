@@ -6,26 +6,26 @@ configure        = --prob dsharp_abs-sca --coord spherical_polar -implicit_radia
 <job>
 problem_id       = dsharp              # basename of output filenames
 
-<output1>
-file_type        = hdf5                # HDF5 data dump
-dt               = 0.1                 # time increment between outputs
-variable         = prim                # output variables
-next_time        = 0.1                 # skip initial state
-file_number      = 1                   # next output number
-xdmf             = 0                   # disable XDMF output (VisIt)
+# <output1>
+# file_type        = hdf5                # HDF5 data dump
+# dt               = 0.1                 # time increment between outputs
+# variable         = prim                # output variables
+# next_time        = 0.1                 # skip initial state
+# file_number      = 1                   # next output number
+# xdmf             = 0                   # disable XDMF output (VisIt)
 
 <output3>
 file_type        = hst                 # HDF5 data dump
 dt               = 1e-9                # time increment between outputs
 
-<output4>
-file_type        = rst                 # restart file
-dt               = 0.1                 # time increment between outputs
+# <output4>
+# file_type        = rst                 # restart file
+# dt               = 0.1                 # time increment between outputs
 
 <time>
 cfl_number       = 0.1                 # The Courant, Friedrichs & Lewy No.
 nlim             = -1                  # cycle limit
-tlim             = 0.1                 # time limit
+tlim             = 2e-9                # time limit
 ncycle_out       = 1                   # interval for stdout summary info
 
 <mesh>
