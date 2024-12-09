@@ -126,7 +126,7 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim);
 //! functions in this file.  Called in Mesh constructor.
 //========================================================================================
 void Mesh::InitUserMeshData(ParameterInput *pin) {
-    // Get parameters for gravitatonal potential of central point mass
+  // Get parameters for gravitatonal potential of central point mass
   gm0 = pin->GetOrAddReal("problem", "gm0", 1.0);
   r0 = pin->GetOrAddReal("problem", "r0", 1.0);
 
@@ -162,6 +162,7 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
   user_freq = pin->GetOrAddInteger("problem", "frequency_table", 0);
 
   // Convert constant opacities as needed
+  std::stringstream msg;
   if (kappa_a < 0) {
     kappa_a *= -1;
   } else if (density_unit == 0.0) {
@@ -201,7 +202,6 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
   if (nfreq > 1) {
     int ftemp_lines = 0;
     std::string line;
-    std::stringstream msg;
     FILE *ftemp_table = fopen("./temp_table.txt", "r");
     FILE *fkappa_pf_table = fopen("./kappa_pf_table.txt", "r");
     FILE *fkappa_rf_table = fopen("./kappa_rf_table.txt", "r");
