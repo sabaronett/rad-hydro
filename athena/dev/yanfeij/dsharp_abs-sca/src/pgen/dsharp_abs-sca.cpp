@@ -11,7 +11,7 @@
 //! 
 //! Author: Stanley A. Baronett
 //! Created: 2024-10-21
-//! Updated: 2024-10-28
+//! Updated: 2024-12-09
 //========================================================================================
 
 // C headers
@@ -59,18 +59,19 @@ void SetFrequencies(NRRadiation *prad);
 Real x1min;                                     // <mesh>
 Real gamma_gas, dfloor;                         // <hydro>
 Real Omega0;                                    // <orbital_advection>
+Real t_unit, density_unit, length_unit;         // <radiation>
 Real gm0, r0, rho0, p0_over_r0, pslope, dslope; // <problem> (disk)
-Real r_star, t_star, kappa_a, kappa_s;          // <problem> (radiation)
+Real r_star, t_star, kappa_a, kappa_s;          // <problem> (irradiation)
 
 // for frequency dependent opacities
-static bool scattering;
-static int nfreq, ntemp, user_freq;
-static Real dlog10T, t_unit;
-static AthenaArray<Real> freq_table;
-static AthenaArray<Real> temp_table;
-static AthenaArray<Real> kappa_pf_table;
-static AthenaArray<Real> kappa_rf_table;
-static AthenaArray<Real> kappa_sf_table;
+bool scattering;
+int nfreq, ntemp, user_freq;
+Real dlog10T;
+AthenaArray<Real> freq_table;
+AthenaArray<Real> temp_table;
+AthenaArray<Real> kappa_pf_table;
+AthenaArray<Real> kappa_rf_table;
+AthenaArray<Real> kappa_sf_table;
 } // namespace
 
 // User-defined boundary conditions and radiation-related functions for disk simulations
