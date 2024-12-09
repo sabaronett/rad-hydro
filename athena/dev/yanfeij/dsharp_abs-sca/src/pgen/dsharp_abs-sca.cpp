@@ -152,12 +152,50 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
   x1min = pin->GetOrAddReal("mesh", "x1min", 1.0);
   nfreq = pin->GetOrAddInteger("radiation", "n_frequency", 1);
   t_unit = pin->GetOrAddReal("radiation", "T_unit", 0.0);
+  density_unit = pin->GetOrAddReal("radiation", "density_unit", 0.0);
+  length_unit = pin->GetOrAddReal("radiation", "length_unit", 0.0);
   kappa_a = pin->GetOrAddReal("problem", "kappa_a", 0.0);
   kappa_s = pin->GetOrAddReal("problem", "kappa_s", 0.0);
   r_star = pin->GetOrAddReal("problem", "r_star", 0.001);
   t_star = pin->GetOrAddReal("problem", "t_star", 1.0);
   ntemp = pin->GetOrAddInteger("problem", "n_temperature", 0);
   user_freq = pin->GetOrAddInteger("problem", "frequency_table", 0);
+
+  // Convert constant opacities as needed
+  if (kappa_a < 0) {
+    kappa_a *= -1;
+  } else if (density_unit == 0.0) {
+    msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
+        << "`density_unit` input parameter needed to convert `kappa_a` to code units";
+    ATHENA_ERROR(msg);
+
+    return;
+  } else if (length_unit == 0.0) {
+    msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
+        << "`length_unit` input parameter needed to convert `kappa_a` to code units";
+    ATHENA_ERROR(msg);
+
+    return;
+  } else {
+    kappa_a *= density_unit*length_unit;
+  }
+  if (kappa_s < 0) {
+    kappa_s *= -1;
+  } else if (density_unit == 0.0) {
+    msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
+        << "`density_unit` input parameter needed to convert `kappa_s` to code units";
+    ATHENA_ERROR(msg);
+
+    return;
+  } else if (length_unit == 0.0) {
+    msg << "### FATAL ERROR in function [Mesh::InitUserMeshData]" << std::endl
+        << "`length_unit` input parameter needed to convert `kappa_s` to code units";
+    ATHENA_ERROR(msg);
+
+    return;
+  } else {
+    kappa_s *= density_unit*length_unit;
+  }
 
   // Prepare frequency- and temperature-dependent opacity tables
   if (nfreq > 1) {
@@ -1096,10 +1134,10 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
           prad->sigma_s(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_sf;
           prad->sigma_a(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_af;
           prad->sigma_pe(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_pfe; // J_0 coefficient
-          if (prad->set_source_flag == 0) {
+          if (prad->set_source_flag == 0) {                      // Pure attenuation case
             prad->sigma_p(k,j,i,ifr) = 0;                        // \epsilon_0 coefficient
           } else {
-            prad->sigma_p(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_pf; // \epsilon_0 coefficient
+            prad->sigma_p(k,j,i,ifr) = prim(IDN,k,j,i)*kappa_pf;
           }
         }
       }
