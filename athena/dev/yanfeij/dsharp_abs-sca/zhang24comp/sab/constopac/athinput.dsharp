@@ -44,7 +44,7 @@ ox2_bc           = polar_wedge         # outer-X2 boundary flag
 
 nx3              = 1                   # Number of zones in X3-direction
 x3min            = 0.0                 # minimum value of X3
-x3max            = 3.141592653589793   # maximum value of X3
+x3max            = 6.283185307179586   # maximum value of X3
 ix3_bc           = periodic            # inner-X3 boundary flag
 ox3_bc           = periodic            # outer-X3 boundary flag
 
@@ -72,7 +72,7 @@ length_unit      = 5.98e14             # L_0 [cm]
 molecular_weight = 0.6                 # \mu [g/mol]
 nlimit           = 1000                # maximum no. of iterations to try
 error_limit      = 1e-6                # tolerance level of iteration
-source_flag      = 0                   # do not heat (0) or heat (1/2) the gas
+source_flag      = 2                   # do not heat (0) or heat (1/2) the gas
 
 <problem>
 r0               = 0.425278227742474   # disk length normalization [L_0]
