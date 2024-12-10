@@ -239,6 +239,8 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     } else {
       scattering = true;
     }
+    std::cout << "### Scattering mode in [Mesh::InitUserMeshData]" << std::endl
+              << "\tscattering = " << scattering << std::endl;
 
     // Check table sizes against input parameters
     std::ifstream temp_ifstream("temp_table.txt");
