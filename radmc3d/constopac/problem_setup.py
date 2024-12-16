@@ -20,9 +20,10 @@ import athena_read
 # Read the Athena++ grid
 run = 'zhang24comp/sab/constopac'
 problem_id = 'dsharp'
-# path = '/mnt/home/sbaronett/ceph/github/sabaronett/rad-hydro/athena/dev/yanfeij/'\
-path = '/home/stanley/github/sabaronett/rad-hydro/athena/dev/yanfeij/'\
+path = '/mnt/home/sbaronett/ceph/github/sabaronett/rad-hydro/athena/dev/yanfeij/'\
        +f'{problem_id}_abs-sca/{run}'
+# path = '/home/stanley/github/sabaronett/rad-hydro/athena/dev/yanfeij/'\
+#        +f'{problem_id}_abs-sca/{run}'
 athinput = athena_read.athinput(f'{path}/athinput.{problem_id}')
 length_unit = athinput['radiation']['length_unit']
 athdf = athena_read.athdf(f'{path}/athdf/{problem_id}.out1.00001.athdf')
