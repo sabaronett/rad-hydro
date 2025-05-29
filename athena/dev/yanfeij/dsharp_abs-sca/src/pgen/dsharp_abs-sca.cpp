@@ -6,12 +6,12 @@
 //! \file dsharp_abs-sca.cpp
 //! \brief Initializes stratified Keplerian accretion disk in both cylindrical and
 //! spherical polar coordinates. Initial conditions are in vertical hydrostatic eqm.
-//! The inner radial boundary emits purely radial stellar radiation.
+//! The inner radial boundary admits stellar irradiation only along radial rays.
 //! (Adapted from disk.cpp.)
 //! 
 //! Author: Stanley A. Baronett
 //! Created: 2024-10-21
-//! Updated: 2024-12-09
+//! Updated: 2024-05-29
 //========================================================================================
 
 // C headers
@@ -236,11 +236,11 @@ void Mesh::InitUserMeshData(ParameterInput *pin) {
     }
     if (fkappa_sf_table == nullptr) {
       scattering = false;
+      // std::cout << "### Scattering OFF" << std::endl;
     } else {
       scattering = true;
+      // std::cout << "### Scattering ON" << std::endl;
     }
-    std::cout << "### Scattering mode in [Mesh::InitUserMeshData]" << std::endl
-              << "\tscattering = " << scattering << std::endl;
 
     // Check table sizes against input parameters
     std::ifstream temp_ifstream("temp_table.txt");
@@ -528,7 +528,8 @@ void GetOpacities(const Real temp, const int ifr, Real &kappa_af, Real &kappa_pf
     kappa_af = kappa_rf_table(ntemp-1, ifr);
     kappa_pf = kappa_pf_table(ntemp-1, ifr);
   } else {
-    // int i = BinarySearchIncreasing(temp_table, 0, ntemp-1, temp); // consider removal
+    // For a non-log-uniform temp_table, use the following instead:
+    // int i = BinarySearchIncreasing(temp_table, 0, ntemp-1, temp);
     int i = int((std::log10(temp) - std::log10(temp_table(0)))/dlog10T) + 1;
     kappa_af = LinearInterpolation(temp, temp_table(i-1), temp_table(i),
                                    kappa_rf_table(i-1, ifr), kappa_rf_table(i, ifr));
@@ -583,14 +584,14 @@ void SetFrequencies(NRRadiation *prad) {
 //! radiation energy density.
 //========================================================================================
 int GetMaxErfDnu(const AthenaArray<Real> erf_dnu) {
-  int f_peak = 0;
+  int f = 0;
 
   for(int ifr=1; ifr<nfreq-1; ++ifr) {
-    if (erf_dnu(ifr) > erf_dnu(f_peak))
-      f_peak = ifr;
+    if (erf_dnu(ifr) > erf_dnu(f))
+      f = ifr;
   }
 
-  return f_peak;
+  return f;
 }
 
 //========================================================================================
@@ -623,7 +624,7 @@ int GetFreqGroup(const NRRadiation *prad, const Real nu) {
   } else if (nu > prad->nu_grid(nfreq-1)) {
     f = nfreq-1;
   } else {
-    for (int i=1; i<nfreq-1; ++i) {
+    for (int i=1; i<nfreq-1; ++i) {  // USE BinarySearchIncreasing
       if (nu > prad->nu_grid(i) && nu < prad->nu_grid(i+1)) {
         f = i;
         break;
@@ -657,8 +658,9 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
             else                                                        // entering rays
               ir(k,j,is-i,n) = 0.0;                                     // disable
           }                                                             // radial rays
-          ir(k,j,is-i,nang-2) = flux/prad->wmu(nang-2);                      // stellar ray
-          ir(k,j,is-i,nang-1) = ir(k,j,is,nang-1);                      // disk emission
+          ir(k,j,is-i,nang-2) = flux/prad->wmu(nang-2);                 // n-hat_r,out
+          ir(k,j,is-i,nang-1) = ir(k,j,is,nang-1)\
+                                *std::pow(pco->x1v(is)/pco->x1v(is-i), 2);
         } else {                                                        // multifrequency
           for (int ifr=0; ifr<nfreq; ++ifr) {                           // each band
             for (int n=0; n<nang-2; ++n) {                              // non-radial rays
@@ -668,14 +670,15 @@ void RadInnerX1(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
               else                                                      // entering rays
                 ir(k,j,is-i,ifr*nang+n) = 0.0;                          // disable
             }
-            if (ifr < nfreq-1) {
+            if (ifr < nfreq-1) {                                        // n-hat_r,out
               ir(k,j,is-i,ifr*nang+nang-2) = flux*prad->IntPlanckFunc(prad->nu_grid(ifr)\
-                                             /t_star, prad->nu_grid(ifr+1)/t_star)/prad->wmu(0);
-            } else {
+                                             /t_star, prad->nu_grid(ifr+1)/t_star)\
+                                             /prad->wmu(nang-2);
+            } else {                                                    // n-hat_r,out
               ir(k,j,is-i,ifr*nang+nang-2) = flux*(1.0\
                                              - prad->FitIntPlanckFunc(prad->nu_grid(ifr)\
                                              /t_star))/prad->wmu(nang-2);
-            }
+            }                                                           // n-hat_r,in
             ir(k,j,is-i,ifr*nang+nang-1) = ir(k,j,is,ifr*nang+nang-1)\
                                            *std::pow(pco->x1v(is)/pco->x1v(is-i), 2);
           }
@@ -732,7 +735,8 @@ void RadInnerX2(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
     for (int j=1; j<=ngh; ++j) {
       for (int i=is; i<=ie; ++i) {
         for (int n=0; n<nang; ++n) {
-          ir(k,js-j,i,n) = 0.0;
+          ir(k,js-j,i,n) = 0.0;  // should only be for entering rays
+          //! TODO: use 1/r^2 decay for exiting rays (disk emission)
         }
       }
     }
@@ -751,7 +755,8 @@ void RadOuterX2(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
     for (int j=1; j<=ngh; ++j) {
       for (int i=is; i<=ie; ++i) {
         for (int n=0; n<nang; ++n) {
-          ir(k,je+j,i,n) = 0.0;
+          ir(k,je+j,i,n) = 0.0;  // should only be for entering rays
+          //! TODO: use 1/r^2 decay for exiting rays (disk emission)
         }
       }
     }
@@ -770,7 +775,8 @@ void RadInnerX3(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
     for (int j=js; j<=je; ++j) {
       for (int i=is; i<=ie; ++i) {
         for (int n=0; n<nang; ++n) {
-          ir(ks-k,j,i,n) = 0.0;
+          ir(ks-k,j,i,n) = 0.0;  // should only be for entering rays
+          //! TODO: use 1/r^2 decay for exiting rays (disk emission)
         }
       }
     }
@@ -789,7 +795,8 @@ void RadOuterX3(MeshBlock *pmb, Coordinates *pco, NRRadiation *prad,
     for (int j=js; j<=je; ++j) {
       for (int i=is; i<=ie; ++i) {
         for (int n=0; n<nang; ++n) {
-          ir(ke+k,j,i,n) = 0.0;
+          ir(ke+k,j,i,n) = 0.0;  // should only be for entering rays
+          //! TODO: use 1/r^2 decay for exiting rays (disk emission)
         }
       }
     }
@@ -1070,13 +1077,13 @@ void DiskOuterX3(MeshBlock *pmb,Coordinates *pco, AthenaArray<Real> &prim, FaceF
 //! Sets opacities throughout the domain
 void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
   NRRadiation *prad = pmb->pnrrad;
-  AthenaArray<Real> erf_dnu;  // specific radiation energy density per finite freq. band
+  AthenaArray<Real> erf_dnu;  // specific radiation energy density per frequency band
   int il = pmb->is; int jl = pmb->js; int kl = pmb->ks;
   int iu = pmb->ie; int ju = pmb->je; int ku = pmb->ke;
   int &nang = prad->nang;     // total angles
-  int f_peak;                 // frequency band with peak Er/\Delta\nu
-  int f_gas;                  // frequency band with peak gas emission
-  Real t_gas;                 // gas temperature
+  int f_irrad;                // frequency band with peak Er/\Delta\nu
+  int f_therm;                // frequency band with peak thermal emission
+  Real t_therm;               // thermal temperature
   Real t_c;                   // color temperature
   Real kappa_sf = kappa_s;    // Rosseland mean scattering opacity (gray by default)
   Real kappa_af = kappa_a;    // Rosseland mean absorption opacity (gray by default)
@@ -1104,8 +1111,8 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
     for (int j=jl; j<=ju; ++j) {
       for (int i=il; i<=iu; ++i) {
         if (nfreq > 1) {
-          t_gas = prim(IEN,k,j,i)/prim(IDN,k,j,i);
-          f_gas = GetFreqGroup(prad, GetNuPeak(t_gas));
+          t_therm = prim(IEN,k,j,i)/prim(IDN,k,j,i);
+          f_therm = GetFreqGroup(prad, GetNuPeak(t_therm));
           for (int ifr=0; ifr<nfreq-1; ++ifr) {
             erf_dnu(ifr) = 0.0;                                  // reset from last cell
             for (int n=0; n<nang; ++n) {
@@ -1113,24 +1120,24 @@ void DiskOpacity(MeshBlock *pmb, AthenaArray<Real> &prim) {
             }
             erf_dnu(ifr) /= prad->delta_nu(ifr);
           }
-          f_peak = GetMaxErfDnu(erf_dnu);
-          t_c = GetColorTemp(prad->nu_cen(f_peak));
+          f_irrad = GetMaxErfDnu(erf_dnu);
+          t_c = GetColorTemp(prad->nu_cen(f_irrad));
           pmb->user_out_var(0,k,j,i) = t_c;
           pmb->user_out_var(1,k,j,i) = 0.0;
-          if (f_peak != f_gas) { pmb->user_out_var(1,k,j,i) = 1.0; }
+          if (f_irrad != f_therm) { pmb->user_out_var(1,k,j,i) = 1.0; }
         }
         for (int ifr=0; ifr<nfreq; ++ifr) {
           if (nfreq > 1) {
             if (scattering) {
-              GetScatteringOpacities(t_gas, ifr, kappa_pf, kappa_rf, kappa_sf);
+              GetScatteringOpacities(t_therm, ifr, kappa_pf, kappa_rf, kappa_sf);
               kappa_af = kappa_rf - kappa_sf;
             } else {
-              GetOpacities(t_gas, ifr, kappa_af, kappa_pf);
+              GetOpacities(t_therm, ifr, kappa_af, kappa_pf);
             }
-            if (f_peak != f_gas) {                               // non-rad.-therm. eq.
+            if (f_irrad != f_therm) {                            // non-irrad.-therm. eq.
               GetOpacities(t_c, ifr, dummy, kappa_pfe);
-            } else {                                             // radiation-thermal eq.
-              GetOpacities(t_gas, ifr, dummy, kappa_pfe);
+            } else {                                             // irradiative-thermal eq.
+              GetOpacities(t_therm, ifr, dummy, kappa_pfe);
             }
             pmb->user_out_var(2+ifr,k,j,i) = kappa_pfe;
           }
